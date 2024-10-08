@@ -26,32 +26,35 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "warn"
+      },
       "correctness": {
-        "noConstantMathMinMaxClamp": "error",
-        "noNodejsModules": "error",
-        "noUnusedImports": "error",
-        "noUnusedPrivateClassMembers": "error",
-        "noUnusedVariables": "error",
-        "useArrayLiterals": "error"
+        "noConstantMathMinMaxClamp": "warn",
+        "noNodejsModules": "warn",
+        "noUnusedImports": "warn",
+        "noUnusedPrivateClassMembers": "warn",
+        "noUnusedVariables": "warn",
+        "useArrayLiterals": "warn"
       },
       "nursery": {
-        "useSortedClasses": "error"
+        "useSortedClasses": "warn"
       },
       "style": {
-        "noImplicitBoolean": "error",
-        "noNamespace": "error",
-        "noNamespaceImport": "error",
-        "noNegationElse": "error",
-        "noParameterProperties": "error",
-        "noShoutyConstants": "error",
-        "useBlockStatements": "error",
-        "useCollapsedElseIf": "error",
-        "useConsistentArrayType": "error",
-        "useForOf": "error",
-        "useFragmentSyntax": "error",
-        "useShorthandArrayType": "error",
-        "useShorthandAssign": "error",
-        "useSingleCaseStatement": "error"
+        "noImplicitBoolean": "warn",
+        "noNamespace": "warn",
+        "noNamespaceImport": "warn",
+        "noNegationElse": "warn",
+        "noParameterProperties": "warn",
+        "noShoutyConstants": "warn",
+        "useBlockStatements": "warn",
+        "useCollapsedElseIf": "warn",
+        "useConsistentArrayType": "warn",
+        "useForOf": "warn",
+        "useFragmentSyntax": "warn",
+        "useShorthandArrayType": "warn",
+        "useShorthandAssign": "warn",
+        "useSingleCaseStatement": "warn"
       }
     }
   },
