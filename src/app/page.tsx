@@ -1,15 +1,58 @@
 'use client';
+import BaseSvg from '@/assets/svg/BaseSvg';
 import { ONCHAINKIT_LINK } from '@/constants/links';
-import OnchainkitSvg from '@assets/svg/OnchainkitSvg';
+import { useWagmiConfig } from '@/wagmi';
+import { getEnsAddress } from '@wagmi/core';
+import { useState } from 'react';
 import Footer from 'src/components/Footer';
-import TransactionWrapper from 'src/components/TransactionWrapper';
-import WalletWrapper from 'src/components/WalletWrapper';
+import { normalize } from 'viem/ens';
 import { useAccount } from 'wagmi';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
+import { getDagoraProfile } from './api/dagoraCallers';
+import {
+  listAllEVMTransactions,
+  searchAddressFromOneID,
+} from './api/explorerCallers';
 
 export default function Page() {
   const { address } = useAccount();
+
+  const wagmiConfig = useWagmiConfig();
+
+  const [text, setText] = useState('');
+  const [inputAddress, setInputAddress] = useState('');
+
+  const getAddress = async (text: string) => {
+    let address = '';
+    if (text.startsWith('0x')) {
+      address = text;
+    } else if (text.endsWith('.eth')) {
+      address = (await getEnsAddress(wagmiConfig, {
+        name: normalize(text),
+        chainId: 1,
+      })) as string;
+      // console.log('ENS Address:', address);
+    } else {
+      address = await searchAddressFromOneID(text);
+      // console.log('OneID Address:', address);
+    }
+
+    setInputAddress(address);
+    return address;
+  };
+
+  const handleSearchAllExplorers = async (text: string) => {
+    const address = await getAddress(text);
+    const data = await listAllEVMTransactions(address);
+    console.log('evmTransactions:', data);
+  };
+
+  const handleDagoraProfile = async (text: string) => {
+    const address = await getAddress(text);
+    const data = await getDagoraProfile(address);
+    console.log('dagoraProfile:', data);
+  };
 
   return (
     <div className="flex h-full w-96 max-w-full flex-col px-1 md:w-[1008px]">
@@ -21,7 +64,7 @@ export default function Page() {
             target="_blank"
             rel="noreferrer"
           >
-            <OnchainkitSvg />
+            <BaseSvg />
           </a>
           <div className="flex items-center gap-3">
             <SignupButton />
@@ -30,21 +73,36 @@ export default function Page() {
         </div>
       </section>
       <section className="templateSection flex w-full flex-col items-center justify-center gap-4 rounded-xl bg-gray-100 px-2 py-4 md:grow">
-        <div className="flex h-[450px] w-[450px] max-w-full items-center justify-center rounded-xl bg-[#030712]">
-          <div className="rounded-xl bg-[#F3F4F6] px-4 py-[11px]">
-            <p className="font-normal text-indigo-600 text-xl not-italic tracking-[-1.2px]">
-              npm install @coinbase/onchainkit
-            </p>
-          </div>
-        </div>
-        {address ? (
-          <TransactionWrapper address={address} />
-        ) : (
-          <WalletWrapper
-            className="w-[450px] max-w-full"
-            text="Sign in to transact"
+        <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
+          <input
+            type="text"
+            placeholder="EVM address 0x..., ENS, Basename, OneID"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 mr-2 w-full"
           />
+        </section>
+
+        {inputAddress !== '' ? (
+          <p>Your EVM address: {inputAddress}</p>
+        ) : (
+          <p>Address not found</p>
         )}
+
+        <button
+          type="button"
+          onClick={() => handleDagoraProfile(text)}
+          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+        >
+          Dagora Profile
+        </button>
+        <button
+          type="button"
+          onClick={() => handleSearchAllExplorers(text)}
+          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+        >
+          Multi-EVM Transactions
+        </button>
       </section>
       <Footer />
     </div>
