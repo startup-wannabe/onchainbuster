@@ -5,10 +5,15 @@ import {
   listEtherscanTransactions,
   listVicTransactions,
   searchAddressFromOneID,
-} from '../api/callers';
+} from '../api/explorerCallers';
 
 import { getEnsAddress } from '@wagmi/core';
 import { normalize } from 'viem/ens';
+import {
+  getDagoraAddressStats,
+  listDagoraAddressActivities,
+  listDagoraAddressBalance,
+} from '../api/dagoraCallers';
 
 const Explorer = () => {
   const wagmiConfig = useWagmiConfig();
@@ -17,7 +22,7 @@ const Explorer = () => {
   const [chain, setChain] = useState('ETH');
   const [address, setAddress] = useState('');
 
-  const handleSearch = async (text: string, chain: string) => {
+  const getAddress = async (text: string) => {
     let address = '';
     if (text.startsWith('0x')) {
       address = text;
@@ -31,6 +36,11 @@ const Explorer = () => {
       address = await searchAddressFromOneID(text);
       console.log('OneID Address:', address);
     }
+    return address;
+  };
+
+  const handleSearch = async (text: string, chain: string) => {
+    const address = await getAddress(text);
     setAddress(address);
 
     let data: TEtherscanTransaction[] | TVicscanTransaction[];
@@ -40,6 +50,19 @@ const Explorer = () => {
       data = await listVicTransactions(address);
     }
     console.log(chain, data);
+  };
+
+  const handleDagoraProfile = async (text: string) => {
+    const address = await getAddress(text);
+    const [activities, balance, stats] = await Promise.all([
+      listDagoraAddressActivities(address),
+      listDagoraAddressBalance(address),
+      getDagoraAddressStats(address),
+    ]);
+
+    console.log('activities:', activities);
+    console.log('balance:', balance);
+    console.log('stats:', stats);
   };
 
   return (
@@ -77,6 +100,16 @@ const Explorer = () => {
       ) : (
         <p>Address not found</p>
       )}
+
+      <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
+        <button
+          type="button"
+          onClick={() => handleDagoraProfile(text)}
+          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600"
+        >
+          Dagora Profile
+        </button>
+      </section>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import {
   listEtherscanTransactions,
   listVicTransactions,
   searchAddressFromOneID,
-} from './callers';
+} from './explorerCallers';
 
 export const explorerRouteKey = {
   etherscan: 'etherscan',

@@ -1,3 +1,4 @@
+// Explorers
 type TEtherscanResponse = {
   status: string;
   message: string;
