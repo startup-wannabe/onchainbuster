@@ -1,12 +1,38 @@
 'use client';
+import { useWagmiConfig } from '@/wagmi';
 import { useState } from 'react';
-import { listEtherscanTransactions, listVicTransactions } from '../api/callers';
+import {
+  listEtherscanTransactions,
+  listVicTransactions,
+  searchAddressFromOneID,
+} from '../api/callers';
+
+import { getEnsAddress } from '@wagmi/core';
+import { normalize } from 'viem/ens';
 
 const Explorer = () => {
-  const [address, setAddress] = useState('');
-  const [chain, setChain] = useState('ETH');
+  const wagmiConfig = useWagmiConfig();
 
-  const handleSearch = async (address: string, chain: string) => {
+  const [text, setText] = useState('');
+  const [chain, setChain] = useState('ETH');
+  const [address, setAddress] = useState('');
+
+  const handleSearch = async (text: string, chain: string) => {
+    let address = '';
+    if (text.startsWith('0x')) {
+      address = text;
+    } else if (text.endsWith('.eth') || text.endsWith('.base.eth')) {
+      address = (await getEnsAddress(wagmiConfig, {
+        name: normalize(text),
+        chainId: 1,
+      })) as string;
+      console.log('ENS Address:', address);
+    } else {
+      address = await searchAddressFromOneID(text);
+      console.log('OneID Address:', address);
+    }
+    setAddress(address);
+
     let data: TEtherscanTransaction[] | TVicscanTransaction[];
     if (chain !== 'VIC') {
       data = await listEtherscanTransactions(address, chain);
@@ -21,9 +47,9 @@ const Explorer = () => {
       <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
         <input
           type="text"
-          placeholder="0x..."
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          placeholder="EVM address 0x..., ENS, Basename, OneID"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           className="border border-gray-300 rounded-md p-2 mr-2 w-full"
         />
         <select
@@ -39,12 +65,18 @@ const Explorer = () => {
         </select>
         <button
           type="button"
-          onClick={() => handleSearch(address, chain)}
+          onClick={() => handleSearch(text, chain)}
           className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600"
         >
           Search
         </button>
       </section>
+
+      {address !== '' ? (
+        <p>Your EVM address: {address}</p>
+      ) : (
+        <p>Address not found</p>
+      )}
     </div>
   );
 };

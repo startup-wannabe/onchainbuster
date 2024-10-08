@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { listEtherscanTransactions, listVicTransactions } from './callers';
+import {
+  listEtherscanTransactions,
+  listVicTransactions,
+  searchAddressFromOneID,
+} from './callers';
 
-export const apiRouteKey = {
+export const explorerRouteKey = {
   etherscan: 'etherscan',
   vicscan: 'vicscan',
 };
@@ -11,14 +15,21 @@ export const useListEtherscanTransactions = (
   chain: string,
 ) => {
   return useQuery({
-    queryKey: [apiRouteKey.etherscan, address, chain],
+    queryKey: [explorerRouteKey.etherscan, address, chain],
     queryFn: () => listEtherscanTransactions(address, chain),
   });
 };
 
 export const useListVicTransactions = (account: string) => {
   return useQuery({
-    queryKey: [apiRouteKey.vicscan],
+    queryKey: [explorerRouteKey.vicscan],
     queryFn: () => listVicTransactions(account),
+  });
+};
+
+export const useSearchAddressFromOneID = (text: string) => {
+  return useQuery({
+    queryKey: ['oneid'],
+    queryFn: () => searchAddressFromOneID(text),
   });
 };

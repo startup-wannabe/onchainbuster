@@ -56,3 +56,8 @@ type TVicscanTransaction = {
   toName?: string;
   toOneId?: boolean;
 };
+
+type TSearchOneIDResponse = {
+  address: string;
+  oneId: string;
+};
