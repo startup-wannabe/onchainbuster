@@ -1,4 +1,6 @@
 import {
+  ARBSCAN_API_BASE_URL,
+  ARBSCAN_API_KEY,
   BASESCAN_API_BASE_URL,
   BASESCAN_API_KEY,
   BSCSCAN_API_BASE_URL,
@@ -34,6 +36,11 @@ export async function GET(request: NextRequest) {
     case 'OP': {
       apiUrl = OPTIMISMSCAN_API_BASE_URL;
       apiKey = OPTIMISMSCAN_API_KEY;
+      break;
+    }
+    case 'ARB': {
+      apiUrl = ARBSCAN_API_BASE_URL;
+      apiKey = ARBSCAN_API_KEY;
       break;
     }
     case 'BSC': {

@@ -1,3 +1,25 @@
+export const getDagoraProfile = async (address: string) => {
+  if (address === '') {
+    return {
+      balance: [],
+      activities: [],
+      stats: {},
+    };
+  }
+
+  const [balance, activities, stats] = await Promise.all([
+    listDagoraAddressActivities(address),
+    listDagoraAddressBalance(address),
+    getDagoraAddressStats(address),
+  ]);
+
+  return {
+    balance,
+    activities,
+    stats,
+  };
+};
+
 export const getDagoraAddressStats = async (address: string) => {
   if (address === '') {
     return '';

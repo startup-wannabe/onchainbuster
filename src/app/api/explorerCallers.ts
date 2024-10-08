@@ -1,3 +1,28 @@
+export const listAllEVMTransactions = async (address: string) => {
+  if (address === '') {
+    return [];
+  }
+
+  const [etherscan, basescan, optimismscan, arbiscan, bscscan, vicscan] =
+    await Promise.all([
+      listEtherscanTransactions(address, 'ETH'),
+      listEtherscanTransactions(address, 'BASE'),
+      listEtherscanTransactions(address, 'OP'),
+      listEtherscanTransactions(address, 'ARB'),
+      listEtherscanTransactions(address, 'BSC'),
+      listVicTransactions(address),
+    ]);
+
+  return {
+    eth: etherscan,
+    base: basescan,
+    op: optimismscan,
+    arb: arbiscan,
+    bsc: bscscan,
+    vic: vicscan,
+  };
+};
+
 export const listEtherscanTransactions = async (
   address: string,
   chain: string,
