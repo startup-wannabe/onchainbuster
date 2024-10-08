@@ -1,13 +1,13 @@
 'use client';
 
+import ArrowSvg from '@assets/svg/ArrowSvg';
 import {
   DISCORD_LINK,
   FIGMA_LINK,
   GITHUB_LINK,
   ONCHAINKIT_LINK,
   TWITTER_LINK,
-} from 'src/links';
-import ArrowSvg from 'src/svg/ArrowSvg';
+} from '@constants/links';
 
 const docLinks = [
   { href: ONCHAINKIT_LINK, title: 'Docs' },
