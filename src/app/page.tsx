@@ -9,12 +9,14 @@ import { normalize } from 'viem/ens';
 import { useAccount } from 'wagmi';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
-
-import { listAllTransactionsByChain } from './api/services';
 import {
-  listVicTokenBalance,
-  searchAddressFromOneID,
-} from './api/victionCallers';
+  listAllNFTActivityByChain,
+  listAllNFTBalanceByChain,
+  listAllTokenActivityByChain,
+  listAllTokenBalanceByChain,
+  listAllTransactionsByChain,
+} from './api/services';
+import { searchAddressFromOneID } from './api/victionCallers';
 
 export default function Page() {
   const { address } = useAccount();
@@ -33,10 +35,10 @@ export default function Page() {
         name: normalize(text),
         chainId: 1,
       })) as string;
-      // console.log('ENS Address:', address);
+      console.log('ENS Address:', address);
     } else {
       address = await searchAddressFromOneID(text);
-      // console.log('OneID Address:', address);
+      console.log('OneID Address:', address);
     }
 
     setInputAddress(address);
@@ -49,16 +51,28 @@ export default function Page() {
     console.log('evmTransactions:', data);
   };
 
-  const handleVictionBalance = async (text: string) => {
-    const address = await getAddress(text);
-    const data = await listVicTokenBalance(address);
-    console.log('vicTokenBalance:', data);
-  };
-
   const handleSearchAllNFTBalance = async (text: string) => {
     const address = await getAddress(text);
-    // const data = await listAllNFTBalanceByChain(address);
-    // console.log('nftBalance:', data);
+    const data = await listAllNFTBalanceByChain(address);
+    console.log('nftBalance:', data);
+  };
+
+  const handleSearchAllNFTActivity = async (text: string) => {
+    const address = await getAddress(text);
+    const data = await listAllNFTActivityByChain(address);
+    console.log('nftActivity:', data);
+  };
+
+  const handleSearchAllTokenBalance = async (text: string) => {
+    const address = await getAddress(text);
+    const data = await listAllTokenBalanceByChain(address);
+    console.log('tokenBalance:', data);
+  };
+
+  const handleSearchAllTokenActivity = async (text: string) => {
+    const address = await getAddress(text);
+    const data = await listAllTokenActivityByChain(address);
+    console.log('tokenActivity:', data);
   };
 
   return (
@@ -98,26 +112,44 @@ export default function Page() {
 
         <button
           type="button"
-          onClick={() => handleVictionBalance(text)}
-          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
-        >
-          Viction Token Balance
-        </button>
-        <button
-          type="button"
           onClick={() => handleSearchAllExplorers(text)}
           className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
         >
           Multi-EVM Transactions
         </button>
+
+        <button
+          type="button"
+          onClick={() => handleSearchAllTokenActivity(text)}
+          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+        >
+          Multi-EVM Token Activity
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleSearchAllTokenBalance(text)}
+          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+        >
+          Multi-EVM Token Balance
+        </button>
+
         <button
           type="button"
           onClick={() => handleSearchAllNFTBalance(text)}
           className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
         >
-          Multi-EVM NFT
+          Multi-EVM NFT Balance
+        </button>
+        <button
+          type="button"
+          onClick={() => handleSearchAllNFTActivity(text)}
+          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+        >
+          Multi-EVM NFT Activity
         </button>
       </section>
+
       <Footer />
     </div>
   );

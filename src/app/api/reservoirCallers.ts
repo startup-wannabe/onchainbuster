@@ -11,7 +11,7 @@ export const getReservoirAddressProfile = async (
 
   const [balance, activities] = await Promise.all([
     listReservoirAddressBalance(address, chain),
-    listReservoirAddressActivities(address, chain),
+    listReservoirAddressActivity(address, chain),
   ]);
 
   return {
@@ -20,7 +20,7 @@ export const getReservoirAddressProfile = async (
   };
 };
 
-export const listReservoirAddressActivities = async (
+export const listReservoirAddressActivity = async (
   address: string,
   chain: string,
   limit = 20,

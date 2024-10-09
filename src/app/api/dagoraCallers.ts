@@ -9,7 +9,7 @@ export const getDagoraProfile = async (address: string) => {
 
   const [balance, activities] = await Promise.all([
     listDagoraAddressBalance(address),
-    listDagoraAddressActivities(address),
+    listDagoraAddressActivity(address),
   ]);
 
   return {
@@ -36,7 +36,7 @@ export const getDagoraAddressStats = async (address: string) => {
   return accountStats;
 };
 
-export const listDagoraAddressActivities = async (
+export const listDagoraAddressActivity = async (
   address: string,
   size = 100,
 ) => {

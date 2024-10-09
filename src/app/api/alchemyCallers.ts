@@ -1,7 +1,8 @@
-export const getAlchemyTokenBalance = async (
+export const listAlchemyTokenBalance = async (
   address: string,
   chain: string,
 ) => {
+  // Note: let the maxCount=100 by default
   const req: TAlchemyRequest = {
     id: 1,
     jsonrpc: '2.0',
@@ -14,7 +15,7 @@ export const getAlchemyTokenBalance = async (
   });
 
   const res = await data.json();
-  const alchemyResult: TAlchemyResult = res.data;
-  const tokenBalance = alchemyResult.result.tokenBalances || [];
+  const alchemyRes: TAlchemyResponse = res.data;
+  const tokenBalance = alchemyRes.result.tokenBalances || [];
   return tokenBalance;
 };

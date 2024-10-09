@@ -25,12 +25,39 @@ export const listVicTransactions = async (account: string, limit = 100) => {
   return allTransactions;
 };
 
+export const listVicTokenActivity = async (account: string, limit = 100) => {
+  if (account === '') {
+    return { token: [] };
+  }
+
+  let tokenActivities: TVicscanTokenActivity[] = [];
+  let offset = 0;
+  let total = 0;
+
+  do {
+    const data = await fetch(
+      `/api/vicscan/token?account=${account}&limit=${limit}&offset=${offset}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const res = await data.json();
+    const vicscanResp: TVicscanResponse = res.data;
+    tokenActivities = tokenActivities.concat(vicscanResp.data);
+    total = vicscanResp.total;
+    offset += limit; // Increment offset by limit for the next fetch
+  } while (offset < total); // Continue until all data is fetched
+
+  return { token: tokenActivities };
+};
+
 export const listVicTokenBalance = async (account: string, limit = 100) => {
   if (account === '') {
     return [];
   }
 
-  let allTransactions: TVicscanTransaction[] = [];
+  let allTransactions: TVicscanTokenBalance[] = [];
   let offset = 0;
   let total = 0;
 
