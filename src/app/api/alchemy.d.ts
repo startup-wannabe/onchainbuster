@@ -2,7 +2,7 @@ type TAlchemyRequest = {
   id: number;
   jsonrpc: string;
   method: string;
-  params: (AssetTransferParams | string)[];
+  params: (TAssetTransferParams | string)[];
 };
 
 type TAlchemyResult = {
@@ -18,7 +18,8 @@ type TAlchemyResult = {
 type TAssetTransferParams = {
   fromBlock: string;
   toBlock: string;
-  toAddress: string;
+  fromAddress?: string;
+  toAddress?: string;
   order: string;
   withMetadata: boolean;
   excludeZeroValue: boolean;

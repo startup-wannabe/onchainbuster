@@ -1,29 +1,20 @@
 export const getAlchemyTokenBalance = async (
-  req: TAlchemyRequest,
+  address: string,
   chain: string,
 ) => {
+  const req: TAlchemyRequest = {
+    id: 1,
+    jsonrpc: '2.0',
+    method: 'alchemy_getTokenBalances',
+    params: [address],
+  };
   const data = await fetch(`/api/alchemy?chain=${chain}`, {
     method: 'POST',
     body: JSON.stringify(req),
   });
 
   const res = await data.json();
-  const result: TAlchemyResult = res.data.result;
-  const tokenBalances = result.result.tokenBalances || [];
-  return tokenBalances;
-};
-
-export const getAlchemyAssetTransfer = async (
-  req: TAlchemyRequest,
-  chain: string,
-) => {
-  const data = await fetch(`/api/alchemy?chain=${chain}`, {
-    method: 'POST',
-    body: JSON.stringify(req),
-  });
-
-  const res = await data.json();
-  const result: TAlchemyResult = res.data.result;
-  const assetTransfers = result.result.transfers || [];
-  return assetTransfers;
+  const alchemyResult: TAlchemyResult = res.data;
+  const tokenBalance = alchemyResult.result.tokenBalances || [];
+  return tokenBalance;
 };
