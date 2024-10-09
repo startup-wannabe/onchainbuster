@@ -9,12 +9,12 @@ import { normalize } from 'viem/ens';
 import { useAccount } from 'wagmi';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
-import { getDagoraProfile } from './api/dagoraCallers';
+
+import { listAllTransactionsByChain } from './api/services';
 import {
-  listAllEVMTransactions,
+  listVicTokenBalance,
   searchAddressFromOneID,
-} from './api/explorerCallers';
-import { listAllNFTProfile } from './api/reservoirCallers';
+} from './api/victionCallers';
 
 export default function Page() {
   const { address } = useAccount();
@@ -45,21 +45,20 @@ export default function Page() {
 
   const handleSearchAllExplorers = async (text: string) => {
     const address = await getAddress(text);
-    const data = await listAllEVMTransactions(address);
+    const data = await listAllTransactionsByChain(address);
     console.log('evmTransactions:', data);
   };
 
-  const handleDagoraProfile = async (text: string) => {
+  const handleVictionBalance = async (text: string) => {
     const address = await getAddress(text);
-    const data = await getDagoraProfile(address);
-    console.log('dagoraProfile:', data);
+    const data = await listVicTokenBalance(address);
+    console.log('vicTokenBalance:', data);
   };
 
-  const handleReservoirProfile = async (text: string) => {
+  const handleSearchAllNFTBalance = async (text: string) => {
     const address = await getAddress(text);
-
-    // const data = await listAllNFTProfile(address);
-    // console.log('data:', data);
+    // const data = await listAllNFTBalanceByChain(address);
+    // console.log('nftBalance:', data);
   };
 
   return (
@@ -99,10 +98,10 @@ export default function Page() {
 
         <button
           type="button"
-          onClick={() => handleDagoraProfile(text)}
+          onClick={() => handleVictionBalance(text)}
           className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
         >
-          Dagora Profile
+          Viction Token Balance
         </button>
         <button
           type="button"
@@ -113,10 +112,10 @@ export default function Page() {
         </button>
         <button
           type="button"
-          onClick={() => handleReservoirProfile(text)}
+          onClick={() => handleSearchAllNFTBalance(text)}
           className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
         >
-          Reservoir Transactions
+          Multi-EVM NFT
         </button>
       </section>
       <Footer />

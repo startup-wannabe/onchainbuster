@@ -1,28 +1,22 @@
-export const listAllNFTProfile = async (address: string) => {
+export const getReservoirAddressProfile = async (
+  address: string,
+  chain: string,
+) => {
   if (address === '') {
     return {
-      eth: { balance: [], activities: [] },
-      base: { balance: [], activities: [] },
-      op: { balance: [], activities: [] },
-      arb: { balance: [], activities: [] },
-      bsc: { balance: [], activities: [] },
+      balance: [],
+      activities: [],
     };
   }
 
-  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'] as const;
-  const results = await Promise.all(
-    chains.map(async (chain) => ({
-      balance: await listReservoirAddressBalance(address, chain),
-      activities: await listReservoirAddressActivities(address, chain),
-    })),
-  );
+  const [balance, activities] = await Promise.all([
+    listReservoirAddressBalance(address, chain),
+    listReservoirAddressActivities(address, chain),
+  ]);
 
   return {
-    eth: results[0],
-    base: results[1],
-    op: results[2],
-    arb: results[3],
-    bsc: results[4],
+    balance,
+    activities,
   };
 };
 
