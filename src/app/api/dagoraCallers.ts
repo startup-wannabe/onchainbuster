@@ -22,7 +22,11 @@ export const getDagoraProfile = async (address: string) => {
 
 export const getDagoraAddressStats = async (address: string) => {
   if (address === '') {
-    return '';
+    return {
+      collections: 0,
+      floorPrice: 0,
+      totalVolume: 0,
+    };
   }
 
   const data = await fetch(`/api/dagora/stats?address=${address}`, {
