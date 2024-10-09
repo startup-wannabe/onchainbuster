@@ -1,25 +1,3 @@
-export const getReservoirAddressProfile = async (
-  address: string,
-  chain: string,
-) => {
-  if (address === '') {
-    return {
-      balance: [],
-      activities: [],
-    };
-  }
-
-  const [balance, activities] = await Promise.all([
-    listReservoirAddressBalance(address, chain),
-    listReservoirAddressActivity(address, chain),
-  ]);
-
-  return {
-    balance,
-    activities,
-  };
-};
-
 export const listReservoirAddressActivity = async (
   address: string,
   chain: string,
@@ -82,4 +60,27 @@ export const listReservoirAddressBalance = async (
   }
 
   return allCollections;
+};
+
+// Unused
+export const getReservoirAddressProfile = async (
+  address: string,
+  chain: string,
+) => {
+  if (address === '') {
+    return {
+      balance: [],
+      activities: [],
+    };
+  }
+
+  const [balance, activities] = await Promise.all([
+    listReservoirAddressBalance(address, chain),
+    listReservoirAddressActivity(address, chain),
+  ]);
+
+  return {
+    balance,
+    activities,
+  };
 };

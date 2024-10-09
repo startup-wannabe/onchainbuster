@@ -42,9 +42,15 @@ export const listAllTokenBalanceByChain = async (address: string) => {
     return {};
   }
 
-  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const chains = ['ETH', 'BASE', 'OP', 'ARB'];
+  const alchemyChains = [
+    'eth-mainnet',
+    'base-mainnet',
+    'opt-mainnet',
+    'arb-mainnet',
+  ];
   const results = await Promise.all([
-    ...chains.map((chain) => listAlchemyTokenBalance(address, chain)),
+    ...alchemyChains.map((chain) => listAlchemyTokenBalance(address, chain)),
     listVicTokenBalance(address),
   ]);
 
