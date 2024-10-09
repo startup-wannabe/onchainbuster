@@ -1,41 +1,3 @@
-export const getDagoraProfile = async (address: string) => {
-  if (address === '') {
-    return {
-      balance: [],
-      activities: [],
-      stats: {},
-    };
-  }
-
-  const [balance, activities] = await Promise.all([
-    listDagoraAddressBalance(address),
-    listDagoraAddressActivity(address),
-  ]);
-
-  return {
-    balance,
-    activities,
-  };
-};
-
-export const getDagoraAddressStats = async (address: string) => {
-  if (address === '') {
-    return {
-      collections: 0,
-      floorPrice: 0,
-      totalVolume: 0,
-    };
-  }
-
-  const data = await fetch(`/api/dagora/stats?address=${address}`, {
-    method: 'GET',
-  });
-
-  const res = await data.json();
-  const accountStats: TDagoraAccountStats = res.data.data.stats;
-  return accountStats;
-};
-
 export const listDagoraAddressActivity = async (
   address: string,
   size = 100,
@@ -101,6 +63,86 @@ export const listDagoraAddressBalance = async (address: string, size = 100) => {
     page += 1;
   } while (accountCollections.length < total);
 
-  // Filter approved NFT (not spam) before returning
-  return accountCollections.filter((c) => c.isApproved);
+  // Fetch collection stats for each approved collection
+  const collectionsWithStats = await Promise.all(
+    accountCollections
+      // Filter approved NFT (not spam) before returning
+      .filter((c) => c.isApproved)
+      .map(async (collection) => {
+        const collectionStats = await getDagoraCollectionStats(
+          collection.address,
+          collection.chain,
+        );
+        return {
+          ...collection,
+          stats: collectionStats,
+        };
+      }),
+  );
+
+  return collectionsWithStats;
+};
+
+export const getDagoraCollectionStats = async (
+  address: string,
+  chain: string,
+) => {
+  if (address === '') {
+    return {
+      totalVolume: 0,
+      floorPrice: 0,
+      items: 0,
+      tokenVolume: [],
+    };
+  }
+
+  const data = await fetch(
+    `/api/dagora/collectionStats?address=${address}&chain=${chain}`,
+    {
+      method: 'GET',
+    },
+  );
+
+  const res = await data.json();
+  const accountStats: TDagoraCollectionStats = res.data.data.stats;
+  return accountStats;
+};
+
+// Unused
+export const getDagoraProfile = async (address: string) => {
+  if (address === '') {
+    return {
+      balance: [],
+      activities: [],
+      stats: {},
+    };
+  }
+
+  const [balance, activities] = await Promise.all([
+    listDagoraAddressBalance(address),
+    listDagoraAddressActivity(address),
+  ]);
+
+  return {
+    balance,
+    activities,
+  };
+};
+
+export const getDagoraAddressStats = async (address: string) => {
+  if (address === '') {
+    return {
+      collections: 0,
+      floorPrice: 0,
+      totalVolume: 0,
+    };
+  }
+
+  const data = await fetch(`/api/dagora/stats?address=${address}`, {
+    method: 'GET',
+  });
+
+  const res = await data.json();
+  const accountStats: TDagoraAccountStats = res.data.data.stats;
+  return accountStats;
 };

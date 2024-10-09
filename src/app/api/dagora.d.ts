@@ -7,6 +7,13 @@ type TDagoraAccountStats = {
   totalVolume: number;
 };
 
+type TDagoraCollectionStats = {
+  totalVolume: number;
+  floorPrice: number;
+  items: number;
+  tokenVolume: TDagoraListingToken[];
+};
+
 type TDagoraAccountBalanceResponse = {
   total: number;
   data: TDagoraAccountCollection[];
