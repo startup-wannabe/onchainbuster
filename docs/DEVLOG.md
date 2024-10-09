@@ -23,3 +23,7 @@ Done:
 - Convert [ENS](https://dagora.xyz/) (.eth) and [OneID](https://www.oneid.xyz/) to wallet address
 
 Define scoring metrics and UI/UX (expected insights for user)
+
+Data collection & Resources:
+- Token metadata list: [Coin98 Token List](https://rapid.coin98.com/token-list.json)
+- Native Basename on-chain Stats: [Basenames/UsernameProfileSectionHeatmap](https://github.com/base-org/web/tree/master/apps/web/src/components/Basenames/UsernameProfileSectionHeatmap)

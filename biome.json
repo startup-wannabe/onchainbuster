@@ -64,6 +64,6 @@
     }
   },
   "files": {
-    "ignore": ["coverage/**", ".next/**"]
+    "ignore": ["coverage/**", ".next/**", "src/constants/tokenList.json"]
   }
 }

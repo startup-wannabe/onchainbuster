@@ -1,4 +1,4 @@
-import { DAGORA_API_BASE_URL } from '@constants/nft';
+import { DAGORA_API_BASE_URL } from '@/constants/nftInfra';
 import type { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
