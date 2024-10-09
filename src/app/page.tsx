@@ -14,6 +14,7 @@ import {
   listAllEVMTransactions,
   searchAddressFromOneID,
 } from './api/explorerCallers';
+import { listAllNFTProfile } from './api/reservoirCallers';
 
 export default function Page() {
   const { address } = useAccount();
@@ -52,6 +53,13 @@ export default function Page() {
     const address = await getAddress(text);
     const data = await getDagoraProfile(address);
     console.log('dagoraProfile:', data);
+  };
+
+  const handleReservoirProfile = async (text: string) => {
+    const address = await getAddress(text);
+
+    // const data = await listAllNFTProfile(address);
+    // console.log('data:', data);
   };
 
   return (
@@ -102,6 +110,13 @@ export default function Page() {
           className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
         >
           Multi-EVM Transactions
+        </button>
+        <button
+          type="button"
+          onClick={() => handleReservoirProfile(text)}
+          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+        >
+          Reservoir Transactions
         </button>
       </section>
       <Footer />

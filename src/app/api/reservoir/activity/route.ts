@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const address = searchParams.get('address');
   const chain = searchParams.get('chain');
-  const continuation = searchParams.get('offset');
+  const continuation = searchParams.get('continuation');
   const limit = searchParams.get('limit');
 
   let chainSuffix = '';
@@ -36,7 +36,12 @@ export async function GET(request: NextRequest) {
 
   const reservoirBaseUrl = `https://api${chainSuffix}.reservoir.tools`;
 
-  const query = `address=${address}&continuation=${continuation}&limit=${limit}&excludeSpam=true`;
+  let query = '';
+  if (continuation !== '') {
+    query = `users=${address}&continuation=${continuation}&limit=${limit}&excludeSpam=true`;
+  } else {
+    query = `users=${address}&limit=${limit}&excludeSpam=true`;
+  }
 
   const res = await fetch(`${reservoirBaseUrl}/users/activity/v6?${query}`, {
     method: 'GET',

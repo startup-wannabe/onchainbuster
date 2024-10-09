@@ -7,16 +7,14 @@ export const getDagoraProfile = async (address: string) => {
     };
   }
 
-  const [balance, activities, stats] = await Promise.all([
-    listDagoraAddressActivities(address),
+  const [balance, activities] = await Promise.all([
     listDagoraAddressBalance(address),
-    getDagoraAddressStats(address),
+    listDagoraAddressActivities(address),
   ]);
 
   return {
     balance,
     activities,
-    stats,
   };
 };
 
