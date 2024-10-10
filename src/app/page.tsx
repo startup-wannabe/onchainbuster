@@ -107,7 +107,7 @@ export default function Page() {
             placeholder="EVM address 0x..., ENS, Basename, OneID"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 mr-2 w-full"
+            className="mr-2 w-full rounded-md border border-gray-300 p-2"
           />
         </section>
 
@@ -120,7 +120,7 @@ export default function Page() {
         <button
           type="button"
           onClick={() => handleSearchAllNativeTokenBalance(text)}
-          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
         >
           Multi-EVM Native Balance
         </button>
@@ -128,7 +128,7 @@ export default function Page() {
         <button
           type="button"
           onClick={() => handleSearchAllExplorers(text)}
-          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
         >
           Multi-EVM Transactions
         </button>
@@ -136,7 +136,7 @@ export default function Page() {
         <button
           type="button"
           onClick={() => handleSearchAllTokenActivity(text)}
-          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
         >
           Multi-EVM Token Activity
         </button>
@@ -144,7 +144,7 @@ export default function Page() {
         <button
           type="button"
           onClick={() => handleSearchAllTokenBalance(text)}
-          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
         >
           Multi-EVM Token Balance
         </button>
@@ -152,14 +152,14 @@ export default function Page() {
         <button
           type="button"
           onClick={() => handleSearchAllNFTBalance(text)}
-          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
         >
           Multi-EVM NFT Balance
         </button>
         <button
           type="button"
           onClick={() => handleSearchAllNFTActivity(text)}
-          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
         >
           Multi-EVM NFT Activity
         </button>

@@ -64,7 +64,6 @@
     }
   },
   "files": {
-    "ignore": ["coverage/**", ".next/**", "src/constants/tokenList.json"],
-    "maxSize": 10000
+    "ignore": ["coverage/**", ".next/**", "src/constants/tokenList.json"]
   }
 }
