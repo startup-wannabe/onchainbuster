@@ -4,6 +4,12 @@ export const ALCHEMY_API_BASE_URL =
 export const ALCHEMY_API_KEY = process.env
   .NEXT_PUBLIC_ALCHEMY_API_KEY as string;
 
+export const MORALIS_API_BASE_URL =
+  (process.env.NEXT_PUBLIC_MORALIS_API_BASE_URL as string) ||
+  'https://deep-index.moralis.io/api';
+export const MORALIS_API_KEY = process.env
+  .NEXT_PUBLIC_MORALIS_API_KEY as string;
+
 export const CMC_API_BASE_URL =
   (process.env.NEXT_PUBLIC_CMC_API_BASE_URL as string) ||
   'https://pro-api.coinmarketcap.com/';
