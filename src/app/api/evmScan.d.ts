@@ -36,10 +36,10 @@ type TEVMScanTokenActivity = {
   from: string;
   contractAddress: string;
   to: string;
-  value?: string;
+  value?: string | '0';
   tokenName: string;
   tokenSymbol: string;
-  tokenDecimal?: string;
+  tokenDecimal?: string | '18';
   transactionIndex: string;
   gas: string;
   gasPrice: string;
