@@ -1,35 +1,165 @@
-import { useQuery } from '@tanstack/react-query';
+import { listAlchemyTokenBalance } from './alchemyCallers';
 import {
-  listEtherscanTransactions,
+  listDagoraAddressActivity,
+  listDagoraAddressBalance,
+} from './dagoraCallers';
+import {
+  getEVMScanBalance,
+  listEVMScanTokenActivity,
+  listEVMScanTransactions,
+} from './evmScanCallers';
+import {
+  listReservoirAddressActivity,
+  listReservoirAddressBalance,
+} from './reservoirCallers';
+import { listStaticTokenMetadata } from './tokenCallers';
+import {
+  getVicNativeBalance,
+  listVicTokenActivity,
+  listVicTokenBalance,
   listVicTransactions,
-  searchAddressFromOneID,
-} from './explorerCallers';
+} from './victionCallers';
 
-export const explorerRouteKey = {
-  etherscan: 'etherscan',
-  vicscan: 'vicscan',
+export const getAllANativeTokenByChain = async (address: string) => {
+  if (address === '') {
+    return {};
+  }
+
+  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const results = await Promise.all([
+    ...chains.map((chain) => getEVMScanBalance(address, chain)),
+    getVicNativeBalance(address),
+  ]);
+
+  // TODO: Process and union type
+  return {
+    ...Object.fromEntries(
+      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+    ),
+    vic: results[results.length - 1],
+  };
 };
 
-export const useListEtherscanTransactions = (
-  address: string,
-  chain: string,
-) => {
-  return useQuery({
-    queryKey: [explorerRouteKey.etherscan, address, chain],
-    queryFn: () => listEtherscanTransactions(address, chain),
-  });
+export const listAllTransactionsByChain = async (address: string) => {
+  if (address === '') {
+    return {};
+  }
+
+  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const results = await Promise.all([
+    ...chains.map((chain) => listEVMScanTransactions(address, chain)),
+    listVicTransactions(address),
+  ]);
+
+  // TODO: Process and union type
+  return {
+    ...Object.fromEntries(
+      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+    ),
+    vic: results[results.length - 1],
+  };
 };
 
-export const useListVicTransactions = (account: string) => {
-  return useQuery({
-    queryKey: [explorerRouteKey.vicscan],
-    queryFn: () => listVicTransactions(account),
-  });
+export const listAllTokenBalanceByChain = async (address: string) => {
+  if (address === '') {
+    return {};
+  }
+
+  const chains = ['ETH', 'BASE', 'OP', 'ARB'];
+  const alchemyChains = [
+    'eth-mainnet',
+    'base-mainnet',
+    'opt-mainnet',
+    'arb-mainnet',
+  ];
+  const results = await Promise.all([
+    ...alchemyChains.map((chain) => listAlchemyTokenBalance(address, chain)),
+    listVicTokenBalance(address),
+  ]);
+
+  // TODO: Process and union type
+  return {
+    ...Object.fromEntries(
+      chains.map((chain, index) => [
+        chain.toLowerCase(),
+        results[index]
+          .map((token: any) => {
+            const metadata = listStaticTokenMetadata(
+              chain,
+              token.contractAddress,
+            );
+            if (metadata) {
+              return {
+                ...token,
+                ...metadata,
+                tokenBalance: token.tokenBalance / 10 ** metadata.decimals,
+              };
+            }
+            return null;
+          })
+          .filter((token) => token !== null),
+      ]),
+    ),
+    vic: results[results.length - 1],
+  };
 };
 
-export const useSearchAddressFromOneID = (text: string) => {
-  return useQuery({
-    queryKey: ['oneid'],
-    queryFn: () => searchAddressFromOneID(text),
-  });
+export const listAllTokenActivityByChain = async (address: string) => {
+  if (address === '') {
+    return {};
+  }
+
+  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const results = await Promise.all([
+    ...chains.map((chain) => listEVMScanTokenActivity(address, chain)),
+    listVicTokenActivity(address),
+  ]);
+
+  // TODO: Process and union type
+  return {
+    ...Object.fromEntries(
+      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+    ),
+    vic: results[results.length - 1],
+  };
+};
+
+export const listAllNFTBalanceByChain = async (address: string) => {
+  if (address === '') {
+    return {};
+  }
+
+  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const results = await Promise.all([
+    ...chains.map((chain) => listReservoirAddressBalance(address, chain)),
+    listDagoraAddressBalance(address),
+  ]);
+
+  // TODO: Process and union type
+  return {
+    ...Object.fromEntries(
+      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+    ),
+    vic: results[results.length - 1],
+  };
+};
+
+export const listAllNFTActivityByChain = async (address: string) => {
+  if (address === '') {
+    return {};
+  }
+
+  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const results = await Promise.all([
+    ...chains.map((chain) => listReservoirAddressActivity(address, chain)),
+    listDagoraAddressActivity(address),
+  ]);
+
+  // TODO: Process and union type
+  return {
+    ...Object.fromEntries(
+      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+    ),
+    vic: results[results.length - 1],
+  };
 };
