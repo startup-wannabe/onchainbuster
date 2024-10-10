@@ -65,6 +65,24 @@ type TVicscanTokenBalance = {
   valueUsd: number;
 };
 
+type TVicscanAccount = {
+  balanceNumber: number;
+  code: string;
+  isContract: boolean;
+  status: boolean;
+  isToken: boolean;
+  txCount: number;
+  minedBlock: number;
+  rewardCount: number;
+  address: string;
+  balance: string;
+  timestamp: number;
+  updatedAt: string;
+  tomoPrice: number;
+  accountName: string;
+  oneId: boolean;
+};
+
 type TSearchOneIDResponse = {
   address: string;
   oneId: string;

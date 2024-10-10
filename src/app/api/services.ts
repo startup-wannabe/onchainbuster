@@ -4,6 +4,7 @@ import {
   listDagoraAddressBalance,
 } from './dagoraCallers';
 import {
+  getEVMScanBalance,
   listEVMScanTokenActivity,
   listEVMScanTransactions,
 } from './evmScanCallers';
@@ -11,11 +12,33 @@ import {
   listReservoirAddressActivity,
   listReservoirAddressBalance,
 } from './reservoirCallers';
+import { listStaticTokenMetadata } from './tokenCallers';
 import {
+  getVicNativeBalance,
   listVicTokenActivity,
   listVicTokenBalance,
   listVicTransactions,
 } from './victionCallers';
+
+export const getAllANativeTokenByChain = async (address: string) => {
+  if (address === '') {
+    return {};
+  }
+
+  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const results = await Promise.all([
+    ...chains.map((chain) => getEVMScanBalance(address, chain)),
+    getVicNativeBalance(address),
+  ]);
+
+  // TODO: Process and union type
+  return {
+    ...Object.fromEntries(
+      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+    ),
+    vic: results[results.length - 1],
+  };
+};
 
 export const listAllTransactionsByChain = async (address: string) => {
   if (address === '') {
@@ -57,7 +80,25 @@ export const listAllTokenBalanceByChain = async (address: string) => {
   // TODO: Process and union type
   return {
     ...Object.fromEntries(
-      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+      chains.map((chain, index) => [
+        chain.toLowerCase(),
+        results[index]
+          .map((token: any) => {
+            const metadata = listStaticTokenMetadata(
+              chain,
+              token.contractAddress,
+            );
+            if (metadata) {
+              return {
+                ...token,
+                ...metadata,
+                tokenBalance: token.tokenBalance / 10 ** metadata.decimals,
+              };
+            }
+            return null;
+          })
+          .filter((token) => token !== null),
+      ]),
     ),
     vic: results[results.length - 1],
   };

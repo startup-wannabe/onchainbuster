@@ -19,6 +19,27 @@ export const listEVMScanTransactions = async (
   return evmResp.result;
 };
 
+export const getEVMScanBalance = async (address: string, chain: string) => {
+  if (address === '') {
+    return [];
+  }
+
+  const data = await fetch(
+    `/api/evmscan/account?address=${address}&chain=${chain}`,
+    {
+      method: 'GET',
+    },
+  );
+
+  const res = await data.json();
+  const evmResp: TEVMScanResponse = res.data;
+  return {
+    account: address,
+    symbol: chain.toUpperCase() === 'BSC' ? 'BNB' : 'ETH',
+    tokenBalance: (evmResp.result as any as number) / 10 ** 18,
+  };
+};
+
 export const listEVMScanTokenActivity = async (
   address: string,
   chain: string,

@@ -1,11 +1,23 @@
-type TTokenCurrency = {
-  cgkId: string;
-  symbol: string;
+type TTokenList = {
   name: string;
-  image: string;
-  chain: string;
+  timestamp: string;
+  version: Version;
+  tags: Tags;
+  logoURI: string;
+  keywords: string[];
+  tokens: TTokenCurrency[];
+};
+
+type TTokenCurrency = {
+  chainId: number;
   address: string;
-  isVaultCoin: boolean;
-  isEarnCoin: boolean;
+  name: string;
+  symbol: string;
   decimals: number;
+  logoURI: string;
+  extensions?: TTokenExtensions;
+};
+
+type TTokenExtensions = {
+  bridgeInfo: Record<string, { tokenAddress: string }>;
 };

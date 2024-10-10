@@ -1,40 +1,27 @@
-export const listVicTransactions = async (account: string, limit = 100) => {
-  if (account === '') {
-    return [];
-  }
+import tokenList from '@constants/tokenList.json';
 
-  let allTransactions: TVicscanTransaction[] = [];
-  let offset = 0;
-  let total = 0;
-
-  do {
-    const data = await fetch(
-      `/api/vicscan/activity?account=${account}&limit=${limit}&offset=${offset}`,
-      {
-        method: 'GET',
-      },
-    );
-
-    const res = await data.json();
-    const vicscanResp: TVicscanResponse = res.data;
-    allTransactions = allTransactions.concat(vicscanResp.data);
-    total = vicscanResp.total;
-    offset += limit; // Increment offset by limit for the next fetch
-  } while (offset < total); // Continue until all data is fetched
-
-  return allTransactions;
+const tokenListJSON: TTokenList = JSON.parse(JSON.stringify(tokenList));
+const chainIDMap = {
+  eth: 1,
+  base: 8453,
+  arb: 42161,
+  op: 10,
+  bsc: 56,
 };
 
-export const searchAddressFromOneID = async (text: string) => {
-  if (text === '') {
-    return '';
-  }
+export const listStaticTokenMetadata = (
+  chain: string,
+  contractAdress: string,
+) => {
+  const chainId =
+    chainIDMap[chain.toLowerCase() as keyof typeof chainIDMap] ||
+    chain.toLowerCase();
 
-  const data = await fetch(`/api/vicscan/oneid?text=${text}`, {
-    method: 'GET',
-  });
+  const chainTokens =
+    tokenListJSON.tokens.filter((token) => token.chainId === chainId) || [];
 
-  const res = await data.json();
-  const oneidResp: TSearchOneIDResponse = res.data[0];
-  return oneidResp?.address ? oneidResp.address : '';
+  return chainTokens.find(
+    (t: TTokenCurrency) =>
+      t.address?.toLowerCase() === contractAdress.toLowerCase(),
+  );
 };

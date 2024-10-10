@@ -79,6 +79,27 @@ export const listVicTokenBalance = async (account: string, limit = 100) => {
   return allTransactions;
 };
 
+export const getVicNativeBalance = async (address: string) => {
+  if (address === '') {
+    return {};
+  }
+
+  const data = await fetch(`/api/vicscan/account?address=${address}`, {
+    method: 'GET',
+  });
+
+  const res = await data.json();
+  const vicAccount: TVicscanAccount = res.data;
+
+  return {
+    account: vicAccount.address,
+    symbol: 'VIC',
+    tokenBalance: vicAccount.balanceNumber,
+    price: vicAccount.tomoPrice,
+    usdBalance: vicAccount.tomoPrice * vicAccount.balanceNumber,
+  };
+};
+
 export const searchAddressFromOneID = async (text: string) => {
   if (text === '') {
     return '';

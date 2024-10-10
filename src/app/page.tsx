@@ -10,6 +10,7 @@ import { useAccount } from 'wagmi';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
 import {
+  getAllANativeTokenByChain,
   listAllNFTActivityByChain,
   listAllNFTBalanceByChain,
   listAllTokenActivityByChain,
@@ -75,6 +76,12 @@ export default function Page() {
     console.log('tokenActivity:', data);
   };
 
+  const handleSearchAllNativeTokenBalance = async (text: string) => {
+    const address = await getAddress(text);
+    const data = await getAllANativeTokenByChain(address);
+    console.log('accountNativeBalance:', data);
+  };
+
   return (
     <div className="flex h-full w-96 max-w-full flex-col px-1 md:w-[1008px]">
       <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
@@ -109,6 +116,14 @@ export default function Page() {
         ) : (
           <p>Address not found</p>
         )}
+
+        <button
+          type="button"
+          onClick={() => handleSearchAllNativeTokenBalance(text)}
+          className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 rounded-md p-2 mr-2"
+        >
+          Multi-EVM Native Balance
+        </button>
 
         <button
           type="button"

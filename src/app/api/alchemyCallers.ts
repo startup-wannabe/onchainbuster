@@ -17,5 +17,10 @@ export const listAlchemyTokenBalance = async (
   const res = await data.json();
   const alchemyRes: TAlchemyResponse = res.data;
   const tokenBalance = alchemyRes.result.tokenBalances || [];
-  return tokenBalance;
+
+  const parsedTokenBalance = tokenBalance.map((token) => ({
+    ...token,
+    tokenBalance: Number.parseInt(token.tokenBalance, 16),
+  }));
+  return parsedTokenBalance;
 };
