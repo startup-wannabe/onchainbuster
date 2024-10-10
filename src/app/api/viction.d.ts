@@ -14,7 +14,7 @@ type TVicscanTransaction = {
   value: string;
   gas: number;
   gasUsed: number;
-  gasPrice: string;
+  gasPrice: number | string;
   input: string;
   contractAddress: string | null;
   status: string;
@@ -22,8 +22,8 @@ type TVicscanTransaction = {
   timestamp: number;
   toContract: boolean;
   method: string;
-  fromName: string;
-  fromOneId: boolean;
+  fromName?: string;
+  fromOneId?: boolean;
   toName?: string;
   toOneId?: boolean;
 };

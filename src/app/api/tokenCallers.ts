@@ -1,24 +1,20 @@
+import { chainIDMap } from '@constants/chains';
 import tokenList from '@constants/tokenList.json';
 
 const tokenListJSON: TTokenList = JSON.parse(JSON.stringify(tokenList));
-const chainIDMap = {
-  eth: 1,
-  base: 8453,
-  arb: 42161,
-  op: 10,
-  bsc: 56,
-};
 
 export const listStaticTokenMetadata = (
   chain: string,
   contractAdress: string,
 ) => {
-  const chainId =
+  const chainMetadata =
     chainIDMap[chain.toLowerCase() as keyof typeof chainIDMap] ||
     chain.toLowerCase();
 
   const chainTokens =
-    tokenListJSON.tokens.filter((token) => token.chainId === chainId) || [];
+    tokenListJSON.tokens.filter(
+      (token) => token.chainId === chainMetadata.id,
+    ) || [];
 
   return chainTokens.find(
     (t: TTokenCurrency) =>

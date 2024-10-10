@@ -16,6 +16,7 @@ type TEVMScanTransaction = {
   value: string;
   gas: string;
   gasPrice: string;
+  gasPriceBid?: string;
   input: string;
   methodId: string;
   functionName: string;
