@@ -25,7 +25,7 @@ export const getAllANativeTokenByChain = async (address: string) => {
     return {};
   }
 
-  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const chains = ['ETH', 'BASE', 'OP', 'ARB'];
   const results = await Promise.all([
     ...chains.map((chain) => getEVMScanBalance(address, chain)),
     getVicNativeBalance(address),
@@ -45,7 +45,7 @@ export const listAllTransactionsByChain = async (address: string) => {
     return {};
   }
 
-  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const chains = ['ETH', 'BASE', 'OP', 'ARB'];
   const results = await Promise.all([
     ...chains.map((chain) => listEVMScanTransactions(address, chain)),
     listVicTransactions(address),
@@ -109,7 +109,7 @@ export const listAllTokenActivityByChain = async (address: string) => {
     return {};
   }
 
-  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const chains = ['ETH', 'BASE', 'OP', 'ARB'];
   const results = await Promise.all([
     ...chains.map((chain) => listEVMScanTokenActivity(address, chain)),
     listVicTokenActivity(address),
@@ -129,7 +129,7 @@ export const listAllNFTBalanceByChain = async (address: string) => {
     return {};
   }
 
-  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const chains = ['ETH', 'BASE', 'OP', 'ARB'];
   const results = await Promise.all([
     ...chains.map((chain) => listReservoirAddressBalance(address, chain)),
     listDagoraAddressBalance(address),
@@ -149,7 +149,7 @@ export const listAllNFTActivityByChain = async (address: string) => {
     return {};
   }
 
-  const chains = ['ETH', 'BASE', 'OP', 'ARB', 'BSC'];
+  const chains = ['ETH', 'BASE', 'OP', 'ARB'];
   const results = await Promise.all([
     ...chains.map((chain) => listReservoirAddressActivity(address, chain)),
     listDagoraAddressActivity(address),

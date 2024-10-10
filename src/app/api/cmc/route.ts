@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const tokenList = searchParams.get('tokenList');
 
-  const query = `symbol=${tokenList}&aux=tags`;
+  const query = `symbol=${tokenList}&aux=tags,date_added`;
 
   const res = await fetch(
     `${CMC_API_BASE_URL}/v1/cryptocurrency/quotes/latest?${query}`,
