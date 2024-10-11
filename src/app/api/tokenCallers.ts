@@ -17,7 +17,7 @@ export const listStaticTokenMetadata = (
     ) || [];
 
   return chainTokens.find(
-    (t: TTokenCurrency) =>
+    (t: TTokenListMetadata) =>
       t.address?.toLowerCase() === contractAdress.toLowerCase(),
   );
 };
