@@ -43,6 +43,7 @@ export default function Page() {
     currentStreakDays: 0,
     activityPeriod: 0,
   });
+  const [mostActiveChain, setMostActiveChain] = useState('');
 
   const getAddress = async (text: string) => {
     let address = '';
@@ -69,7 +70,11 @@ export default function Page() {
     console.log('evmTransactions:', data);
     const allTransactions = Object.values(data).flat();
     setAllTransactions(allTransactions);
-    const stats = calculateEVMStreaksAndMetrics(allTransactions, address);
+    const mostActiveChain = Object.keys(data).reduce((a, b) =>
+      data[a].length > data[b].length ? a : b,
+    );
+    setMostActiveChain(mostActiveChain);
+    const stats = calculateEVMStreaksAndMetrics(data[mostActiveChain], address);
     setActivityStats(stats);
     console.log('Activity Stats:', stats);
   };
@@ -142,6 +147,7 @@ export default function Page() {
         ) : (
           <p>Address not found</p>
         )}
+
         <div className="flex flex-row flex-wrap justify-center gap-2">
           <button
             type="button"
@@ -196,8 +202,8 @@ export default function Page() {
           </button>
         </div>
       </section>
-
-      <section className="mt-8">
+      {/* Activiy Stats */}
+      <div className="mt-8">
         <div className="flex items-center justify-between">
           <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
           <button
@@ -213,9 +219,10 @@ export default function Page() {
           <ActivityStats
             transactions={allTransactions}
             activityStats={activityStats}
+            mostActiveChain={mostActiveChain}
           />
         )}
-      </section>
+      </div>
 
       <Footer />
     </div>
