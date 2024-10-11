@@ -1,3 +1,5 @@
+import { VIC_METADATA } from '@/constants/nativeToken';
+
 export const listVicTransactions = async (account: string, limit = 100) => {
   if (account === '') {
     return [];
@@ -57,7 +59,7 @@ export const listVicTokenBalance = async (account: string, limit = 100) => {
     return [];
   }
 
-  let allTransactions: TVicscanTokenBalance[] = [];
+  let tokenBalance: TVicscanTokenBalance[] = [];
   let offset = 0;
   let total = 0;
 
@@ -71,17 +73,30 @@ export const listVicTokenBalance = async (account: string, limit = 100) => {
 
     const res = await data.json();
     const vicscanResp: TVicscanResponse = res.data;
-    allTransactions = allTransactions.concat(vicscanResp.data);
+    tokenBalance = tokenBalance.concat(vicscanResp.data);
     total = vicscanResp.total;
     offset += limit; // Increment offset by limit for the next fetch
   } while (offset < total); // Continue until all data is fetched
 
-  return allTransactions;
+  const detailedTokenBalance = await Promise.all(
+    tokenBalance.map(async (token) => {
+      const metadata = await getVicTokenDetail(token.token);
+      return {
+        chain: 'vic',
+        name: metadata.name,
+        symbol: token.tokenSymbol,
+        logoURI: metadata.image,
+        tokenBalance: token.quantityNumber,
+      } as TTokenBalance;
+    }),
+  );
+
+  return detailedTokenBalance;
 };
 
 export const getVicNativeBalance = async (address: string) => {
   if (address === '') {
-    return {};
+    return [];
   }
 
   const data = await fetch(`/api/vicscan/account?address=${address}`, {
@@ -91,13 +106,34 @@ export const getVicNativeBalance = async (address: string) => {
   const res = await data.json();
   const vicAccount: TVicscanAccount = res.data;
 
-  return {
-    account: vicAccount.address,
-    symbol: 'VIC',
-    tokenBalance: vicAccount.balanceNumber,
-    price: vicAccount.tomoPrice,
-    usdBalance: vicAccount.tomoPrice * vicAccount.balanceNumber,
-  };
+  // Return list for easy mapping
+  return [
+    {
+      chain: 'vic',
+      name: VIC_METADATA.name,
+      logoURI: VIC_METADATA.logoURI,
+      symbol: VIC_METADATA.symbol,
+      tokenBalance: vicAccount.balanceNumber, // Formatted
+    } as TTokenBalance,
+  ];
+};
+
+export const getVicTokenDetail = async (tokenAddress: string) => {
+  if (tokenAddress === '') {
+    return {} as TVicscanTokenDetail;
+  }
+
+  const data = await fetch(
+    `/api/vicscan/metadata?tokenAddress=${tokenAddress}`,
+    {
+      method: 'GET',
+    },
+  );
+
+  const res = await data.json();
+  const token: TVicscanTokenDetail = res.data;
+
+  return token;
 };
 
 export const searchAddressFromOneID = async (text: string) => {

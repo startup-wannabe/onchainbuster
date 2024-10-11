@@ -10,12 +10,12 @@ type TAlchemyResponse = {
   jsonrpc: string;
   result: {
     address: string;
-    tokenBalances: TTokenBalance[];
+    tokenBalances: TAlchemyTokenBalance[];
     pageKey?: string;
   };
 };
 
-type TTokenBalance = {
+type TAlchemyTokenBalance = {
   contractAddress: string;
   tokenBalance: string;
 };

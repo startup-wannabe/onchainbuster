@@ -1,3 +1,5 @@
+import { BNB_METADATA, ETH_METADATA } from '@/constants/nativeToken';
+
 export const listEVMScanTransactions = async (
   address: string,
   chain: string,
@@ -33,11 +35,24 @@ export const getEVMScanBalance = async (address: string, chain: string) => {
 
   const res = await data.json();
   const evmResp: TEVMScanResponse = res.data;
-  return {
-    account: address,
-    symbol: chain.toUpperCase() === 'BSC' ? 'BNB' : 'ETH',
-    tokenBalance: (evmResp.result as any as number) / 10 ** 18,
-  };
+
+  // Return list for easy mapping
+  return [
+    {
+      chain: chain.toLowerCase(),
+      name:
+        chain.toUpperCase() === 'BSC' ? BNB_METADATA.name : ETH_METADATA.name,
+      symbol:
+        chain.toUpperCase() === 'BSC'
+          ? BNB_METADATA.symbol
+          : ETH_METADATA.symbol,
+      logoURI:
+        chain.toUpperCase() === 'BSC'
+          ? BNB_METADATA.logoURI
+          : ETH_METADATA.logoURI,
+      tokenBalance: (evmResp.result as any as number) / 10 ** 18,
+    } as TTokenBalance,
+  ];
 };
 
 export const listEVMScanTokenActivity = async (

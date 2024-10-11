@@ -1,3 +1,5 @@
+import { listStaticTokenMetadata } from './tokenCallers';
+
 export const listAlchemyTokenBalance = async (
   address: string,
   chain: string,
@@ -18,9 +20,32 @@ export const listAlchemyTokenBalance = async (
   const alchemyRes: TAlchemyResponse = res.data;
   const tokenBalance = alchemyRes.result.tokenBalances || [];
 
-  const parsedTokenBalance = tokenBalance.map((token) => ({
-    ...token,
-    tokenBalance: Number.parseInt(token.tokenBalance, 16),
-  }));
-  return parsedTokenBalance;
+  const alchemyChainMapping: Record<string, string> = {
+    'eth-mainnet': 'eth',
+    'base-mainnet': 'base',
+    'opt-mainnet': 'op',
+    'arb-mainnet': 'arb',
+  };
+
+  const parsedTokenBalance = tokenBalance.map((token) => {
+    const metadata = listStaticTokenMetadata(
+      alchemyChainMapping[chain],
+      token.contractAddress,
+    );
+
+    if (metadata) {
+      return {
+        chain: alchemyChainMapping[chain],
+        name: metadata.name,
+        symbol: metadata.symbol,
+        logoURI: metadata.logoURI,
+        tokenBalance:
+          Number.parseInt(token.tokenBalance, 16) / 10 ** metadata.decimals,
+      } as TTokenBalance;
+    }
+    return null;
+  });
+
+  // Only get token with metadata
+  return parsedTokenBalance.filter((token) => token !== null);
 };

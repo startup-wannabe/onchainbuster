@@ -12,7 +12,7 @@ import { useAccount } from 'wagmi';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
 import {
-  getAllANativeTokenByChain,
+  getMultichainPortfolio,
   listAllNFTActivityByChain,
   listAllNFTBalanceByChain,
   listAllTokenActivityByChain,
@@ -110,10 +110,10 @@ export default function Page() {
     console.log('tokenActivity:', data);
   };
 
-  const handleSearchAllNativeTokenBalance = async (text: string) => {
+  const handleGetMultichainTokenPortfolio = async (text: string) => {
     const address = await getAddress(text);
-    const data = await getAllANativeTokenByChain(address);
-    console.log('accountNativeBalance:', data);
+    const data = await getMultichainPortfolio(address);
+    console.log('portfolio:', data);
   };
 
   return (
@@ -151,10 +151,10 @@ export default function Page() {
         <div className="flex flex-row flex-wrap justify-center gap-2">
           <button
             type="button"
-            onClick={() => handleSearchAllNativeTokenBalance(text)}
+            onClick={() => handleGetMultichainTokenPortfolio(text)}
             className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
           >
-            Multi-EVM Native Balance
+            Multi-EVM Token Portfolio
           </button>
 
           <button

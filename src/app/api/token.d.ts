@@ -5,19 +5,19 @@ type TTokenList = {
   tags: Tags;
   logoURI: string;
   keywords: string[];
-  tokens: TTokenCurrency[];
+  tokens: TTokenListMetadata[];
 };
 
-type TTokenCurrency = {
+type TTokenListMetadata = {
   chainId: number;
   address: string;
   name: string;
   symbol: string;
   decimals: number;
   logoURI: string;
-  extensions?: TTokenExtensions;
+  extensions?: TTokenListExtensions;
 };
 
-type TTokenExtensions = {
+type TTokenListExtensions = {
   bridgeInfo: Record<string, { tokenAddress: string }>;
 };

@@ -83,6 +83,33 @@ type TVicscanAccount = {
   oneId: boolean;
 };
 
+type TVicscanTokenDetail = {
+  status: boolean;
+  marketcap: number;
+  contractVerified: boolean;
+  projectVerified: boolean;
+  address: string;
+  circulatingSupply: string;
+  circulatingSupplyNumber: number;
+  decimals: number;
+  isMintable: boolean;
+  name: string;
+  owner: string;
+  symbol: string;
+  timestamp: number;
+  totalSupply: string;
+  totalSupplyNumber: number;
+  type: string;
+  transferCount: number;
+  coingeckoId: string;
+  price: number;
+  priceChange: number;
+  priceChangePercentage: number;
+  volume: number;
+  holder: number;
+  image: string;
+};
+
 type TSearchOneIDResponse = {
   address: string;
   oneId: string;

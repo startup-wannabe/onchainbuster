@@ -11,9 +11,12 @@ type TActivityStats = {
 };
 
 // Unified type
-type TTokenBalance = TTokenCurrency & {
-  tokenBalance: number;
-  usdBalance: number; // Calculated field
+type TTokenBalance = {
+  chain: string;
+  name: string;
+  symbol: string;
+  logoURI: string;
+  tokenBalance: number; // Formatted
 };
 
 type TNFTBalance = {
