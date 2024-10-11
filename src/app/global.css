@@ -18,19 +18,13 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  font-family: Unbounded, sans-serif;
 }
 
 html {
   height: 100%;
   scroll-behavior: smooth;
-}
-
-html .font-robotoMono {
-  font-family: var(--font-roboto-mono);
-}
-
-html .font-inter {
-  font-family: var(--font-inter);
+  font-family: var(--font-coinbase-sans), sans-serif;
 }
 
 body {
@@ -38,7 +32,7 @@ body {
   margin: 0;
   background-color: var(--palette-bg-black);
   color: var(--palette-bg-white);
-  font-family: Inter, sans-serif;
+  font-family: var(--font-coinbase-sans), sans-serif;
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -81,5 +75,5 @@ a {
 }
 
 .templateSection > div {
-  max-width: 100%;;
+  max-width: 100%;
 }

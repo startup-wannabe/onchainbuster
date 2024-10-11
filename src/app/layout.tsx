@@ -9,7 +9,15 @@ import dynamic from "next/dynamic";
 import { Theme } from "@radix-ui/themes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Unbounded } from "next/font/google";
 import React from "react";
+import Footer from "@/components/Footer";
+
+const unboundedFont = Unbounded({
+  subsets: ["latin"],
+  display: "auto",
+  variable: "--font-coinbase-sans",
+});
 
 const OnchainProviders = dynamic(
   () => import("src/components/OnchainProviders"),
@@ -39,12 +47,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="flex items-center justify-center">
+    <html lang="en" className={`${unboundedFont.variable} scroll-smooth`}>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap"
+          rel="stylesheet"
+        ></link>
+      </head>
+      <body className="flex font-sans items-center justify-center">
         <Theme>
           <OnchainProviders>
             <React.Fragment>
-              {children}
+              <div
+                style={{
+                  minHeight: "100vh",
+                  paddingBottom: 20,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                {children}
+                <Footer />
+              </div>
               <ToastContainer />
             </React.Fragment>
           </OnchainProviders>
