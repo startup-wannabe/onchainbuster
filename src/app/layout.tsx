@@ -1,42 +1,42 @@
-import type { Metadata } from "next";
-import { NEXT_PUBLIC_URL } from "../config";
+import type { Metadata } from 'next';
+import { NEXT_PUBLIC_URL } from '../config';
 
-import "@radix-ui/themes/styles.css";
-import "./global.css";
-import "@coinbase/onchainkit/styles.css";
-import "@rainbow-me/rainbowkit/styles.css";
-import dynamic from "next/dynamic";
-import { Theme } from "@radix-ui/themes";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Unbounded } from "next/font/google";
-import React from "react";
-import Footer from "@/components/Footer";
+import '@radix-ui/themes/styles.css';
+import './global.css';
+import '@coinbase/onchainkit/styles.css';
+import '@rainbow-me/rainbowkit/styles.css';
+import { Theme } from '@radix-ui/themes';
+import dynamic from 'next/dynamic';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Footer from '@/components/Footer';
+import { Unbounded } from 'next/font/google';
+import type React from 'react';
 
 const unboundedFont = Unbounded({
-  subsets: ["latin"],
-  display: "auto",
-  variable: "--font-coinbase-sans",
+  subsets: ['latin'],
+  display: 'auto',
+  variable: '--font-coinbase-sans',
 });
 
 const OnchainProviders = dynamic(
-  () => import("src/components/OnchainProviders"),
+  () => import('src/components/OnchainProviders'),
   {
     ssr: false,
-  }
+  },
 );
 
 export const viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1.0,
 };
 
 export const metadata: Metadata = {
-  title: "How Based Are You?",
-  description: "Learn about your Base onchain data.",
+  title: 'How Based Are You?',
+  description: 'Learn about your Base onchain data.',
   openGraph: {
-    title: "How Based Are You?",
-    description: "Learn about your Base onchain data.",
+    title: 'How Based Are You?',
+    description: 'Learn about your Base onchain data.',
     images: [`${NEXT_PUBLIC_URL}/vibes/vibes-19.png`],
   },
 };
@@ -52,26 +52,26 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap"
           rel="stylesheet"
-        ></link>
+        />
       </head>
       <body className="flex font-sans items-center justify-center">
         <Theme>
           <OnchainProviders>
-            <React.Fragment>
+            <>
               <div
                 style={{
-                  minHeight: "100vh",
+                  minHeight: '100vh',
                   paddingBottom: 20,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
                 }}
               >
                 {children}
                 <Footer />
               </div>
               <ToastContainer />
-            </React.Fragment>
+            </>
           </OnchainProviders>
         </Theme>
       </body>

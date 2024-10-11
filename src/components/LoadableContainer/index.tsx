@@ -1,4 +1,4 @@
-import React from "react";
+import type React from 'react';
 
 type Props = {
   isLoading: boolean | undefined;
@@ -7,11 +7,7 @@ type Props = {
 };
 
 const LoadableContainer = ({ loadComponent, isLoading, children }: Props) => {
-  return isLoading ? (
-    loadComponent
-  ) : (
-    <React.Fragment>{children}</React.Fragment>
-  );
+  return isLoading ? loadComponent : <>{children}</>;
 };
 
 export default LoadableContainer;

@@ -59,7 +59,19 @@ export const listReservoirAddressBalance = async (
     offset += limit;
   }
 
-  return allCollections;
+  return allCollections.map((collection) => {
+    const count = Number.parseInt(collection.ownership.tokenCount);
+    const usdPrice = collection.collection.floorAskPrice?.amount.usd || 0;
+    return {
+      chain: chain.toLowerCase(),
+      collectionAddress: collection.collection.id,
+      collectionName: collection.collection.name,
+      collectionImage: collection.collection.image,
+      floorPrice: usdPrice,
+      totalCount: count,
+      totalValue: usdPrice,
+    } as TNFTBalance;
+  });
 };
 
 // Unused

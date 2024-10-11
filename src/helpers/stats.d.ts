@@ -33,3 +33,8 @@ type TTokenPortfolioStats = {
   >;
   aggregatedBalanceByChain: Record<string, number>;
 };
+
+type TNFTPortfolioStats = {
+  sumPortfolioUSDValue: number;
+  mostValuableNFTCollection: TNFTBalance;
+};

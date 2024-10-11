@@ -99,3 +99,23 @@ export const calculateMultichainTokenPortfolio = (
 export function formatNumberUSD(num: number) {
   return num.toLocaleString('it-IT', { style: 'currency', currency: 'USD' });
 }
+
+export const calculateMultichainNFTPortfolio = (
+  nftBalanceList: TNFTBalance[],
+): TNFTPortfolioStats => {
+  // Calculate sumPortfolioUSDValue
+  let sumPortfolioUSDValue = 0;
+  for (const nft of nftBalanceList) {
+    sumPortfolioUSDValue += nft.totalValue;
+  }
+
+  // Calculate mostValuableNFTCollection
+  const mostValuableNFTCollection = nftBalanceList.reduce((prev, current) =>
+    prev && prev.totalValue > current.totalValue ? prev : current,
+  );
+
+  return {
+    sumPortfolioUSDValue,
+    mostValuableNFTCollection,
+  };
+};

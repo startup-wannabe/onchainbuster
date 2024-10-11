@@ -1,42 +1,42 @@
-"use client";
-import BaseSvg from "@/assets/svg/BaseSvg";
-import ActivityStats from "@/components/ActivityStats";
-import TokenPortfolio from "@/components/TokenPortfolio";
-import { ONCHAINKIT_LINK } from "@/constants/links";
-import { calculateEVMStreaksAndMetrics } from "@/helpers/activity.helper";
-import { useWagmiConfig } from "@/wagmi";
-import { getEnsAddress } from "@wagmi/core";
-import { useState } from "react";
-import { normalize } from "viem/ens";
-import { useAccount } from "wagmi";
-import LoginButton from "../components/LoginButton";
-import SignupButton from "../components/SignupButton";
-import { listCMCTokenDetail } from "./api/cmcCallers";
+'use client';
+import BaseSvg from '@/assets/svg/BaseSvg';
+import ActivityStats from '@/components/ActivityStats';
+import LoadableContainer from '@/components/LoadableContainer';
+import MagicButton from '@/components/MagicButton';
+import TokenPortfolio from '@/components/TokenPortfolio';
+import { ONCHAINKIT_LINK } from '@/constants/links';
+import { calculateEVMStreaksAndMetrics } from '@/helpers/activity.helper';
+import { useWagmiConfig } from '@/wagmi';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { Spinner, TextField } from '@radix-ui/themes';
+import { getEnsAddress } from '@wagmi/core';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { normalize } from 'viem/ens';
+import { useAccount } from 'wagmi';
+import LoginButton from '../components/LoginButton';
+import SignupButton from '../components/SignupButton';
+import { listCMCTokenDetail } from './api/cmcCallers';
 import {
   getMultichainPortfolio,
   listAllNFTActivityByChain,
   listAllNFTBalanceByChain,
   listAllTokenActivityByChain,
   listAllTransactionsByChain,
-} from "./api/services";
-import { searchAddressFromOneID } from "./api/victionCallers";
-import LoadableContainer from "@/components/LoadableContainer";
-import { Spinner, TextField } from "@radix-ui/themes";
-import { toast } from "react-toastify";
-import MagicButton from "@/components/MagicButton";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+} from './api/services';
+import { searchAddressFromOneID } from './api/victionCallers';
 import {
   BinaryState,
   StateEvent,
-  StateEventRegistry,
-  StateOption,
+  type StateEventRegistry,
+  type StateOption,
   ThreeStageState,
-} from "./state.type";
+} from './state.type';
 
 // TODO: Remove this when ready.
-const MOCK_WALLET_ADDRESS = "0x294d404b2d2A46DAb65d0256c5ADC34C901A6842";
+const MOCK_WALLET_ADDRESS = '0x294d404b2d2A46DAb65d0256c5ADC34C901A6842';
 
-export const StateSubEvents = {
+const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
   [StateEvent.ActivityStats]: ThreeStageState,
   [StateEvent.GetAddress]: BinaryState,
@@ -49,10 +49,10 @@ export default function Page() {
   const wagmiConfig = useWagmiConfig();
   // TODO: Remove the mock value when ready.
   const [addressInput, setAddressInput] = useState(MOCK_WALLET_ADDRESS);
-  const [inputAddress, setInputAddress] = useState("");
+  const [inputAddress, setInputAddress] = useState('');
   // All transactions and activity stats
   const [allTransactions, setAllTransactions] = useState<TEVMScanTransaction[]>(
-    []
+    [],
   );
   const [activityStats, setActivityStats] = useState<TActivityStats>({
     totalTxs: 0,
@@ -65,11 +65,13 @@ export default function Page() {
     currentStreakDays: 0,
     activityPeriod: 0,
   });
-  const [mostActiveChain, setMostActiveChain] = useState("");
+  const [mostActiveChain, setMostActiveChain] = useState('');
   // Multi-chain token portfolio
   const [tokenPortfolio, setTokenPortfolio] = useState<TTokenBalance[]>([]);
   const [marketData, setMarketData] = useState<TTokenSymbolDetail[]>([]);
 
+  // Multi-chain nft portfolio
+  const [nftPortfolio, setNftPortfolio] = useState<TNFTBalance[]>([]);
   const dispatchStateEvent = (eventName: StateEvent, status: StateOption) => {
     setStateEvents((stateEvents) => {
       stateEvents[eventName] = status;
@@ -79,7 +81,7 @@ export default function Page() {
 
   const stateCheck = (
     event: keyof typeof StateEvent,
-    option: StateOption
+    option: StateOption,
   ): boolean => {
     return stateEvents[event] === (StateSubEvents[event] as any)[option];
   };
@@ -93,13 +95,15 @@ export default function Page() {
       onResetEvent: StateOption;
     },
     method: () => Promise<Output>,
-    toastContent?: string
+    toastContent?: string,
   ): Promise<Output> {
     dispatchStateEvent(eventName, eventHooks.onResetEvent);
     dispatchStateEvent(eventName, eventHooks.onStartEvent);
     try {
       const data = await method();
-      if (toastContent) toast(toastContent);
+      if (toastContent) {
+        toast(toastContent);
+      }
       dispatchStateEvent(eventName, eventHooks.onFinishEvent);
       return data;
     } catch (error: any) {
@@ -118,22 +122,22 @@ export default function Page() {
         onResetEvent: StateSubEvents.GetAddress.False,
       },
       async () => {
-        let address = "";
-        if (text.startsWith("0x")) {
+        let address = '';
+        if (text.startsWith('0x')) {
           address = text;
-        } else if (text.endsWith(".eth")) {
+        } else if (text.endsWith('.eth')) {
           address = (await getEnsAddress(wagmiConfig, {
             name: normalize(text),
             chainId: 1,
           })) as string;
-          console.log("ENS Address:", address);
+          console.log('ENS Address:', address);
         } else {
           address = await searchAddressFromOneID(text);
-          console.log("OneID Address:", address);
+          console.log('OneID Address:', address);
         }
         setInputAddress(address);
         return address;
-      }
+      },
     );
   };
 
@@ -149,22 +153,22 @@ export default function Page() {
       },
       async () => {
         const data = await listAllTransactionsByChain(address);
-        console.log("evmTransactions:", data);
+        console.log('evmTransactions:', data);
         const allTransactions = Object.values(data).flat();
         setAllTransactions(allTransactions);
         const mostActiveChain = Object.keys(data).reduce((a, b) =>
-          data[a].length > data[b].length ? a : b
+          data[a].length > data[b].length ? a : b,
         );
         setMostActiveChain(mostActiveChain);
         const stats = calculateEVMStreaksAndMetrics(
           data[mostActiveChain],
-          address
+          address,
         );
         setActivityStats(stats);
-        console.log("Activity Stats:", stats);
+        console.log('Activity Stats:', stats);
         return stats;
       },
-      "Activity stats fetched."
+      'Activity stats fetched.',
     );
   };
 
@@ -186,19 +190,39 @@ export default function Page() {
           ...new Set(
             tokenBalanceData
               .filter((token) => token.tokenBalance !== 0)
-              .map((token) => token.symbol)
+              .map((token) => token.symbol),
           ),
         ];
 
         // Get token price
         const marketData = await listCMCTokenDetail(
-          distinctTokenSymbols.join(",")
+          distinctTokenSymbols.join(','),
         );
         console.log(marketData);
         setMarketData(marketData);
         setTokenPortfolio(tokenBalanceData);
       },
-      "Fetched token portfolio."
+      'Fetched token portfolio.',
+    );
+  };
+
+  const fetchMultichainNFTPortfolio = async (text: string) => {
+    const address = await getAddress(text);
+    return newAsyncDispatch(
+      StateEvent.GetTokenPortfolio,
+      {
+        onStartEvent: StateSubEvents.GetTokenPortfolio.InProgress,
+        onErrorEvent: StateSubEvents.GetTokenPortfolio.Idle,
+        onFinishEvent: StateSubEvents.GetTokenPortfolio.Finished,
+        onResetEvent: StateSubEvents.GetTokenPortfolio.Idle,
+      },
+      async () => {
+        const data = await listAllNFTBalanceByChain(address);
+        const allNFTBalance = Object.values(data).flat();
+        console.log(allNFTBalance);
+        setNftPortfolio(allNFTBalance);
+      },
+      'Fetched token portfolio.',
     );
   };
 
@@ -214,27 +238,21 @@ export default function Page() {
       async () => {
         await fetchActivityStats(addressInput);
         await fetchMultichainTokenPortfolio(addressInput);
-      }
+        // await fetchMultichainNFTPortfolio(addressInput);
+      },
     );
-  };
-
-  // Raw API functions (testing only - remove later)
-  const handleSearchAllNFTBalance = async (text: string) => {
-    const address = await getAddress(text);
-    const data = await listAllNFTBalanceByChain(address);
-    console.log("nftBalance:", data);
   };
 
   const handleSearchAllNFTActivity = async (text: string) => {
     const address = await getAddress(text);
     const data = await listAllNFTActivityByChain(address);
-    console.log("nftActivity:", data);
+    console.log('nftActivity:', data);
   };
 
   const handleSearchAllTokenActivity = async (text: string) => {
     const address = await getAddress(text);
     const data = await listAllTokenActivityByChain(address);
-    console.log("tokenActivity:", data);
+    console.log('tokenActivity:', data);
   };
 
   return (
@@ -259,21 +277,21 @@ export default function Page() {
         <h1 className="inline-flex text-4xl mb-6">
           How
           <span className="flex mx-2 font-bold">
-            <BaseSvg width={40} height={40} />{" "}
+            <BaseSvg width={40} height={40} />{' '}
             <span style={{ marginLeft: 5 }}>Based</span>
-          </span>{" "}
+          </span>{' '}
           are you?
         </h1>
         <TextField.Root
           className="mr-2 w-full rounded-md p-2 shadow-xl"
-          placeholder="EVM address (Starts with '0x'), ENS, Basename, OneID"
+          placeholder="ENS, Basename, OneID, 0x..."
           style={{
             borderRadius: 50,
-            height: "70px",
-            maxWidth: "900px",
-            border: "1px solid lightgray",
+            height: '70px',
+            maxWidth: '900px',
+            border: '1px solid lightgray',
           }}
-          size={"3"}
+          size={'3'}
           value={addressInput}
           onChange={(e) => setAddressInput(e.target.value)}
         >
@@ -291,11 +309,11 @@ export default function Page() {
             <MagicButton
               text="Let's go 🔥"
               onClick={letsDoSomeMagic}
-              loading={stateCheck("HowBasedAreYou", ThreeStageState.InProgress)}
+              loading={stateCheck('HowBasedAreYou', ThreeStageState.InProgress)}
             />
           </TextField.Slot>
         </TextField.Root>
-        {inputAddress !== "" ? (
+        {inputAddress !== '' ? (
           <p className="text-md">Your EVM address: {inputAddress}</p>
         ) : (
           <p className="text-md">Address not found</p>
@@ -310,13 +328,6 @@ export default function Page() {
           </button>
           <button
             type="button"
-            onClick={() => handleSearchAllNFTBalance(addressInput)}
-            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-          >
-            Multi-EVM NFT Balance
-          </button>
-          <button
-            type="button"
             onClick={() => handleSearchAllNFTActivity(addressInput)}
             className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
           >
@@ -324,13 +335,13 @@ export default function Page() {
           </button>
         </div>
       </section>
-      {stateCheck("ActivityStats", ThreeStageState.Finished) && (
+      {stateCheck('ActivityStats', ThreeStageState.Finished) && (
         <div className="mt-8">
           <div className="flex items-center justify-center">
             <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
           </div>
           <LoadableContainer
-            isLoading={stateCheck("ActivityStats", ThreeStageState.InProgress)}
+            isLoading={stateCheck('ActivityStats', ThreeStageState.InProgress)}
             loadComponent={<Spinner />}
           >
             {allTransactions.length > 0 && (
@@ -343,7 +354,7 @@ export default function Page() {
           </LoadableContainer>
         </div>
       )}
-      {stateCheck("GetTokenPortfolio", ThreeStageState.Finished) && (
+      {stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
         <div className="mt-8">
           <div className="flex items-center justify-center">
             <h2 className="mb-4 font-bold text-2xl">Token Portfolio</h2>
