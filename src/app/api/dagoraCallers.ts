@@ -63,24 +63,48 @@ export const listDagoraAddressBalance = async (address: string, size = 100) => {
     page += 1;
   } while (accountCollections.length < total);
 
-  // Fetch collection stats for each approved collection
-  const collectionsWithStats = await Promise.all(
+  // Fetch collection stats & metadata for each approved collection
+  const collectionsDetails = await Promise.all(
     accountCollections
       // Filter approved NFT (not spam) before returning
       .filter((c) => c.isApproved)
       .map(async (collection) => {
-        const collectionStats = await getDagoraCollectionStats(
-          collection.address,
-          collection.chain,
-        );
+        const [stats, metadata] = await Promise.all([
+          getDagoraCollectionStats(collection.address, collection.chain),
+          getDagoraCollectionMetadata(collection.address, collection.chain),
+        ]);
+
         return {
           ...collection,
-          stats: collectionStats,
-        };
+          stats,
+          metadata,
+        } as TDagoraCollectionFull;
       }),
   );
+  const addressCountRecord: Record<string, number> = {};
+  for (const collection of collectionsDetails) {
+    const count = addressCountRecord[collection.address] || 0;
+    addressCountRecord[collection.address] = count + 1;
+  }
 
-  return collectionsWithStats;
+  return Object.entries(addressCountRecord).map(([address, count]) => {
+    const collection = collectionsDetails.find(
+      (collection) => collection.address === address,
+    );
+    return {
+      chain: 'vic',
+      collectionAddress: address,
+      collectionName: collection ? collection.metadata.title : '',
+      collectionImage: collection
+        ? collection.metadata.logo
+            .replace('image.png', 'logo_120x120.png')
+            .replace('logo.png', 'logo_120x120.png')
+        : '',
+      floorPrice: collection ? collection.stats.floorPrice : 0,
+      totalCount: count,
+      totalValue: collection ? collection.stats.floorPrice * count : 0,
+    } as TNFTBalance;
+  });
 };
 
 export const getDagoraCollectionStats = async (
@@ -106,6 +130,26 @@ export const getDagoraCollectionStats = async (
   const res = await data.json();
   const accountStats: TDagoraCollectionStats = res.data.data.stats;
   return accountStats;
+};
+
+export const getDagoraCollectionMetadata = async (
+  address: string,
+  chain: string,
+) => {
+  if (address === '') {
+    return {} as TDagoraAccountCollection;
+  }
+
+  const data = await fetch(
+    `/api/dagora/collectionMetadata?address=${address}&chain=${chain}`,
+    {
+      method: 'GET',
+    },
+  );
+
+  const res = await data.json();
+  const metadata: TDagoraCollectionMetadata = res.data.data.collection;
+  return metadata;
 };
 
 // Unused

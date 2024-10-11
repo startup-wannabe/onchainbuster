@@ -15,7 +15,9 @@ type TTokenBalance = {
 
 type TNFTBalance = {
   chain: string;
+  collectionAddress: string;
   collectionName: string;
+  collectionImage: string;
   floorPrice: number;
   totalCount: number;
   totalValue: number; // USD
