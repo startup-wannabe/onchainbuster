@@ -1,7 +1,6 @@
 'use client';
 import BaseSvg from '@/assets/svg/BaseSvg';
 import ActivityStats from '@/components/ActivityStats';
-import Footer from '@/components/Footer';
 import LoadableContainer from '@/components/LoadableContainer';
 import MagicButton from '@/components/MagicButton';
 import TokenPortfolio from '@/components/TokenPortfolio';
@@ -239,7 +238,7 @@ export default function Page() {
       async () => {
         await fetchActivityStats(addressInput);
         await fetchMultichainTokenPortfolio(addressInput);
-        await fetchMultichainNFTPortfolio(addressInput);
+        // await fetchMultichainNFTPortfolio(addressInput);
       },
     );
   };
@@ -285,7 +284,7 @@ export default function Page() {
         </h1>
         <TextField.Root
           className="mr-2 w-full rounded-md p-2 shadow-xl"
-          placeholder="EVM address (Starts with '0x'), ENS, Basename, OneID"
+          placeholder="ENS, Basename, OneID, 0x..."
           style={{
             borderRadius: 50,
             height: '70px',
@@ -329,13 +328,6 @@ export default function Page() {
           </button>
           <button
             type="button"
-            onClick={() => handleSearchAllNFTBalance(addressInput)}
-            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-          >
-            Multi-EVM={true} NFT={true} Balance={true}
-          </button>
-          <button
-            type="button"
             onClick={() => handleSearchAllNFTActivity(addressInput)}
             className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
           >
@@ -375,7 +367,6 @@ export default function Page() {
           )}
         </div>
       )}
-      <Footer />
     </div>
   );
 }

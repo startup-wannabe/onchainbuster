@@ -1,14 +1,14 @@
 // biome-ignore lint/style/noNamespaceImport: <explanation>
-import * as Collapsible from "@radix-ui/react-collapsible";
-import { useCallback, useRef } from "react";
+import * as Collapsible from '@radix-ui/react-collapsible';
+import { useCallback, useRef } from 'react';
 import CalendarHeatmap, {
   type ReactCalendarHeatmapValue,
-} from "react-calendar-heatmap";
-import { Icon } from "../Icon";
-import Title from "../Title";
+} from 'react-calendar-heatmap';
+import { Icon } from '../Icon';
+import Title from '../Title';
 // import { Address } from 'viem';
-import "./cal.css";
-import { chainIDMap } from "@/constants/chains";
+import './cal.css';
+import { chainIDMap } from '@/constants/chains';
 
 type HeatmapValue = {
   date: string;
@@ -32,39 +32,39 @@ const ActivityStats = ({
   const classForValue = useCallback(
     (value: ReactCalendarHeatmapValue<string> | undefined) => {
       if (!value) {
-        return "m-1 fill-[#F8F9FB]";
+        return 'm-1 fill-[#F8F9FB]';
       } // empty
       if (value.count >= 10) {
-        return "m-1 fill-[#003EC1]";
+        return 'm-1 fill-[#003EC1]';
       } // 4 - most
       if (value.count >= 7) {
-        return "m-1 fill-[#266EFF]"; // 3
+        return 'm-1 fill-[#266EFF]'; // 3
       }
       if (value.count >= 4) {
-        return "m-1 fill-[#92B6FF]";
+        return 'm-1 fill-[#92B6FF]';
       } // 2
       if (value.count >= 1) {
-        return "m-1 fill-[#D3E1FF]";
+        return 'm-1 fill-[#D3E1FF]';
       } // 1
-      return "m-1 fill-[#F8F9FB]"; // empty - least
+      return 'm-1 fill-[#F8F9FB]'; // empty - least
     },
-    []
+    [],
   );
 
   const titleForValue = useCallback(
     (value: ReactCalendarHeatmapValue<string> | undefined) => {
-      return value ? `${value.date}: ${value.count} transactions` : "";
+      return value ? `${value.date}: ${value.count} transactions` : '';
     },
-    []
+    [],
   );
 
   const generateHeatmapData = (
-    transactions: TEVMScanTransaction[]
+    transactions: TEVMScanTransaction[],
   ): HeatmapValue[] => {
     const dateMap: Record<string, HeatmapValue> = {};
     for (const tx of transactions) {
       const txDate = new Date(
-        Number.parseInt(tx.timeStamp) * 1000
+        Number.parseInt(tx.timeStamp) * 1000,
       ).toLocaleDateString();
       dateMap[txDate] = dateMap[txDate]
         ? { date: txDate, count: dateMap[txDate].count + 1 }
@@ -155,7 +155,7 @@ const ActivityStats = ({
             <div className="font-medium text-palette-primary text-xl">
               {activityStats.firstActiveDay
                 ? activityStats.firstActiveDay.toLocaleDateString()
-                : "N/A"}
+                : 'N/A'}
             </div>
             <p className="text-palette-foregroundMuted text-xs">
               First Active Day
