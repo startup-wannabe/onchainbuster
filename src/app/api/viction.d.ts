@@ -51,6 +51,23 @@ type TVicscanTokenActivity = {
   thisAccount: string;
 };
 
+type TVicscanNFTActivity = {
+  logId: string;
+  address: string;
+  tokenType: string;
+  tokenSymbol: string;
+  tokenName: string;
+  blockNumber: number;
+  blockHash: string;
+  transactionHash: string;
+  transactionIndex: number;
+  from: string;
+  to: string;
+  tokenId: string;
+  tokenIdString: string;
+  timestamp: number;
+};
+
 type TVicscanTokenBalance = {
   address: string;
   token: string;

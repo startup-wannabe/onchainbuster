@@ -16,7 +16,7 @@ import {
 } from './reservoirCallers';
 import {
   getVicNativeBalance,
-  listVicTokenActivity,
+  listVicAllActivity,
   listVicTokenBalance,
   listVicTransactions,
 } from './victionCallers';
@@ -135,7 +135,7 @@ export const listAllTokenActivityByChain = async (address: string) => {
   const chains = ['ETH', 'BASE', 'OP', 'ARB'];
   const results = await Promise.all([
     ...chains.map((chain) => listEVMScanTokenActivity(address, chain)),
-    listVicTokenActivity(address),
+    listVicAllActivity(address),
   ]);
 
   // TODO: Process and union type

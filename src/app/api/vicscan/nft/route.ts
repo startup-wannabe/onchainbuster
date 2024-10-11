@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const offset = searchParams.get('offset');
 
   const res = await fetch(
-    `${VICSCAN_API_BASE_URL}/tokenTx/list?account=${account}&limit=${limit}&offset=${offset}`,
+    `${VICSCAN_API_BASE_URL}/tokenTx/nft/list?account=${account}&limit=${limit}&offset=${offset}`,
     {
       method: 'GET',
       headers: {

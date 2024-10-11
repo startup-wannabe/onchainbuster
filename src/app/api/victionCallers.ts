@@ -27,9 +27,25 @@ export const listVicTransactions = async (account: string, limit = 100) => {
   return allTransactions;
 };
 
+export const listVicAllActivity = async (account: string) => {
+  if (account === '') {
+    return { token: [], nft: [] };
+  }
+
+  const [tokenActivities, nftActivities] = await Promise.all([
+    listVicTokenActivity(account),
+    listVicNFTActivity(account),
+  ]);
+
+  return {
+    token: tokenActivities,
+    nft: nftActivities,
+  };
+};
+
 export const listVicTokenActivity = async (account: string, limit = 100) => {
   if (account === '') {
-    return { token: [] };
+    return [];
   }
 
   let tokenActivities: TVicscanTokenActivity[] = [];
@@ -51,7 +67,34 @@ export const listVicTokenActivity = async (account: string, limit = 100) => {
     offset += limit; // Increment offset by limit for the next fetch
   } while (offset < total); // Continue until all data is fetched
 
-  return { token: tokenActivities };
+  return tokenActivities;
+};
+
+export const listVicNFTActivity = async (account: string, limit = 100) => {
+  if (account === '') {
+    return [];
+  }
+
+  let nftActivities: TVicscanNFTActivity[] = [];
+  let offset = 0;
+  let total = 0;
+
+  do {
+    const data = await fetch(
+      `/api/vicscan/nft?account=${account}&limit=${limit}&offset=${offset}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const res = await data.json();
+    const vicscanResp: TVicscanResponse = res.data;
+    nftActivities = nftActivities.concat(vicscanResp.data);
+    total = vicscanResp.total;
+    offset += limit; // Increment offset by limit for the next fetch
+  } while (offset < total); // Continue until all data is fetched
+
+  return nftActivities;
 };
 
 export const listVicTokenBalance = async (account: string, limit = 100) => {
