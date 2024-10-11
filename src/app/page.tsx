@@ -36,7 +36,7 @@ import {
 // TODO: Remove this when ready.
 const MOCK_WALLET_ADDRESS = '0x294d404b2d2A46DAb65d0256c5ADC34C901A6842';
 
-export const StateSubEvents = {
+const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
   [StateEvent.ActivityStats]: ThreeStageState,
   [StateEvent.GetAddress]: BinaryState,
