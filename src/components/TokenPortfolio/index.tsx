@@ -20,7 +20,7 @@ const TokenPortfolio = ({
     aggregatedBalanceBySymbol,
     aggregatedBalanceByChain,
   } = calculateMultichainTokenPortfolio(tokenPortfolio, marketData);
-
+  console.log(aggregatedBalanceBySymbol);
   return (
     <section className="mt-2">
       <Title title="Multi-chain Portfolio" />
@@ -60,6 +60,8 @@ const TokenPortfolio = ({
             <th className="border border-gray-300 p-2">Balance</th>
             <th className="border border-gray-300 p-2">Value</th>
             <th className="border border-gray-300 p-2">Chain</th>
+            <th className="border border-gray-300 p-2">Tags</th>
+            <th className="border border-gray-300 p-2">Date Added</th>
           </tr>
         </thead>
         <tbody>
@@ -68,7 +70,15 @@ const TokenPortfolio = ({
             .map(
               ([
                 token,
-                { totalBalance, chains, logoURI, name, totalUSDValue },
+                {
+                  totalBalance,
+                  chains,
+                  logoURI,
+                  name,
+                  totalUSDValue,
+                  date_added,
+                  tags,
+                },
               ]) => (
                 <tr key={token}>
                   <td className="border border-gray-300 p-2">
@@ -93,6 +103,12 @@ const TokenPortfolio = ({
                       />
                     ))}
                   </td>
+                  <td className="border border-gray-300 p-2">
+                    {tags.map((tag) => (
+                      <p key={tag}>{tag}</p>
+                    ))}
+                  </td>
+                  <td className="border border-gray-300 p-2">{date_added}</td>
                 </tr>
               ),
             )}

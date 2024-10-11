@@ -12,6 +12,8 @@ export const calculateMultichainTokenPortfolio = (
       logoURI: string;
       price: number;
       totalUSDValue: number;
+      tags: string[];
+      date_added: string;
     }
   > = {};
 
@@ -30,11 +32,19 @@ export const calculateMultichainTokenPortfolio = (
         logoURI: logoURI || '',
         price: 0,
         totalUSDValue: 0,
+        tags: [],
+        date_added: '',
       };
     }
     const tokenPrice =
       marketData.find((data) => data.symbol === symbol)?.currentUSDPrice || 0;
+    const tags = marketData.find((data) => data.symbol === symbol)?.tags || [];
+    const date_added =
+      marketData.find((data) => data.symbol === symbol)?.date_added || '';
 
+    aggregatedBalanceBySymbol[symbol].tags = tags;
+    aggregatedBalanceBySymbol[symbol].date_added = date_added;
+    aggregatedBalanceBySymbol[symbol].price = tokenPrice;
     aggregatedBalanceBySymbol[symbol].chains.add(chain);
     aggregatedBalanceBySymbol[symbol].price = tokenPrice;
     aggregatedBalanceBySymbol[symbol].totalBalance += tokenBalance;
