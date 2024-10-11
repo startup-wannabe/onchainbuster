@@ -9,7 +9,7 @@ export const calculateEVMStreaksAndMetrics = (
   );
   if (filteredTransactions.length === 0) {
     return {
-      totalTxs: countTxs,
+      totalTxs: 0,
       firstActiveDay: null,
       uniqueActiveDays: 0,
       uniqueActiveDays12M: 0,

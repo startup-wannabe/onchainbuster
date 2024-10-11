@@ -1,7 +1,6 @@
-export const unionTransactionType = (
-  EVMScanTransactions: TEVMScanTransaction[],
+export const castVICToEVMTransactionType = (
   VicscanTransactions: TVicscanTransaction[],
-) => {
+): TEVMScanTransaction[] => {
   // Cast VicscanTransactions to the format of EVMScanTransactions
   const castVicscanTransactions: TEVMScanTransaction[] =
     VicscanTransactions.map(
@@ -31,10 +30,9 @@ export const unionTransactionType = (
     );
 
   // Combine the EVMScanTransactions with the cast VicscanTransactions
-  const unionTransactions: TEVMScanTransaction[] = [
-    ...EVMScanTransactions,
+  const castedEVMTransactions: TEVMScanTransaction[] = [
     ...castVicscanTransactions,
   ];
 
-  return unionTransactions;
+  return castedEVMTransactions;
 };

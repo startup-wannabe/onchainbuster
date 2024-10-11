@@ -7,4 +7,5 @@ export const chainIDMap: Record<
   arb: { id: 42161, name: 'Arbitrum', nativeToken: 'ETH' },
   op: { id: 10, name: 'Optimism', nativeToken: 'ETH' },
   bsc: { id: 56, name: 'Binance Smart Chain', nativeToken: 'BNB' },
+  vic: { id: 88, name: 'Viction', nativeToken: 'VIC' },
 };

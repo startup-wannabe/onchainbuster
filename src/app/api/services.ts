@@ -1,3 +1,5 @@
+// Testing API call - Please use analyticalServices for insights
+import { castVICToEVMTransactionType } from '@/helpers/transaction.helper';
 import { listAlchemyTokenBalance } from './alchemyCallers';
 import {
   listDagoraAddressActivity,
@@ -40,9 +42,17 @@ export const getAllANativeTokenByChain = async (address: string) => {
   };
 };
 
-export const listAllTransactionsByChain = async (address: string) => {
+export const listAllTransactionsByChain = async (
+  address: string,
+): Promise<Record<string, TEVMScanTransaction[]>> => {
   if (address === '') {
-    return {};
+    return {
+      eth: [],
+      base: [],
+      op: [],
+      arb: [],
+      vic: [],
+    };
   }
 
   const chains = ['ETH', 'BASE', 'OP', 'ARB'];
@@ -51,12 +61,13 @@ export const listAllTransactionsByChain = async (address: string) => {
     listVicTransactions(address),
   ]);
 
-  // TODO: Process and union type
   return {
     ...Object.fromEntries(
       chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
     ),
-    vic: results[results.length - 1],
+    vic: castVICToEVMTransactionType(
+      results[results.length - 1] as TVicscanTransaction[],
+    ),
   };
 };
 

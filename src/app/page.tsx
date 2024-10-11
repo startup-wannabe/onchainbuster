@@ -1,6 +1,8 @@
 'use client';
 import BaseSvg from '@/assets/svg/BaseSvg';
+import ActivityStats from '@/components/ActivityStats';
 import { ONCHAINKIT_LINK } from '@/constants/links';
+import { calculateEVMStreaksAndMetrics } from '@/helpers/activity.helper';
 import { useWagmiConfig } from '@/wagmi';
 import { getEnsAddress } from '@wagmi/core';
 import { useState } from 'react';
@@ -27,6 +29,21 @@ export default function Page() {
   const [text, setText] = useState('');
   const [inputAddress, setInputAddress] = useState('');
 
+  const [allTransactions, setAllTransactions] = useState<TEVMScanTransaction[]>(
+    [],
+  );
+  const [activityStats, setActivityStats] = useState<TActivityStats>({
+    totalTxs: 0,
+    firstActiveDay: null,
+    uniqueActiveDays: 0,
+    uniqueActiveDays12M: 0,
+    uniqueActiveDays6M: 0,
+    uniqueActiveDays3M: 0,
+    longestStreakDays: 0,
+    currentStreakDays: 0,
+    activityPeriod: 0,
+  });
+
   const getAddress = async (text: string) => {
     let address = '';
     if (text.startsWith('0x')) {
@@ -46,6 +63,18 @@ export default function Page() {
     return address;
   };
 
+  const fetchActivityStats = async (text: string) => {
+    const address = await getAddress(text);
+    const data = await listAllTransactionsByChain(address);
+    console.log('evmTransactions:', data);
+    const allTransactions = Object.values(data).flat();
+    setAllTransactions(allTransactions);
+    const stats = calculateEVMStreaksAndMetrics(allTransactions, address);
+    setActivityStats(stats);
+    console.log('Activity Stats:', stats);
+  };
+
+  // Raw API functions (testing only - remove later)
   const handleSearchAllExplorers = async (text: string) => {
     const address = await getAddress(text);
     const data = await listAllTransactionsByChain(address);
@@ -100,69 +129,92 @@ export default function Page() {
           </div>
         </div>
       </section>
-      <section className="templateSection flex w-full flex-col items-center justify-center gap-4 rounded-xl bg-gray-100 px-2 py-4 md:grow">
-        <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
-          <input
-            type="text"
-            placeholder="EVM address 0x..., ENS, Basename, OneID"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            className="mr-2 w-full rounded-md border border-gray-300 p-2"
-          />
-        </section>
-
+      <section className="templateSection flex w-full flex-col items-center justify-center gap-4 rounded-xl px-2 py-4 md:grow">
+        <input
+          type="text"
+          placeholder="EVM address 0x..., ENS, Basename, OneID"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          className="mr-2 w-full rounded-md border border-gray-300 p-2"
+        />
         {inputAddress !== '' ? (
           <p>Your EVM address: {inputAddress}</p>
         ) : (
           <p>Address not found</p>
         )}
+        <div className="flex flex-row flex-wrap justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => handleSearchAllNativeTokenBalance(text)}
+            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
+          >
+            Multi-EVM Native Balance
+          </button>
 
-        <button
-          type="button"
-          onClick={() => handleSearchAllNativeTokenBalance(text)}
-          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-        >
-          Multi-EVM Native Balance
-        </button>
+          <button
+            type="button"
+            onClick={() => handleSearchAllExplorers(text)}
+            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
+          >
+            Multi-EVM Transactions
+          </button>
+        </div>
 
-        <button
-          type="button"
-          onClick={() => handleSearchAllExplorers(text)}
-          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-        >
-          Multi-EVM Transactions
-        </button>
+        <div className="flex flex-row flex-wrap justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => handleSearchAllTokenActivity(text)}
+            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
+          >
+            Multi-EVM Token Activity
+          </button>
 
-        <button
-          type="button"
-          onClick={() => handleSearchAllTokenActivity(text)}
-          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-        >
-          Multi-EVM Token Activity
-        </button>
+          <button
+            type="button"
+            onClick={() => handleSearchAllTokenBalance(text)}
+            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
+          >
+            Multi-EVM Token Balance
+          </button>
+        </div>
 
-        <button
-          type="button"
-          onClick={() => handleSearchAllTokenBalance(text)}
-          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-        >
-          Multi-EVM Token Balance
-        </button>
+        <div className="flex flex-row flex-wrap justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => handleSearchAllNFTBalance(text)}
+            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
+          >
+            Multi-EVM NFT Balance
+          </button>
 
-        <button
-          type="button"
-          onClick={() => handleSearchAllNFTBalance(text)}
-          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-        >
-          Multi-EVM NFT Balance
-        </button>
-        <button
-          type="button"
-          onClick={() => handleSearchAllNFTActivity(text)}
-          className="mr-2 rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-        >
-          Multi-EVM NFT Activity
-        </button>
+          <button
+            type="button"
+            onClick={() => handleSearchAllNFTActivity(text)}
+            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
+          >
+            Multi-EVM NFT Activity
+          </button>
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <div className="flex items-center justify-between">
+          <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
+          <button
+            type="button"
+            onClick={() => fetchActivityStats(text)}
+            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
+          >
+            Get Stats
+          </button>
+        </div>
+
+        {allTransactions.length > 0 && (
+          <ActivityStats
+            transactions={allTransactions}
+            activityStats={activityStats}
+          />
+        )}
       </section>
 
       <Footer />
