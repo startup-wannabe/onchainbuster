@@ -24,3 +24,5 @@ export const VIC_METADATA: NativeTokenMetadata = {
   logoURI:
     'https://assets.coingecko.com/coins/images/3416/standard/viction.jpeg',
 };
+
+export const TOKEN_TAGS = [];

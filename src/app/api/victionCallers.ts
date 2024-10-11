@@ -1,4 +1,4 @@
-import { VIC_METADATA } from '@/constants/nativeToken';
+import { VIC_METADATA } from '@/constants/token';
 
 export const listVicTransactions = async (account: string, limit = 100) => {
   if (account === '') {

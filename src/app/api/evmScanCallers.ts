@@ -1,4 +1,4 @@
-import { BNB_METADATA, ETH_METADATA } from '@/constants/nativeToken';
+import { BNB_METADATA, ETH_METADATA } from '@/constants/token';
 
 export const listEVMScanTransactions = async (
   address: string,

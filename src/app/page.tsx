@@ -1,6 +1,7 @@
 'use client';
 import BaseSvg from '@/assets/svg/BaseSvg';
 import ActivityStats from '@/components/ActivityStats';
+import TokenPortfolio from '@/components/TokenPortfolio';
 import { ONCHAINKIT_LINK } from '@/constants/links';
 import { calculateEVMStreaksAndMetrics } from '@/helpers/activity.helper';
 import { useWagmiConfig } from '@/wagmi';
@@ -11,12 +12,12 @@ import { normalize } from 'viem/ens';
 import { useAccount } from 'wagmi';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
+import { listCMCTokenDetail } from './api/cmcCallers';
 import {
   getMultichainPortfolio,
   listAllNFTActivityByChain,
   listAllNFTBalanceByChain,
   listAllTokenActivityByChain,
-  listAllTokenBalanceByChain,
   listAllTransactionsByChain,
 } from './api/services';
 import { searchAddressFromOneID } from './api/victionCallers';
@@ -29,6 +30,7 @@ export default function Page() {
   const [text, setText] = useState('');
   const [inputAddress, setInputAddress] = useState('');
 
+  // All transactions and activity stats
   const [allTransactions, setAllTransactions] = useState<TEVMScanTransaction[]>(
     [],
   );
@@ -44,6 +46,10 @@ export default function Page() {
     activityPeriod: 0,
   });
   const [mostActiveChain, setMostActiveChain] = useState('');
+
+  // Multi-chain token portfolio
+  const [tokenPortfolio, setTokenPortfolio] = useState<TTokenBalance[]>([]);
+  const [marketData, setMarketData] = useState<TTokenSymbolDetail[]>([]);
 
   const getAddress = async (text: string) => {
     let address = '';
@@ -79,13 +85,27 @@ export default function Page() {
     console.log('Activity Stats:', stats);
   };
 
-  // Raw API functions (testing only - remove later)
-  const handleSearchAllExplorers = async (text: string) => {
+  const fetchMultichainTokenPortfolio = async (text: string) => {
     const address = await getAddress(text);
-    const data = await listAllTransactionsByChain(address);
-    console.log('evmTransactions:', data);
+    const tokenBalanceData = await getMultichainPortfolio(address);
+    console.log(tokenBalanceData);
+    // Get distinct token symbol with non-zero balance
+    const distinctTokenSymbols = [
+      ...new Set(
+        tokenBalanceData
+          .filter((token) => token.tokenBalance !== 0)
+          .map((token) => token.symbol),
+      ),
+    ];
+
+    // Get token price
+    const marketData = await listCMCTokenDetail(distinctTokenSymbols.join(','));
+    console.log(marketData);
+    setMarketData(marketData);
+    setTokenPortfolio(tokenBalanceData);
   };
 
+  // Raw API functions (testing only - remove later)
   const handleSearchAllNFTBalance = async (text: string) => {
     const address = await getAddress(text);
     const data = await listAllNFTBalanceByChain(address);
@@ -98,22 +118,10 @@ export default function Page() {
     console.log('nftActivity:', data);
   };
 
-  const handleSearchAllTokenBalance = async (text: string) => {
-    const address = await getAddress(text);
-    const data = await listAllTokenBalanceByChain(address);
-    console.log('tokenBalance:', data);
-  };
-
   const handleSearchAllTokenActivity = async (text: string) => {
     const address = await getAddress(text);
     const data = await listAllTokenActivityByChain(address);
     console.log('tokenActivity:', data);
-  };
-
-  const handleGetMultichainTokenPortfolio = async (text: string) => {
-    const address = await getAddress(text);
-    const data = await getMultichainPortfolio(address);
-    console.log('portfolio:', data);
   };
 
   return (
@@ -151,36 +159,10 @@ export default function Page() {
         <div className="flex flex-row flex-wrap justify-center gap-2">
           <button
             type="button"
-            onClick={() => handleGetMultichainTokenPortfolio(text)}
-            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-          >
-            Multi-EVM Token Portfolio
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSearchAllExplorers(text)}
-            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-          >
-            Multi-EVM Transactions
-          </button>
-        </div>
-
-        <div className="flex flex-row flex-wrap justify-center gap-2">
-          <button
-            type="button"
             onClick={() => handleSearchAllTokenActivity(text)}
             className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
           >
             Multi-EVM Token Activity
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSearchAllTokenBalance(text)}
-            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
-          >
-            Multi-EVM Token Balance
           </button>
         </div>
 
@@ -220,6 +202,25 @@ export default function Page() {
             transactions={allTransactions}
             activityStats={activityStats}
             mostActiveChain={mostActiveChain}
+          />
+        )}
+      </div>
+      <div className="mt-8">
+        <div className="flex items-center justify-between">
+          <h2 className="mb-4 font-bold text-2xl">Token Portfolio</h2>
+          <button
+            type="button"
+            onClick={() => fetchMultichainTokenPortfolio(text)}
+            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
+          >
+            Get Portfolio
+          </button>
+        </div>
+
+        {tokenPortfolio.length > 0 && (
+          <TokenPortfolio
+            tokenPortfolio={tokenPortfolio}
+            marketData={marketData}
           />
         )}
       </div>

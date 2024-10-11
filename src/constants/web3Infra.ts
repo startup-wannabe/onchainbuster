@@ -12,11 +12,11 @@ export const MORALIS_API_KEY = process.env
 
 export const CMC_API_BASE_URL =
   (process.env.NEXT_PUBLIC_CMC_API_BASE_URL as string) ||
-  'https://pro-api.coinmarketcap.com/';
+  'https://pro-api.coinmarketcap.com';
 export const CMC_API_KEY = process.env.NEXT_PUBLIC_CMC_API_KEY as string;
 
 export const TALENTPASSPORT_API_BASE_URL =
   (process.env.NEXT_PUBLIC_TALENTPASSPORT_API_BASE_URL as string) ||
-  'https://api.talentprotocol.com/api/';
+  'https://api.talentprotocol.com/api';
 export const TALENTPASSPORT_API_KEY = process.env
   .NEXT_PUBLIC_TALENTPASSPORT_API_KEY as string;

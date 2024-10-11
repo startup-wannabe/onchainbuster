@@ -1,21 +1,15 @@
-type TActivityStats = {
-  totalTxs: number;
-  firstActiveDay: Date | null;
-  uniqueActiveDays: number;
-  uniqueActiveDays12M: number;
-  uniqueActiveDays6M: number;
-  uniqueActiveDays3M: number;
-  longestStreakDays: number;
-  currentStreakDays: number;
-  activityPeriod: number;
-};
-
 // Unified type
+type TTokenSymbolDetail = {
+  symbol: string;
+  currentUSDPrice: number;
+  tags: string[];
+  date_added: string;
+};
 type TTokenBalance = {
   chain: string;
   name: string;
   symbol: string;
-  logoURI: string;
+  logoURI?: string;
   tokenBalance: number; // Formatted
 };
 

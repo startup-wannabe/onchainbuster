@@ -3,9 +3,8 @@ import type { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const tokenList = searchParams.get('tokenList');
-
-  const query = `symbol=${tokenList}&aux=tags,date_added`;
+  const tokens = searchParams.get('tokens');
+  const query = `symbol=${tokens}&aux=tags,date_added`;
 
   const res = await fetch(
     `${CMC_API_BASE_URL}/v1/cryptocurrency/quotes/latest?${query}`,
@@ -14,7 +13,7 @@ export async function GET(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'PostmanRuntime/7.40.0',
-        'x-api-key': CMC_API_KEY,
+        'X-CMC_PRO_API_KEY': CMC_API_KEY,
       },
     },
   );
