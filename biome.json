@@ -64,6 +64,11 @@
     }
   },
   "files": {
-    "ignore": ["coverage/**", ".next/**", "src/constants/tokenList.json"]
+    "ignore": [
+      "coverage/**",
+      ".next/**",
+      "src/data/tokenList.json",
+      "src/data/cmcIDList.json"
+    ]
   }
 }
