@@ -1,10 +1,11 @@
-import { CircularTree } from '@/helpers/portfolio';
 import * as d3 from 'd3';
+import React from 'react';
+import Tooltip from '../Tooltip';
 
 type CircularPackingProps = {
   width: number;
   height: number;
-  data: CircularTree;
+  data: TCircularTree;
 };
 
 const colors = [
@@ -28,7 +29,7 @@ export const CircularPackingChart = ({
     .sort((a, b) => b.value! - a.value!);
 
   const packGenerator = d3
-    .pack<CircularTree>()
+    .pack<TCircularTree>()
     .size([width, height])
     .padding(4);
   const root = packGenerator(hierarchy);
@@ -73,27 +74,30 @@ export const CircularPackingChart = ({
 
     return (
       <g key={leaf.data.name}>
-        <circle
-          cx={leaf.x}
-          cy={leaf.y}
-          r={leaf.r}
-          stroke={colorScale(parentName)}
-          strokeWidth={2}
-          fill={colorScale(parentName)}
-          fillOpacity={0.2}
-        />
-
-        <text
-          key={leaf.data.name}
-          x={leaf.x}
-          y={leaf.y}
-          fontSize={13}
-          fontWeight={0.4}
-          textAnchor="middle"
-          alignmentBaseline="middle"
-        >
-          {leaf.data.name}
-        </text>
+        <Tooltip content={leaf.value}>
+          <circle
+            cx={leaf.x}
+            cy={leaf.y}
+            r={leaf.r}
+            stroke={colorScale(parentName)}
+            strokeWidth={2}
+            fill={colorScale(parentName)}
+            fillOpacity={0.2}
+          />
+          {(leaf.value || 0) > 300 && (
+            <text
+              key={leaf.data.name}
+              x={leaf.x}
+              y={leaf.y}
+              fontSize={13}
+              fontWeight={0.4}
+              textAnchor="middle"
+              alignmentBaseline="middle"
+            >
+              {leaf.data.name}
+            </text>
+          )}
+        </Tooltip>
       </g>
     );
   });

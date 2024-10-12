@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import {
   BinaryState,
   StateEvent,
-  StateEventRegistry,
   StateOption,
   ThreeStageState,
   Toastable,

@@ -1,3 +1,5 @@
+import { TreeBuilder } from './tree.helper';
+
 const POPULAR_MEMES = [
   'PEPE',
   'FLOKI',
@@ -15,42 +17,11 @@ const POPULAR_MEMES = [
   'MYRO',
 ];
 
-export const calculateMultichainTokenPortfolio = (
+const aggregateTokensByBalance = (
   tokenBalanceList: TTokenBalance[],
   marketData: TTokenSymbolDetail[],
-): TTokenPortfolioStats => {
-  let sumPortfolioUSDValue = 0;
-  for (const { symbol, tokenBalance } of tokenBalanceList) {
-    const tokenPrice =
-      marketData.find((data) => data.symbol === symbol)?.currentUSDPrice || 0;
-    sumPortfolioUSDValue += tokenBalance * tokenPrice;
-  }
-
-  let sumMemeUSDValue = 0;
-  for (const { symbol, tokenBalance } of tokenBalanceList) {
-    const tokenPrice =
-      marketData.find((data) => data.symbol === symbol)?.currentUSDPrice || 0;
-    const tags = marketData.find((data) => data.symbol === symbol)?.tags || [];
-    if (tags.includes('memes') || POPULAR_MEMES.includes(symbol)) {
-      sumMemeUSDValue += tokenBalance * tokenPrice;
-    }
-  }
-
-  // Aggregate balances by token
-  const aggregatedBalanceBySymbol: Record<
-    string,
-    {
-      totalBalance: number;
-      chains: Set<string>;
-      name: string;
-      logoURI: string;
-      price: number;
-      totalUSDValue: number;
-      tags: string[];
-      date_added: string;
-    }
-  > = {};
-
+): TSymbolAggregationBalance => {
+  const aggregatedBalanceBySymbol: TSymbolAggregationBalance = {};
   for (const {
     symbol,
     tokenBalance,
@@ -85,26 +56,32 @@ export const calculateMultichainTokenPortfolio = (
     aggregatedBalanceBySymbol[symbol].totalUSDValue +=
       tokenBalance * tokenPrice;
   }
+  return aggregatedBalanceBySymbol;
+};
 
-  const aggregatedBalanceByChain: Record<string, number> = {};
-
+const collectChainRecordsWithTokens = (
+  aggregatedBalanceBySymbol: TSymbolAggregationBalance,
+) => {
+  const chainRecordsWithTokens: TChainRecordWithTokens = {};
   for (const [_, details] of Object.entries(aggregatedBalanceBySymbol)) {
     for (const chain of details.chains) {
-      if (!aggregatedBalanceByChain[chain]) {
-        aggregatedBalanceByChain[chain] = 0;
+      if (!chainRecordsWithTokens[chain]) {
+        chainRecordsWithTokens[chain] = {
+          tokens: [],
+          totalUSDValue: 0,
+        };
       }
-      aggregatedBalanceByChain[chain] += details.totalUSDValue;
+      chainRecordsWithTokens[chain].totalUSDValue += details.totalUSDValue;
+      chainRecordsWithTokens[chain].tokens =
+        chainRecordsWithTokens[chain].tokens.concat(details);
     }
   }
-
-  // Calculate mostValuableToken
   let mostValuableToken = {
     name: '',
     symbol: '',
     value: 0,
     logoURI: '',
   };
-
   let mostValuableTokenUSDValue = 0;
   for (const [token, details] of Object.entries(aggregatedBalanceBySymbol)) {
     if (details.totalUSDValue > mostValuableTokenUSDValue) {
@@ -117,15 +94,71 @@ export const calculateMultichainTokenPortfolio = (
       mostValuableTokenUSDValue = details.totalUSDValue;
     }
   }
+  return {
+    chainRecordsWithTokens,
+    mostValuableToken,
+  };
+};
+
+export const calculateMultichainTokenPortfolio = (
+  tokenBalanceList: TTokenBalance[],
+  marketData: TTokenSymbolDetail[],
+): TTokenPortfolioStats => {
+  let sumPortfolioUSDValue = 0;
+  for (const { symbol, tokenBalance } of tokenBalanceList) {
+    const tokenPrice =
+      marketData.find((data) => data.symbol === symbol)?.currentUSDPrice || 0;
+    sumPortfolioUSDValue += tokenBalance * tokenPrice;
+  }
+
+  let sumMemeUSDValue = 0;
+  for (const { symbol, tokenBalance } of tokenBalanceList) {
+    const tokenPrice =
+      marketData.find((data) => data.symbol === symbol)?.currentUSDPrice || 0;
+    const tags = marketData.find((data) => data.symbol === symbol)?.tags || [];
+    if (tags.includes('memes') || POPULAR_MEMES.includes(symbol)) {
+      sumMemeUSDValue += tokenBalance * tokenPrice;
+    }
+  }
+
+  const aggregatedBalanceBySymbol: TSymbolAggregationBalance =
+    aggregateTokensByBalance(tokenBalanceList, marketData);
+
+  const { chainRecordsWithTokens, mostValuableToken } =
+    collectChainRecordsWithTokens(aggregatedBalanceBySymbol);
+
+  const chainCircularPackingData = buildCircularPackingChart(
+    chainRecordsWithTokens,
+  );
 
   return {
     sumPortfolioUSDValue,
     sumMemeUSDValue,
     mostValuableToken,
     aggregatedBalanceBySymbol,
-    aggregatedBalanceByChain,
+    chainRecordsWithTokens,
+    chainCircularPackingData,
   };
 };
+
+export const buildCircularPackingChart = (
+  chains: TChainRecordWithTokens,
+): TCircularTree => {
+  const portfolioBuilder = new TreeBuilder('Multichain Portfolio', 0);
+  for (const [chain, chainData] of Object.entries(chains)) {
+    const treeBuilder = new TreeBuilder(chain, chainData.totalUSDValue);
+    for (const token of chains[chain].tokens) {
+      treeBuilder.addNewChildren({
+        type: 'leaf',
+        name: token.name,
+        value: token.totalUSDValue,
+      });
+    }
+    portfolioBuilder.addNewChildren(treeBuilder.build());
+  }
+  return portfolioBuilder.build();
+};
+
 export function formatNumberUSD(num: number) {
   return num.toLocaleString('it-IT', { style: 'currency', currency: 'USD' });
 }

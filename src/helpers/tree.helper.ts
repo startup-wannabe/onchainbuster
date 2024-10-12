@@ -1,11 +1,5 @@
-import type {
-  CircularTree,
-  CircularTreeLeaf,
-  CircularTreeNode,
-} from './portfolio';
-
 export class TreeBuilder {
-  tree: CircularTreeNode;
+  tree: TCircularTreeNode;
   constructor(chainName: string, totalChainValue: number) {
     this.tree = {
       type: 'node',
@@ -15,13 +9,13 @@ export class TreeBuilder {
     };
   }
 
-  addNewChildren(children: CircularTree) {
+  addNewChildren(children: TCircularTree) {
     this.tree.children.push(children);
   }
 
-  build(): CircularTree {
+  build(): TCircularTree {
     if (this.tree.children.length === 0)
-      return <CircularTreeLeaf>{
+      return <TCircularTreeLeaf>{
         name: this.tree.name,
         value: this.tree.value,
         type: 'leaf',

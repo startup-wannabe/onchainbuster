@@ -1,3 +1,14 @@
+type TTokenDetails = {
+  totalBalance: number;
+  chains: Set<string>;
+  name: string;
+  logoURI: string;
+  price: number;
+  totalUSDValue: number;
+  tags: string[];
+  date_added: string;
+};
+
 type TActivityStats = {
   totalTxs: number;
   firstActiveDay: Date | null;
@@ -10,6 +21,16 @@ type TActivityStats = {
   activityPeriod: number;
 };
 
+type TChainRecordWithTokens = Record<
+  string,
+  {
+    totalUSDValue: number;
+    tokens: TTokenDetails[];
+  }
+>;
+
+type TSymbolAggregationBalance = Record<string, TTokenDetails>;
+
 type TTokenPortfolioStats = {
   sumPortfolioUSDValue: number;
   sumMemeUSDValue: number;
@@ -19,23 +40,27 @@ type TTokenPortfolioStats = {
     value: number;
     logoURI: string;
   };
-  aggregatedBalanceBySymbol: Record<
-    string,
-    {
-      totalBalance: number;
-      chains: Set<string>;
-      name: string;
-      logoURI: string;
-      price: number;
-      totalUSDValue: number;
-      tags: string[];
-      date_added: string;
-    }
-  >;
-  aggregatedBalanceByChain: Record<string, number>;
+  aggregatedBalanceBySymbol: TSymbolAggregationBalance;
+  chainRecordsWithTokens: TChainRecordWithTokens;
+  chainCircularPackingData: TCircularTree;
 };
 
 type TNFTPortfolioStats = {
   sumPortfolioUSDValue: number;
   mostValuableNFTCollection: TNFTBalance;
 };
+
+type TCircularTreeNode = {
+  type: 'node';
+  value: number;
+  name: string;
+  children: Tree[];
+};
+
+type TCircularTreeLeaf = {
+  type: 'leaf';
+  name: string;
+  value: number;
+};
+
+type TCircularTree = TCircularTreeNode | TCircularTreeLeaf;

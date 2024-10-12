@@ -13,6 +13,7 @@ import Footer from '@/components/Footer';
 import localFont from 'next/font/local';
 import type React from 'react';
 import { MagicProvider } from './contexts/MagicContext';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 const coinbaseDisplay = localFont({
   src: [
@@ -119,21 +120,23 @@ export default function RootLayout({
       <body className="flex font-sans items-center justify-center">
         <Theme>
           <OnchainProviders>
-            <MagicProvider>
-              <div
-                style={{
-                  minHeight: '100vh',
-                  paddingBottom: 20,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-              >
-                {children}
-                <Footer />
-              </div>
-              <ToastContainer />
-            </MagicProvider>
+            <TooltipProvider>
+              <MagicProvider>
+                <div
+                  style={{
+                    minHeight: '100vh',
+                    paddingBottom: 20,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  {children}
+                  <Footer />
+                </div>
+                <ToastContainer />
+              </MagicProvider>
+            </TooltipProvider>
           </OnchainProviders>
         </Theme>
       </body>
