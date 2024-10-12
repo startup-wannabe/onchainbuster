@@ -26,14 +26,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
   return (
     <section className="flex items-center justify-center flex-col">
       {stateCheck('ActivityStats', ThreeStageState.Finished) && (
-        <HowBasedAreYouHeader
-          name={addressInput}
-          className="text-xl"
-          icon={{
-            width: 30,
-            height: 30,
-          }}
-        />
+        <HowBasedAreYouHeader name={addressInput} className="text-xl" />
       )}
       <ProfileCard address={addressInput as any} />
       {stateCheck('ActivityStats', ThreeStageState.Finished) && (
