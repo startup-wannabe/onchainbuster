@@ -31,6 +31,7 @@ import {
   StateEventRegistry,
   StateOption,
   ThreeStageState,
+  Toastable,
 } from "./state.type";
 
 // TODO: Remove this when ready.
@@ -88,22 +89,30 @@ export default function Page() {
     eventName: StateEvent,
     eventHooks: {
       onStartEvent: StateOption;
-      onFinishEvent: StateOption;
-      onErrorEvent: StateOption;
+      onFinishEvent: Toastable<StateOption>;
+      onErrorEvent: Toastable<StateOption>;
       onResetEvent: StateOption;
     },
-    method: () => Promise<Output>,
-    toastContent?: string
+    method: () => Promise<Output>
   ): Promise<Output> {
     dispatchStateEvent(eventName, eventHooks.onResetEvent);
     dispatchStateEvent(eventName, eventHooks.onStartEvent);
     try {
       const data = await method();
-      if (toastContent) toast(toastContent);
-      dispatchStateEvent(eventName, eventHooks.onFinishEvent);
+      const event = eventHooks.onErrorEvent;
+      if (event.toast)
+        toast(event.toast, {
+          type: "success",
+        });
+      dispatchStateEvent(eventName, event.value);
       return data;
     } catch (error: any) {
-      dispatchStateEvent(eventName, eventHooks.onErrorEvent);
+      const event = eventHooks.onErrorEvent;
+      if (event.toast)
+        toast(`${event.toast} - Error: ${error.message}`, {
+          type: "error",
+        });
+      dispatchStateEvent(eventName, event.value);
       throw new Error(error);
     }
   }
@@ -113,8 +122,8 @@ export default function Page() {
       StateEvent.GetAddress,
       {
         onStartEvent: StateSubEvents.GetAddress.True,
-        onErrorEvent: StateSubEvents.GetAddress.False,
-        onFinishEvent: StateSubEvents.GetAddress.False,
+        onErrorEvent: { value: StateSubEvents.GetAddress.False },
+        onFinishEvent: { value: StateSubEvents.GetAddress.False },
         onResetEvent: StateSubEvents.GetAddress.False,
       },
       async () => {
@@ -143,8 +152,11 @@ export default function Page() {
       StateEvent.ActivityStats,
       {
         onStartEvent: StateSubEvents.ActivityStats.InProgress,
-        onErrorEvent: StateSubEvents.ActivityStats.Idle,
-        onFinishEvent: StateSubEvents.ActivityStats.Finished,
+        onErrorEvent: { value: StateSubEvents.ActivityStats.Idle },
+        onFinishEvent: {
+          value: StateSubEvents.ActivityStats.Finished,
+          toast: "Activity stats fetched.",
+        },
         onResetEvent: StateSubEvents.ActivityStats.Idle,
       },
       async () => {
@@ -163,8 +175,7 @@ export default function Page() {
         setActivityStats(stats);
         console.log("Activity Stats:", stats);
         return stats;
-      },
-      "Activity stats fetched."
+      }
     );
   };
 
@@ -174,8 +185,14 @@ export default function Page() {
       StateEvent.GetTokenPortfolio,
       {
         onStartEvent: StateSubEvents.GetTokenPortfolio.InProgress,
-        onErrorEvent: StateSubEvents.GetTokenPortfolio.Idle,
-        onFinishEvent: StateSubEvents.GetTokenPortfolio.Finished,
+        onErrorEvent: {
+          value: StateSubEvents.GetTokenPortfolio.Idle,
+          toast: "Failed to fetch multichain token portfolio.",
+        },
+        onFinishEvent: {
+          value: StateSubEvents.GetTokenPortfolio.Finished,
+          toast: "Fetched token portfolio.",
+        },
         onResetEvent: StateSubEvents.GetTokenPortfolio.Idle,
       },
       async () => {
@@ -189,7 +206,6 @@ export default function Page() {
               .map((token) => token.symbol)
           ),
         ];
-
         // Get token price
         const marketData = await listCMCTokenDetail(
           distinctTokenSymbols.join(",")
@@ -197,25 +213,34 @@ export default function Page() {
         console.log(marketData);
         setMarketData(marketData);
         setTokenPortfolio(tokenBalanceData);
-      },
-      "Fetched token portfolio."
+      }
     );
   };
 
   const letsDoSomeMagic = async () => {
-    return newAsyncDispatch(
-      StateEvent.HowBasedAreYou,
-      {
-        onStartEvent: StateSubEvents.HowBasedAreYou.InProgress,
-        onErrorEvent: StateSubEvents.HowBasedAreYou.Idle,
-        onFinishEvent: StateSubEvents.HowBasedAreYou.Finished,
-        onResetEvent: StateSubEvents.HowBasedAreYou.Idle,
-      },
-      async () => {
-        await fetchActivityStats(addressInput);
-        await fetchMultichainTokenPortfolio(addressInput);
-      }
-    );
+    try {
+      return newAsyncDispatch(
+        StateEvent.HowBasedAreYou,
+        {
+          onStartEvent: StateSubEvents.HowBasedAreYou.InProgress,
+          onErrorEvent: {
+            value: StateSubEvents.HowBasedAreYou.Idle,
+            toast: "Magic failed!",
+          },
+          onFinishEvent: {
+            value: StateSubEvents.HowBasedAreYou.Finished,
+            toast: "Fetched token portfolio.",
+          },
+          onResetEvent: StateSubEvents.HowBasedAreYou.Idle,
+        },
+        async () => {
+          await fetchActivityStats(addressInput);
+          await fetchMultichainTokenPortfolio(addressInput);
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Raw API functions (testing only - remove later)
