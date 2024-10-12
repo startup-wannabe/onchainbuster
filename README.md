@@ -1,10 +1,10 @@
-# Onchain App Template
+# How BASED are you
 
-An Onchain App Template build with [OnchainKit](https://onchainkit.xyz), and ready to be deployed to Vercel.
+An Onchain indexer built with [OnchainKit](https://onchainkit.xyz) to support multichain users starting the next journey on Base shaped by their past onchain activity. 
 
-Play with it live on https://onchain-app-template.vercel.app
+Play with it live on https://how-based-are-you.vercel.app/
 
-Have fun! ⛵️
+Made with ❤️️
 
 <br />
 
