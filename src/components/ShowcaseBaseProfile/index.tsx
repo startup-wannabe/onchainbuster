@@ -55,7 +55,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
       {stateCheck("GetTokenPortfolio", ThreeStageState.Finished) && (
         <div className="mt-8">
           <div className="flex items-center justify-center">
-            <h2 className="mb-4 font-bold text-2xl">Token Portfolio</h2>
+            <h2 className="mb-4 font-bold text-2xl">Multi-chain Assets</h2>
           </div>
           {tokenPortfolio.length > 0 && (
             <TokenPortfolio
