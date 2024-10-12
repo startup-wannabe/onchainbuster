@@ -1,4 +1,4 @@
-# How BASED are you
+# OnChain Buster 👀 🔍
 
 An Onchain indexer built with [OnchainKit](https://onchainkit.xyz) to support multichain users starting the next journey on Base shaped by their past onchain activity. 
 
