@@ -1,11 +1,11 @@
-import { chainIDMap } from "@/constants/chains";
+import { chainIDMap } from '@/constants/chains';
 import {
   calculateMultichainTokenPortfolio,
   formatNumberUSD,
-} from "@/helpers/portfolio.helper";
-import Title from "../Title";
-import { CircularTree } from "@/helpers/portfolio";
-import { CircularPackingChart } from "../CircularPackingChart";
+} from '@/helpers/portfolio.helper';
+import Title from '../Title';
+import { CircularTree } from '@/helpers/portfolio';
+import { CircularPackingChart } from '../CircularPackingChart';
 
 type TokenPortfolioProps = {
   tokenPortfolio: TTokenBalance[];
@@ -13,38 +13,38 @@ type TokenPortfolioProps = {
 };
 
 const mockData: CircularTree = {
-  type: "node",
-  name: "boss",
+  type: 'node',
+  name: 'boss',
   value: 0,
   children: [
     {
-      type: "node",
-      name: "Team Dataviz",
+      type: 'node',
+      name: 'Team Dataviz',
       value: 0,
       children: [
-        { type: "leaf", name: "Mark", value: 90 },
-        { type: "leaf", name: "Robert", value: 42 },
-        { type: "leaf", name: "Emily", value: 34 },
-        { type: "leaf", name: "Marion", value: 53 },
+        { type: 'leaf', name: 'Mark', value: 90 },
+        { type: 'leaf', name: 'Robert', value: 42 },
+        { type: 'leaf', name: 'Emily', value: 34 },
+        { type: 'leaf', name: 'Marion', value: 53 },
       ],
     },
     {
-      type: "node",
-      name: "Team DevOps",
+      type: 'node',
+      name: 'Team DevOps',
       value: 0,
       children: [
-        { type: "leaf", name: "Nicolas", value: 98 },
-        { type: "leaf", name: "Malki", value: 22 },
-        { type: "leaf", name: "Djé", value: 12 },
+        { type: 'leaf', name: 'Nicolas', value: 98 },
+        { type: 'leaf', name: 'Malki', value: 22 },
+        { type: 'leaf', name: 'Djé', value: 12 },
       ],
     },
     {
-      type: "node",
-      name: "Team Sales",
+      type: 'node',
+      name: 'Team Sales',
       value: 0,
       children: [
-        { type: "leaf", name: "Mélanie", value: 45 },
-        { type: "leaf", name: "Einstein", value: 76 },
+        { type: 'leaf', name: 'Mélanie', value: 45 },
+        { type: 'leaf', name: 'Einstein', value: 76 },
       ],
     },
   ],
@@ -76,7 +76,7 @@ const TokenPortfolio = ({
       <p>Portfolio value: {formatNumberUSD(sumPortfolioUSDValue)}</p>
       <p>Meme value: {formatNumberUSD(sumMemeUSDValue)}</p>
       <span>
-        Your most valuable asset is{" "}
+        Your most valuable asset is{' '}
         <img
           src={mostValuableToken.logoURI}
           alt={`${mostValuableToken.name} logo`}
@@ -158,7 +158,7 @@ const TokenPortfolio = ({
                   </td>
                   <td className="border border-gray-300 p-2">{date_added}</td>
                 </tr>
-              )
+              ),
             )}
         </tbody>
       </table>

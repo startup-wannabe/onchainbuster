@@ -1,12 +1,12 @@
-import React from "react";
-import HowBasedAreYouHeader from "../HowBasedAreYouHeader";
-import { useMagic } from "@/app/hooks/useMagic";
-import { ThreeStageState } from "@/app/state.type";
-import LoadableContainer from "../LoadableContainer";
-import { Spinner } from "@radix-ui/themes";
-import TokenPortfolio from "../TokenPortfolio";
-import { useMagicContext } from "@/app/hooks/useMagicContext";
-import ActivityStats from "../ActivityStats";
+import React from 'react';
+import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
+import { useMagic } from '@/app/hooks/useMagic';
+import { ThreeStageState } from '@/app/state.type';
+import LoadableContainer from '../LoadableContainer';
+import { Spinner } from '@radix-ui/themes';
+import TokenPortfolio from '../TokenPortfolio';
+import { useMagicContext } from '@/app/hooks/useMagicContext';
+import ActivityStats from '../ActivityStats';
 
 type Props = {
   addressInput: string;
@@ -33,13 +33,13 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           height: 30,
         }}
       />
-      {stateCheck("ActivityStats", ThreeStageState.Finished) && (
+      {stateCheck('ActivityStats', ThreeStageState.Finished) && (
         <div className="mt-8">
           <div className="flex items-center justify-center">
             <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
           </div>
           <LoadableContainer
-            isLoading={stateCheck("ActivityStats", ThreeStageState.InProgress)}
+            isLoading={stateCheck('ActivityStats', ThreeStageState.InProgress)}
             loadComponent={<Spinner />}
           >
             {allTransactions.length > 0 && (
@@ -52,7 +52,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           </LoadableContainer>
         </div>
       )}
-      {stateCheck("GetTokenPortfolio", ThreeStageState.Finished) && (
+      {stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
         <div className="mt-8">
           <div className="flex items-center justify-center">
             <h2 className="mb-4 font-bold text-2xl">Multi-chain Assets</h2>
