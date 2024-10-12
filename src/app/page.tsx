@@ -1,6 +1,6 @@
 'use client';
+import BaseSvg from '@/assets/svg/BaseSvg';
 import MagicButton from '@/components/MagicButton';
-import RotatingCircle from '@/components/RotatingCircle';
 import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { TextField } from '@radix-ui/themes';
@@ -26,9 +26,7 @@ export default function Page() {
     <div className="flex w-100 max-w-full flex-col px-1 md:w-[1200px]">
       <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
         <div className="flex w-full flex-row items-center justify-between gap-2 md:gap-0">
-          <div className="w-[40px] md:w-[50px]">
-            <RotatingCircle theme={1} />
-          </div>
+          <BaseSvg width={30} height={30} />{' '}
           <div className="flex items-center gap-3">
             <SignupButton />
             {!address && <LoginButton />}
@@ -43,12 +41,7 @@ export default function Page() {
           backgroundSize: 'cover',
         }}
       >
-        <HowBasedAreYouHeader
-          icon={{
-            width: 40,
-            height: 40,
-          }}
-        />
+        <HowBasedAreYouHeader />
         <TextField.Root
           className="mr-2 w-full rounded-md p-2 shadow-xl"
           placeholder="ENS, Basename, OneID, 0x..."
