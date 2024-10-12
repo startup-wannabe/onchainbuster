@@ -14,6 +14,7 @@ import {
   listReservoirAddressActivity,
   listReservoirAddressBalance,
 } from './reservoirCallers';
+import { getTalentPassportByWallet } from './talentCallers';
 import {
   getVicNativeBalance,
   listVicAllActivity,
@@ -192,4 +193,9 @@ export const listAllNFTActivityByChain = async (
     ),
     vic: results[results.length - 1],
   };
+};
+
+// Talent Passport
+export const getTalentPassport = async (address: string) => {
+  return await getTalentPassportByWallet(address);
 };
