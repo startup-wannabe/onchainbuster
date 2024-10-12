@@ -1,5 +1,6 @@
 import React from 'react';
 import BaseSvg from '@/assets/svg/BaseSvg';
+import Address from '../Address';
 
 type Props = {
   icon: {
@@ -18,7 +19,21 @@ const HowBasedAreYouHeader = (props: Props) => {
         <BaseSvg width={props.icon.width} height={props.icon.height} />{' '}
         <span style={{ marginLeft: 5 }}>Based</span>
       </span>{' '}
-      {props.name ? `is ${props.name}` : 'are you'}?
+      {props.name ? (
+        <span>
+          is{' '}
+          <span className="font-bold">
+            {props.name.startsWith('0x') ? (
+              <Address truncatedLength={6} truncated value={props.name} />
+            ) : (
+              props.name
+            )}
+          </span>
+        </span>
+      ) : (
+        'are you'
+      )}
+      ?
     </h1>
   );
 };

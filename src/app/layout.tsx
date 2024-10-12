@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Footer from '@/components/Footer';
 import { Unbounded } from 'next/font/google';
 import type React from 'react';
+import { MagicProvider } from './contexts/MagicContext';
 
 const unboundedFont = Unbounded({
   subsets: ['latin'],
@@ -57,7 +58,7 @@ export default function RootLayout({
       <body className="flex font-sans items-center justify-center">
         <Theme>
           <OnchainProviders>
-            <>
+            <MagicProvider>
               <div
                 style={{
                   minHeight: '100vh',
@@ -71,7 +72,7 @@ export default function RootLayout({
                 <Footer />
               </div>
               <ToastContainer />
-            </>
+            </MagicProvider>
           </OnchainProviders>
         </Theme>
       </body>

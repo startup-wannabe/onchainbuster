@@ -20,6 +20,7 @@ import { normalize } from 'viem/ens';
 import { searchAddressFromOneID } from '../api/victionCallers';
 import { delayMs } from '../../helpers';
 import { calculateEVMStreaksAndMetrics } from '../../helpers/activity.helper';
+import { useMagicContext } from './useMagicContext';
 
 export const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
@@ -29,31 +30,19 @@ export const StateSubEvents = {
 };
 
 export const useMagic = () => {
+  const {} = useMagic;
   const wagmiConfig = useWagmiConfig();
-  const [stateEvents, setStateEvents] = useState<StateEventRegistry>({});
-  const [inputAddress, setInputAddress] = useState('');
-  // All transactions and activity stats
-  const [allTransactions, setAllTransactions] = useState<TEVMScanTransaction[]>(
-    [],
-  );
-  const [activityStats, setActivityStats] = useState<TActivityStats>({
-    totalTxs: 0,
-    firstActiveDay: null,
-    uniqueActiveDays: 0,
-    uniqueActiveDays12M: 0,
-    uniqueActiveDays6M: 0,
-    uniqueActiveDays3M: 0,
-    longestStreakDays: 0,
-    currentStreakDays: 0,
-    activityPeriod: 0,
-  });
-  const [mostActiveChain, setMostActiveChain] = useState('');
-  // Multi-chain token portfolio
-  const [tokenPortfolio, setTokenPortfolio] = useState<TTokenBalance[]>([]);
-  const [marketData, setMarketData] = useState<TTokenSymbolDetail[]>([]);
-
-  // Multi-chain nft portfolio
-  const [nftPortfolio, setNftPortfolio] = useState<TNFTBalance[]>([]);
+  const {
+    stateEvents,
+    setStateEvents,
+    allTransactions: [, setAllTransactions],
+    inputAddress: [, setInputAddress],
+    mostActiveChain: [, setMostActiveChain],
+    activityStats: [, setActivityStats],
+    tokenPortfolio: [, setTokenPortfolio],
+    marketData: [, setMarketData],
+    nftPortfolio: [, setNftPortfolio],
+  } = useMagicContext();
 
   const dispatchStateEvent = (eventName: StateEvent, status: StateOption) => {
     setStateEvents((stateEvents) => ({ ...stateEvents, [eventName]: status }));
@@ -117,6 +106,7 @@ export const useMagic = () => {
             chainId: 1,
           })) as string;
           console.log('ENS Address:', address);
+          setInputAddress(address);
         } else {
           address = await searchAddressFromOneID(text);
           console.log('OneID Address:', address);
@@ -252,15 +242,6 @@ export const useMagic = () => {
   };
 
   return {
-    state: {
-      inputAddress,
-      activityStats,
-      mostActiveChain,
-      tokenPortfolio,
-      marketData,
-      nftPortfolio,
-      allTransactions,
-    },
     query: {
       fetchMultichainNFTPortfolio,
       fetchActivityStats,
