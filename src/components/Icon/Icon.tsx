@@ -1,4 +1,4 @@
-type IconProps = {
+export type IconProps = {
   name: keyof typeof ICONS;
   color?: 'white' | 'black' | 'currentColor';
   width?: string | number;

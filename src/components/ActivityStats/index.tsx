@@ -4,7 +4,7 @@ import { useCallback, useRef } from 'react';
 import CalendarHeatmap, {
   type ReactCalendarHeatmapValue,
 } from 'react-calendar-heatmap';
-import { Icon } from '../Icon';
+import { Icon } from '../Icon/Icon';
 import Title from '../Title';
 // import { Address } from 'viem';
 import './cal.css';
