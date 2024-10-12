@@ -16,15 +16,16 @@ const TokenPortfolio = ({
 }: TokenPortfolioProps) => {
   const {
     sumPortfolioUSDValue,
+    sumMemeUSDValue,
     mostValuableToken,
     aggregatedBalanceBySymbol,
     aggregatedBalanceByChain,
   } = calculateMultichainTokenPortfolio(tokenPortfolio, marketData);
-  console.log(aggregatedBalanceBySymbol);
   return (
     <section className="mt-2">
       <Title title="Multi-chain Portfolio" />
       <p>Portfolio value: {formatNumberUSD(sumPortfolioUSDValue)}</p>
+      <p>Meme value: {formatNumberUSD(sumMemeUSDValue)}</p>
       <span>
         Your most valuable asset is{' '}
         <img

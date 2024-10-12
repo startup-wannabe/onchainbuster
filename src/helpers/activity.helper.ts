@@ -1,3 +1,8 @@
+type Holding = {
+  amount: number;
+  timestamp: number;
+};
+
 // Acknowledgement: https://github.com/base-org/web/blob/master/apps/web/src/components/Basenames/UsernameProfileSectionHeatmap/index.tsx#L115
 export const calculateEVMStreaksAndMetrics = (
   transactions: TEVMScanTransaction[],
@@ -120,11 +125,6 @@ export const calculateEVMStreaksAndMetrics = (
       1,
     ),
   };
-};
-
-type Holding = {
-  amount: number;
-  timestamp: number;
 };
 
 /**

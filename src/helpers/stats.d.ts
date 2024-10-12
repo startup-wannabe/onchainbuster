@@ -12,6 +12,7 @@ type TActivityStats = {
 
 type TTokenPortfolioStats = {
   sumPortfolioUSDValue: number;
+  sumMemeUSDValue: number;
   mostValuableToken: {
     name: string;
     symbol: string;

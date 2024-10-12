@@ -1,7 +1,41 @@
+const POPULAR_MEMES = [
+  'PEPE',
+  'FLOKI',
+  'BONK',
+  'DOGE',
+  'SHIB',
+  'WIF',
+  'NEIRO',
+  'BRETT',
+  'DEGEN',
+  'BOME',
+  'DOGS',
+  'DOG',
+  'TURBO',
+  'MYRO',
+];
+
 export const calculateMultichainTokenPortfolio = (
   tokenBalanceList: TTokenBalance[],
   marketData: TTokenSymbolDetail[],
 ): TTokenPortfolioStats => {
+  let sumPortfolioUSDValue = 0;
+  for (const { symbol, tokenBalance } of tokenBalanceList) {
+    const tokenPrice =
+      marketData.find((data) => data.symbol === symbol)?.currentUSDPrice || 0;
+    sumPortfolioUSDValue += tokenBalance * tokenPrice;
+  }
+
+  let sumMemeUSDValue = 0;
+  for (const { symbol, tokenBalance } of tokenBalanceList) {
+    const tokenPrice =
+      marketData.find((data) => data.symbol === symbol)?.currentUSDPrice || 0;
+    const tags = marketData.find((data) => data.symbol === symbol)?.tags || [];
+    if (tags.includes('memes') || POPULAR_MEMES.includes(symbol)) {
+      sumMemeUSDValue += tokenBalance * tokenPrice;
+    }
+  }
+
   // Aggregate balances by token
   const aggregatedBalanceBySymbol: Record<
     string,
@@ -62,11 +96,6 @@ export const calculateMultichainTokenPortfolio = (
       aggregatedBalanceByChain[chain] += details.totalUSDValue;
     }
   }
-  // Calculate sumPortfolioUSDValue
-  let sumPortfolioUSDValue = 0;
-  for (const [_, details] of Object.entries(aggregatedBalanceBySymbol)) {
-    sumPortfolioUSDValue += details.totalUSDValue;
-  }
 
   // Calculate mostValuableToken
   let mostValuableToken = {
@@ -91,6 +120,7 @@ export const calculateMultichainTokenPortfolio = (
 
   return {
     sumPortfolioUSDValue,
+    sumMemeUSDValue,
     mostValuableToken,
     aggregatedBalanceBySymbol,
     aggregatedBalanceByChain,
