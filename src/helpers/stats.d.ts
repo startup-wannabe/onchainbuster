@@ -27,7 +27,14 @@ type TTokenPortfolioStats = {
       logoURI: string;
       price: number;
       totalUSDValue: number;
+      tags: string[];
+      date_added: string;
     }
   >;
   aggregatedBalanceByChain: Record<string, number>;
+};
+
+type TNFTPortfolioStats = {
+  sumPortfolioUSDValue: number;
+  mostValuableNFTCollection: TNFTBalance;
 };

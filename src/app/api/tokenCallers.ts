@@ -1,5 +1,5 @@
 import { chainIDMap } from '@constants/chains';
-import tokenList from '@constants/tokenList.json';
+import tokenList from '@data/tokenList.json';
 
 const tokenListJSON: TTokenList = JSON.parse(JSON.stringify(tokenList));
 

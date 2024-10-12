@@ -1,19 +1,19 @@
 export enum StateEvent {
-  GetAddress = "GetAddress",
-  ActivityStats = "ActivityStats",
-  GetTokenPortfolio = "GetTokenPortfolio",
-  HowBasedAreYou = "HowBasedAreYou",
+  GetAddress = 'GetAddress',
+  ActivityStats = 'ActivityStats',
+  GetTokenPortfolio = 'GetTokenPortfolio',
+  HowBasedAreYou = 'HowBasedAreYou',
 }
 
 export enum BinaryState {
-  True = "True",
-  False = "False",
+  True = 'True',
+  False = 'False',
 }
 
 export enum ThreeStageState {
-  Idle = "Idle",
-  InProgress = "InProgress",
-  Finished = "Finished",
+  Idle = 'Idle',
+  InProgress = 'InProgress',
+  Finished = 'Finished',
 }
 
 export type StateOption = BinaryState | ThreeStageState;

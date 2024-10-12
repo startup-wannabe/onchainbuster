@@ -148,7 +148,9 @@ export const listAllTokenActivityByChain = async (address: string) => {
 };
 
 // ---- NFT Balance & Activity ----
-export const listAllNFTBalanceByChain = async (address: string) => {
+export const listAllNFTBalanceByChain = async (
+  address: string,
+): Promise<Record<string, TNFTBalance[]>> => {
   if (address === '') {
     return {};
   }

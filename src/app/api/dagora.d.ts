@@ -14,6 +14,22 @@ type TDagoraCollectionStats = {
   tokenVolume: TDagoraListingToken[];
 };
 
+type TDagoraCollectionMetadata = {
+  title: string;
+  symbol: string;
+  baseURI: string;
+  address: string;
+  chain: string;
+  logo: string;
+  image: string;
+  exploreImage: string;
+  description: string;
+  royaltyFee: number;
+  owner: string;
+  status: string;
+  ownerInfo: any;
+};
+
 type TDagoraAccountBalanceResponse = {
   total: number;
   data: TDagoraAccountCollection[];
@@ -26,6 +42,11 @@ type TDagoraAccountActivityResponse = {
   data: TDagoraTradingActivity[] | TDagoraListingActivity[];
   totalPage: number;
   currPage: number;
+};
+
+type TDagoraCollectionFull = TDagoraAccountCollection & {
+  stats: TDagoraCollectionStats;
+  metadata: TDagoraCollectionMetadata;
 };
 
 type TDagoraAccountCollection = {
