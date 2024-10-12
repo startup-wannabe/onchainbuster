@@ -108,5 +108,17 @@ export const listEVMScanTokenActivity = async (
     }
   }
 
-  return { token, nft };
+  return {
+    token: token.map((t) => {
+      return {
+        chain: chain.toLowerCase(),
+        symbol: t.tokenSymbol,
+        from: t.from,
+        to: t.to,
+        value: t.value,
+        timestamp: t.timeStamp,
+      } as TTokenActivity;
+    }),
+    nft,
+  };
 };

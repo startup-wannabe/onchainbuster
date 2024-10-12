@@ -170,7 +170,9 @@ export const listAllNFTBalanceByChain = async (
   };
 };
 
-export const listAllNFTActivityByChain = async (address: string) => {
+export const listAllNFTActivityByChain = async (
+  address: string,
+): Promise<Record<string, TNFTActivity[]>> => {
   if (address === '') {
     return {};
   }

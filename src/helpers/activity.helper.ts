@@ -121,3 +121,100 @@ export const calculateEVMStreaksAndMetrics = (
     ),
   };
 };
+
+type Holding = {
+  amount: number;
+  timestamp: number;
+};
+
+/**
+ * Function to find the asset with the longest holding duration.
+ * @param transactions - Array of buy/sell transactions.
+ * @returns The asset with the longest holding duration and the duration in milliseconds.
+ */
+export const findLongestHoldingAsset = (
+  transactions: TTokenActivity[],
+  address: string,
+): { asset: string; duration: number } => {
+  const holdings: Record<string, Holding[]> = {};
+  let longestDuration = 0;
+  let longestAsset = '';
+
+  for (const { symbol, from, to, value, timestamp } of transactions) {
+    // If it's a buy transaction, add to holdings
+    if (to.toLowerCase() === address.toLowerCase()) {
+      if (!holdings[symbol]) {
+        holdings[symbol] = [];
+      }
+
+      holdings[symbol].push({
+        amount: Number.parseInt(value || '0'),
+        timestamp: Number.parseInt(timestamp),
+      });
+    }
+
+    // If it's a sell transaction, calculate holding duration
+    if (from.toLowerCase() === address.toLowerCase()) {
+      let remainingSellAmount = Number.parseInt(value || '0');
+
+      // Process each holding for this asset
+      while (
+        remainingSellAmount > 0 &&
+        holdings[symbol] &&
+        holdings[symbol].length > 0
+      ) {
+        const holding = holdings[symbol][0]; // Get the earliest buy
+        const holdingDuration = Number.parseInt(timestamp) - holding.timestamp; // Holding duration
+
+        // If selling the full amount of this holding
+        if (remainingSellAmount >= holding.amount) {
+          remainingSellAmount -= holding.amount;
+          holdings[symbol].shift(); // Remove this holding since it's fully sold
+        } else {
+          // If partially selling this holding
+          holding.amount -= remainingSellAmount;
+          remainingSellAmount = 0; // All sold
+        }
+
+        // Check if this holding has the longest duration
+        if (holdingDuration > longestDuration) {
+          longestDuration = holdingDuration;
+          longestAsset = symbol;
+        }
+      }
+    }
+  }
+
+  return {
+    asset: longestAsset,
+    duration: longestDuration,
+  };
+};
+
+/**
+ * Converts seconds into a human-readable time duration (days, hours, minutes, seconds).
+ * @param seconds - The duration in seconds.
+ * @returns A string representing the time duration.
+ */
+export const formatDuration = (seconds: number): string => {
+  const days = Math.floor(seconds / (3600 * 24));
+  const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  const parts = [];
+  if (days > 0) {
+    parts.push(`${days} day${days > 1 ? 's' : ''}`);
+  }
+  if (hours > 0) {
+    parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+  }
+  if (minutes > 0) {
+    parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+  }
+  if (remainingSeconds > 0 || parts.length === 0) {
+    parts.push(`${remainingSeconds} second${remainingSeconds > 1 ? 's' : ''}`);
+  }
+
+  return parts.join(', ');
+};

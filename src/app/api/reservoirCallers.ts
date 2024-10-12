@@ -25,7 +25,20 @@ export const listReservoirAddressActivity = async (
     continuation = result.continuation || '';
   } while (continuation !== ''); // Continue until all data is fetched
 
-  return allActivities;
+  return allActivities.map((activity) => {
+    return {
+      chain: chain.toLowerCase(),
+      action: activity.type,
+      collectionName: activity.collection.collectionName,
+      from: activity.fromAddress,
+      to: activity.toAddress || '',
+      tokenId: activity.token.tokenId,
+      tokenName: activity.token.tokenName,
+      tokenImage: activity.token.tokenImage || '',
+      amount: activity.amount.toString(),
+      price: activity.price?.amount.usd.toString() || '',
+    } as TNFTActivity;
+  });
 };
 
 export const listReservoirAddressBalance = async (

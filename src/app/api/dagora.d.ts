@@ -120,6 +120,8 @@ type TDagoraListingActivity = {
   nonce: number;
   isMinter: number;
   tokenPrice: string;
+  to?: string;
+  amount?: number;
 };
 
 type TDagoraListingAttribute = {
