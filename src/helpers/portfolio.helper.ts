@@ -1,25 +1,25 @@
-import { TreeBuilder } from './tree.helper';
+import { TreeBuilder } from "./tree.helper";
 
 const POPULAR_MEMES = [
-  'PEPE',
-  'FLOKI',
-  'BONK',
-  'DOGE',
-  'SHIB',
-  'WIF',
-  'NEIRO',
-  'BRETT',
-  'DEGEN',
-  'BOME',
-  'DOGS',
-  'DOG',
-  'TURBO',
-  'MYRO',
+  "PEPE",
+  "FLOKI",
+  "BONK",
+  "DOGE",
+  "SHIB",
+  "WIF",
+  "NEIRO",
+  "BRETT",
+  "DEGEN",
+  "BOME",
+  "DOGS",
+  "DOG",
+  "TURBO",
+  "MYRO",
 ];
 
 const aggregateTokensByBalance = (
   tokenBalanceList: TTokenBalance[],
-  marketData: TTokenSymbolDetail[],
+  marketData: TTokenSymbolDetail[]
 ): TSymbolAggregationBalance => {
   const aggregatedBalanceBySymbol: TSymbolAggregationBalance = {};
   for (const {
@@ -32,55 +32,60 @@ const aggregateTokensByBalance = (
     if (!aggregatedBalanceBySymbol[symbol]) {
       aggregatedBalanceBySymbol[symbol] = {
         totalBalance: 0,
-        chains: new Set(),
+        chains: [],
         name,
-        logoURI: logoURI || '',
+        logoURI: logoURI || "",
         price: 0,
         totalUSDValue: 0,
         tags: [],
-        date_added: '',
+        date_added: "",
+        symbol: "",
       };
     }
     const tokenPrice =
       marketData.find((data) => data.symbol === symbol)?.currentUSDPrice || 0;
     const tags = marketData.find((data) => data.symbol === symbol)?.tags || [];
     const date_added =
-      marketData.find((data) => data.symbol === symbol)?.date_added || '';
+      marketData.find((data) => data.symbol === symbol)?.date_added || "";
+    const tokenUSDValue = tokenBalance * tokenPrice;
 
+    aggregatedBalanceBySymbol[symbol].symbol = symbol;
     aggregatedBalanceBySymbol[symbol].tags = tags;
     aggregatedBalanceBySymbol[symbol].date_added = date_added;
     aggregatedBalanceBySymbol[symbol].price = tokenPrice;
-    aggregatedBalanceBySymbol[symbol].chains.add(chain);
+    aggregatedBalanceBySymbol[symbol].chains.push({
+      chainName: chain,
+      value: tokenUSDValue,
+    });
     aggregatedBalanceBySymbol[symbol].price = tokenPrice;
     aggregatedBalanceBySymbol[symbol].totalBalance += tokenBalance;
-    aggregatedBalanceBySymbol[symbol].totalUSDValue +=
-      tokenBalance * tokenPrice;
+    aggregatedBalanceBySymbol[symbol].totalUSDValue += tokenUSDValue;
   }
   return aggregatedBalanceBySymbol;
 };
 
 const collectChainRecordsWithTokens = (
-  aggregatedBalanceBySymbol: TSymbolAggregationBalance,
+  aggregatedBalanceBySymbol: TSymbolAggregationBalance
 ) => {
   const chainRecordsWithTokens: TChainRecordWithTokens = {};
   for (const [_, details] of Object.entries(aggregatedBalanceBySymbol)) {
-    for (const chain of details.chains) {
-      if (!chainRecordsWithTokens[chain]) {
-        chainRecordsWithTokens[chain] = {
+    for (const { chainName, value } of details.chains) {
+      if (!chainRecordsWithTokens[chainName]) {
+        chainRecordsWithTokens[chainName] = {
           tokens: [],
           totalUSDValue: 0,
         };
       }
-      chainRecordsWithTokens[chain].totalUSDValue += details.totalUSDValue;
-      chainRecordsWithTokens[chain].tokens =
-        chainRecordsWithTokens[chain].tokens.concat(details);
+      chainRecordsWithTokens[chainName].totalUSDValue += value;
+      chainRecordsWithTokens[chainName].tokens =
+        chainRecordsWithTokens[chainName].tokens.concat(details);
     }
   }
   let mostValuableToken = {
-    name: '',
-    symbol: '',
+    name: "",
+    symbol: "",
     value: 0,
-    logoURI: '',
+    logoURI: "",
   };
   let mostValuableTokenUSDValue = 0;
   for (const [token, details] of Object.entries(aggregatedBalanceBySymbol)) {
@@ -102,7 +107,7 @@ const collectChainRecordsWithTokens = (
 
 export const calculateMultichainTokenPortfolio = (
   tokenBalanceList: TTokenBalance[],
-  marketData: TTokenSymbolDetail[],
+  marketData: TTokenSymbolDetail[]
 ): TTokenPortfolioStats => {
   let sumPortfolioUSDValue = 0;
   for (const { symbol, tokenBalance } of tokenBalanceList) {
@@ -116,7 +121,7 @@ export const calculateMultichainTokenPortfolio = (
     const tokenPrice =
       marketData.find((data) => data.symbol === symbol)?.currentUSDPrice || 0;
     const tags = marketData.find((data) => data.symbol === symbol)?.tags || [];
-    if (tags.includes('memes') || POPULAR_MEMES.includes(symbol)) {
+    if (tags.includes("memes") || POPULAR_MEMES.includes(symbol)) {
       sumMemeUSDValue += tokenBalance * tokenPrice;
     }
   }
@@ -128,7 +133,7 @@ export const calculateMultichainTokenPortfolio = (
     collectChainRecordsWithTokens(aggregatedBalanceBySymbol);
 
   const chainCircularPackingData = buildCircularPackingChart(
-    chainRecordsWithTokens,
+    chainRecordsWithTokens
   );
 
   return {
@@ -142,16 +147,16 @@ export const calculateMultichainTokenPortfolio = (
 };
 
 export const buildCircularPackingChart = (
-  chains: TChainRecordWithTokens,
+  chains: TChainRecordWithTokens
 ): TCircularTree => {
-  const portfolioBuilder = new TreeBuilder('Multichain Portfolio', 0);
+  const portfolioBuilder = new TreeBuilder("Multichain Portfolio", 0);
   for (const [chain, chainData] of Object.entries(chains)) {
     const treeBuilder = new TreeBuilder(chain, chainData.totalUSDValue);
     for (const token of chains[chain].tokens) {
       treeBuilder.addNewChildren({
-        type: 'leaf',
-        name: token.name,
-        value: token.totalUSDValue,
+        type: "leaf",
+        name: token.symbol,
+        value: token.chains.find((c) => c.chainName === chain)?.value || 0,
       });
     }
     portfolioBuilder.addNewChildren(treeBuilder.build());
@@ -160,11 +165,11 @@ export const buildCircularPackingChart = (
 };
 
 export function formatNumberUSD(num: number) {
-  return num.toLocaleString('it-IT', { style: 'currency', currency: 'USD' });
+  return num.toLocaleString("it-IT", { style: "currency", currency: "USD" });
 }
 
 export const calculateMultichainNFTPortfolio = (
-  nftBalanceList: TNFTBalance[],
+  nftBalanceList: TNFTBalance[]
 ): TNFTPortfolioStats => {
   // Calculate sumPortfolioUSDValue
   let sumPortfolioUSDValue = 0;
@@ -174,7 +179,7 @@ export const calculateMultichainNFTPortfolio = (
 
   // Calculate mostValuableNFTCollection
   const mostValuableNFTCollection = nftBalanceList.reduce((prev, current) =>
-    prev && prev.totalValue > current.totalValue ? prev : current,
+    prev && prev.totalValue > current.totalValue ? prev : current
   );
 
   return {

@@ -1,6 +1,6 @@
-import * as d3 from 'd3';
-import React from 'react';
-import Tooltip from '../Tooltip';
+import * as d3 from "d3";
+import React from "react";
+import Tooltip from "../Tooltip";
 
 type CircularPackingProps = {
   width: number;
@@ -9,13 +9,13 @@ type CircularPackingProps = {
 };
 
 const colors = [
-  '#e0ac2b',
-  '#6689c6',
-  '#a4c969',
-  '#e85252',
-  '#9a6fb0',
-  '#a53253',
-  '#7f7f7f',
+  "#e0ac2b",
+  "#6689c6",
+  "#a4c969",
+  "#e85252",
+  "#9a6fb0",
+  "#a53253",
+  "#7f7f7f",
 ];
 
 export const CircularPackingChart = ({
@@ -74,36 +74,34 @@ export const CircularPackingChart = ({
 
     return (
       <g key={leaf.data.name}>
-        <Tooltip content={leaf.value}>
-          <circle
-            cx={leaf.x}
-            cy={leaf.y}
-            r={leaf.r}
-            stroke={colorScale(parentName)}
-            strokeWidth={2}
-            fill={colorScale(parentName)}
-            fillOpacity={0.2}
-          />
-          {(leaf.value || 0) > 300 && (
-            <text
-              key={leaf.data.name}
-              x={leaf.x}
-              y={leaf.y}
-              fontSize={13}
-              fontWeight={0.4}
-              textAnchor="middle"
-              alignmentBaseline="middle"
-            >
-              {leaf.data.name}
-            </text>
-          )}
-        </Tooltip>
+        <circle
+          cx={leaf.x}
+          cy={leaf.y}
+          r={leaf.r}
+          stroke={colorScale(parentName)}
+          strokeWidth={2}
+          fill={colorScale(parentName)}
+          fillOpacity={0.2}
+        />
+        {(leaf.value || 0) > ((root.value || 1) * 1) / 100 && (
+          <text
+            key={leaf.data.name}
+            x={leaf.x}
+            y={leaf.y}
+            fontSize={13}
+            fontWeight={0.4}
+            textAnchor="middle"
+            alignmentBaseline="middle"
+          >
+            {leaf.data.name}
+          </text>
+        )}
       </g>
     );
   });
 
   return (
-    <svg width={width} height={height} style={{ display: 'inline-block' }}>
+    <svg width={width} height={height} style={{ display: "inline-block" }}>
       {allLevel1Circles}
       {allLeafCircles}
     </svg>

@@ -1,10 +1,10 @@
-import { chainIDMap } from '@/constants/chains';
+import { chainIDMap } from "@/constants/chains";
 import {
   calculateMultichainTokenPortfolio,
   formatNumberUSD,
-} from '@/helpers/portfolio.helper';
-import Title from '../Title';
-import { CircularPackingChart } from '../CircularPackingChart';
+} from "@/helpers/portfolio.helper";
+import Title from "../Title";
+import { CircularPackingChart } from "../CircularPackingChart";
 
 type TokenPortfolioProps = {
   tokenPortfolio: TTokenBalance[];
@@ -29,14 +29,14 @@ const TokenPortfolio = ({
       <div className="mt-6 w-fit px-10 py-5 rounded-3xl shadow-xl border border-palette-line/20">
         <CircularPackingChart
           data={chainCircularPackingData}
-          height={400}
+          height={300}
           width={400}
         />
       </div>
       <p>Portfolio value: {formatNumberUSD(sumPortfolioUSDValue)}</p>
       <p>Meme value: {formatNumberUSD(sumMemeUSDValue)}</p>
       <span>
-        Your most valuable asset is{' '}
+        Your most valuable asset is{" "}
         <img
           src={mostValuableToken.logoURI}
           alt={`${mostValuableToken.name} logo`}
@@ -102,11 +102,11 @@ const TokenPortfolio = ({
                     {formatNumberUSD(totalUSDValue)}
                   </td>
                   <td className="border border-gray-300 p-2">
-                    {Array.from(chains).map((chain) => (
+                    {Array.from(chains).map(({ chainName }) => (
                       <img
-                        key={chain}
-                        src={chainIDMap[chain].logoURI}
-                        alt={`${chainIDMap[chain].name} logo`}
+                        key={chainName}
+                        src={chainIDMap[chainName].logoURI}
+                        alt={`${chainIDMap[chainName].name} logo`}
                         className="mr-1 inline-block h-6 w-6 rounded-full"
                       />
                     ))}
@@ -118,7 +118,7 @@ const TokenPortfolio = ({
                   </td>
                   <td className="border border-gray-300 p-2">{date_added}</td>
                 </tr>
-              ),
+              )
             )}
         </tbody>
       </table>

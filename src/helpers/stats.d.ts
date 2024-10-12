@@ -1,12 +1,18 @@
+type IValueByChain = {
+  chainName: string;
+  value: number;
+};
+
 type TTokenDetails = {
   totalBalance: number;
-  chains: Set<string>;
+  chains: IValueByChain[];
   name: string;
   logoURI: string;
   price: number;
   totalUSDValue: number;
   tags: string[];
   date_added: string;
+  symbol: string;
 };
 
 type TActivityStats = {
@@ -51,14 +57,14 @@ type TNFTPortfolioStats = {
 };
 
 type TCircularTreeNode = {
-  type: 'node';
+  type: "node";
   value: number;
   name: string;
   children: Tree[];
 };
 
 type TCircularTreeLeaf = {
-  type: 'leaf';
+  type: "leaf";
   name: string;
   value: number;
 };
