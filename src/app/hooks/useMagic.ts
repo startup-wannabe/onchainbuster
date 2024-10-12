@@ -200,7 +200,7 @@ export const useMagic = () => {
       },
       async () => {
         const tokenBalanceData = await getMultichainPortfolio(address);
-        // console.log(tokenBalanceData);
+        console.log(tokenBalanceData);
         // Get distinct token symbol with non-zero balance
         const distinctTokenSymbols = [
           ...new Set(
@@ -358,10 +358,10 @@ export const useMagic = () => {
         },
         async () => {
           await fetchActivityStats(addressInput);
-          // await fetchMultichainTokenPortfolio(addressInput);
+          await fetchMultichainTokenPortfolio(addressInput);
           await fetchMultichainTokenActivity(addressInput);
-          // await fetchMultichainNftPortfolio(addressInput);
-          // await fetchMultichainNftActivity(addressInput);
+          await fetchMultichainNftPortfolio(addressInput);
+          await fetchMultichainNftActivity(addressInput);
           await delayMs(1000);
         },
       );

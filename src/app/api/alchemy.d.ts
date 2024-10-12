@@ -19,3 +19,10 @@ type TAlchemyTokenBalance = {
   contractAddress: string;
   tokenBalance: string;
 };
+
+type TAlchemyTokenMetadata = {
+  name: string;
+  symbol: string;
+  decimals: number;
+  logo: string;
+};

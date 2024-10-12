@@ -404,18 +404,10 @@ export const findLongestHoldingAsset = (
         amount: Number.parseInt(value || '0'),
         timestamp: Number.parseInt(timestamp),
       });
-
-      if (chain === 'vic') {
-        console.log('After buy:', holdings);
-      }
     }
 
     // If it's a sell transaction, calculate holding duration
     if (from.toLowerCase() === address.toLowerCase()) {
-      if (chain === 'vic') {
-        console.log(symbol, '-', value, 'at', timestamp);
-      }
-
       let remainingSellAmount = Number.parseInt(value || '0');
 
       // Process each holding for this asset

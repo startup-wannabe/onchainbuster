@@ -79,23 +79,30 @@ export const listDagoraAddressBalance = async (address: string, size = 100) => {
   } while (accountCollections.length < total);
 
   // Fetch collection stats & metadata for each approved collection
+  const uniqueCollections = [
+    ...new Set(
+      accountCollections
+        .filter((c) => c.isApproved)
+        .map((collection) => `${collection.address}-${collection.chain}`),
+    ),
+  ];
   const collectionsDetails = await Promise.all(
-    accountCollections
-      // Filter approved NFT (not spam) before returning
-      .filter((c) => c.isApproved)
-      .map(async (collection) => {
-        const [stats, metadata] = await Promise.all([
-          getDagoraCollectionStats(collection.address, collection.chain),
-          getDagoraCollectionMetadata(collection.address, collection.chain),
-        ]);
+    uniqueCollections.map(async (uniqueCollection) => {
+      const [address, chain] = uniqueCollection.split('-');
+      const [stats, metadata] = await Promise.all([
+        getDagoraCollectionStats(address, chain),
+        getDagoraCollectionMetadata(address, chain),
+      ]);
 
-        return {
-          ...collection,
-          stats,
-          metadata,
-        } as TDagoraCollectionFull;
-      }),
+      return {
+        address,
+        chain,
+        stats,
+        metadata,
+      } as TDagoraCollectionFull;
+    }),
   );
+
   const addressCountRecord: Record<string, number> = {};
   for (const collection of collectionsDetails) {
     const count = addressCountRecord[collection.address] || 0;
