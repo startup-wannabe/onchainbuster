@@ -1,8 +1,7 @@
 'use client';
-import BaseSvg from '@/assets/svg/BaseSvg';
 import MagicButton from '@/components/MagicButton';
+import RotatingCircle from '@/components/RotatingCircle';
 import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
-import { ONCHAINKIT_LINK } from '@/constants/links';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { TextField } from '@radix-ui/themes';
 import { useAccount } from 'wagmi';
@@ -27,14 +26,9 @@ export default function Page() {
     <div className="flex w-100 max-w-full flex-col px-1 md:w-[1200px]">
       <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
         <div className="flex w-full flex-row items-center justify-between gap-2 md:gap-0">
-          <a
-            href={ONCHAINKIT_LINK}
-            title="onchainkit"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <BaseSvg />
-          </a>
+          <div className="w-[40px] md:w-[50px]">
+            <RotatingCircle theme={1} />
+          </div>
           <div className="flex items-center gap-3">
             <SignupButton />
             {!address && <LoginButton />}
