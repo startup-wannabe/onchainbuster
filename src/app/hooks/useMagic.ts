@@ -25,6 +25,9 @@ export const StateSubEvents = {
   [StateEvent.ActivityStats]: ThreeStageState,
   [StateEvent.GetAddress]: BinaryState,
   [StateEvent.GetTokenPortfolio]: ThreeStageState,
+  [StateEvent.GetNftPortfolio]: ThreeStageState,
+  [StateEvent.GetTokenActivity]: ThreeStageState,
+  [StateEvent.GetNftActivity]: ThreeStageState,
 };
 
 export const useMagic = () => {
@@ -189,18 +192,18 @@ export const useMagic = () => {
   const fetchMultichainNFTPortfolio = async (text: string) => {
     const address = await getAddress(text);
     return newAsyncDispatch(
-      StateEvent.GetTokenPortfolio,
+      StateEvent.GetNftPortfolio,
       {
-        onStartEvent: StateSubEvents.GetTokenPortfolio.InProgress,
+        onStartEvent: StateSubEvents.GetNftPortfolio.InProgress,
         onErrorEvent: {
-          value: StateSubEvents.GetTokenPortfolio.Idle,
+          value: StateSubEvents.GetNftPortfolio.Idle,
           toast: 'Failed to fetch NFT portfolio.',
         },
         onFinishEvent: {
-          value: StateSubEvents.GetTokenPortfolio.Finished,
+          value: StateSubEvents.GetNftPortfolio.Finished,
           toast: 'Fetched token portfolio.',
         },
-        onResetEvent: StateSubEvents.GetTokenPortfolio.Idle,
+        onResetEvent: StateSubEvents.GetNftPortfolio.Idle,
       },
       async () => {
         const data = await listAllNFTBalanceByChain(address);
@@ -230,10 +233,10 @@ export const useMagic = () => {
         async () => {
           await fetchActivityStats(addressInput);
           await fetchMultichainTokenPortfolio(addressInput);
+          await fetchMultichainNFTPortfolio(addressInput);
           await delayMs(1000);
         },
       );
-      // await fetchMultichainNFTPortfolio(addressInput);
     } catch (error) {
       console.log(error);
     }

@@ -2,6 +2,9 @@ export enum StateEvent {
   GetAddress = 'GetAddress',
   ActivityStats = 'ActivityStats',
   GetTokenPortfolio = 'GetTokenPortfolio',
+  GetNftPortfolio = 'GetNftPortfolio',
+  GetTokenActivity = 'GetTokenActivity',
+  GetNftActivity = 'GetNftActivity',
   HowBasedAreYou = 'HowBasedAreYou',
 }
 

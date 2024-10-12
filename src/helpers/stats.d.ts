@@ -57,14 +57,14 @@ type TNFTPortfolioStats = {
 };
 
 type TCircularTreeNode = {
-  type: "node";
+  type: 'node';
   value: number;
   name: string;
   children: Tree[];
 };
 
 type TCircularTreeLeaf = {
-  type: "leaf";
+  type: 'leaf';
   name: string;
   value: number;
 };

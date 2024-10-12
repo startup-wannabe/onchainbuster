@@ -1,6 +1,5 @@
-import * as d3 from "d3";
-import React from "react";
-import Tooltip from "../Tooltip";
+import * as d3 from 'd3';
+import React from 'react';
 
 type CircularPackingProps = {
   width: number;
@@ -8,15 +7,7 @@ type CircularPackingProps = {
   data: TCircularTree;
 };
 
-const colors = [
-  "#e0ac2b",
-  "#6689c6",
-  "#a4c969",
-  "#e85252",
-  "#9a6fb0",
-  "#a53253",
-  "#7f7f7f",
-];
+const colors = ['#266EFF', '#92B6FF', '#D3E1FF', '#003EC1', '#266EFF'];
 
 export const CircularPackingChart = ({
   width,
@@ -47,7 +38,6 @@ export const CircularPackingChart = ({
     .filter((node) => node.depth === 1)
     .map((node) => {
       const parentName = node.data.name;
-
       return (
         <g key={node.data.name}>
           <circle
@@ -55,7 +45,7 @@ export const CircularPackingChart = ({
             cy={node.y}
             r={node.r}
             stroke={colorScale(parentName)}
-            strokeWidth={1}
+            strokeWidth={5}
             strokeOpacity={0.3}
             fill={colorScale(parentName)}
             fillOpacity={0.1}
@@ -88,8 +78,8 @@ export const CircularPackingChart = ({
             key={leaf.data.name}
             x={leaf.x}
             y={leaf.y}
-            fontSize={13}
-            fontWeight={0.4}
+            fontSize={12}
+            fontWeight={14}
             textAnchor="middle"
             alignmentBaseline="middle"
           >
@@ -101,7 +91,7 @@ export const CircularPackingChart = ({
   });
 
   return (
-    <svg width={width} height={height} style={{ display: "inline-block" }}>
+    <svg width={width} height={height} style={{ display: 'inline-block' }}>
       {allLevel1Circles}
       {allLeafCircles}
     </svg>
