@@ -7,6 +7,7 @@ import { Separator, Spinner } from '@radix-ui/themes';
 import TokenPortfolio from '../TokenPortfolio';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
 import ActivityStats from '../ActivityStats';
+import ProfileCard from '../ProfileCard';
 
 type Props = {
   addressInput: string;
@@ -35,40 +36,47 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           }}
         />
       )}
-      <Separator className="my-3" size={'4'} />
+      <ProfileCard address={addressInput as any} />
       {stateCheck('ActivityStats', ThreeStageState.Finished) && (
-        <div className="mt-8">
-          <div className="flex items-center justify-center">
-            <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
-          </div>
-          <LoadableContainer
-            isLoading={stateCheck('ActivityStats', ThreeStageState.InProgress)}
-            loadComponent={<Spinner />}
-          >
-            {allTransactions.length > 0 && (
-              <ActivityStats
-                transactions={allTransactions}
-                activityStats={activityStats}
-                mostActiveChain={mostActiveChain}
-              />
-            )}
-          </LoadableContainer>
-        </div>
-      )}
-      <Separator className="mt-[80px]" size={'4'} />
-      {stateCheck('ActivityStats', ThreeStageState.Finished) &&
-        stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
+        <React.Fragment>
           <div className="mt-8">
             <div className="flex items-center justify-center">
-              <h2 className="mb-4 font-bold text-2xl">Multi-chain Assets</h2>
+              <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
             </div>
-            {tokenPortfolio.length > 0 && (
-              <TokenPortfolio
-                tokenPortfolio={tokenPortfolio}
-                marketData={marketData}
-              />
-            )}
+            <LoadableContainer
+              isLoading={stateCheck(
+                'ActivityStats',
+                ThreeStageState.InProgress,
+              )}
+              loadComponent={<Spinner />}
+            >
+              {allTransactions.length > 0 && (
+                <ActivityStats
+                  transactions={allTransactions}
+                  activityStats={activityStats}
+                  mostActiveChain={mostActiveChain}
+                />
+              )}
+            </LoadableContainer>
           </div>
+        </React.Fragment>
+      )}
+      {stateCheck('ActivityStats', ThreeStageState.Finished) &&
+        stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
+          <React.Fragment>
+            <Separator className="mt-[80px]" size={'4'} />
+            <div className="mt-8">
+              <div className="flex items-center justify-center">
+                <h2 className="mb-4 font-bold text-2xl">Multi-chain Assets</h2>
+              </div>
+              {tokenPortfolio.length > 0 && (
+                <TokenPortfolio
+                  tokenPortfolio={tokenPortfolio}
+                  marketData={marketData}
+                />
+              )}
+            </div>
+          </React.Fragment>
         )}
     </section>
   );

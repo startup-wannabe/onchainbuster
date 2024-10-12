@@ -27,7 +27,6 @@ const TokenPortfolio = ({
   } = calculateMultichainTokenPortfolio(tokenPortfolio, marketData);
   return (
     <section className="mt-2 flex justify-center items-center flex-col">
-      <Title title="Multi-chain Portfolio" />
       <div className="flex justify-between items-center w-full">
         <CircularPackingChart
           data={chainCircularPackingData}
