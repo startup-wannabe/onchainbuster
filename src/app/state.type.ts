@@ -5,6 +5,7 @@ export enum StateEvent {
   GetNftPortfolio = 'GetNftPortfolio',
   GetTokenActivity = 'GetTokenActivity',
   GetNftActivity = 'GetNftActivity',
+  GetTalentScore = 'GetTalentScore',
   HowBasedAreYou = 'HowBasedAreYou',
 }
 

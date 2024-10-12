@@ -15,13 +15,17 @@ type TTokenDetails = {
   symbol: string;
 };
 
+type TChainStats = {
+  totalChains: string[];
+  noActivityChains: string[];
+  mostActiveChain: string;
+  countUniqueDaysActiveChain: number;
+};
+
 type TActivityStats = {
   totalTxs: number;
   firstActiveDay: Date | null;
   uniqueActiveDays: number;
-  uniqueActiveDays12M: number;
-  uniqueActiveDays6M: number;
-  uniqueActiveDays3M: number;
   longestStreakDays: number;
   currentStreakDays: number;
   activityPeriod: number;
@@ -83,6 +87,7 @@ type TDAppInteractionMap = {
 
 type TDeFiActivityStats = {
   sumCount: number;
+  dexCount: number;
   swapCount: number;
   lendCount: number;
 };
@@ -95,4 +100,9 @@ type TTokenActivityStats = {
 type TNFTActivityStats = {
   sumCount: number;
   tradeCount: number;
+};
+
+type TUserTraitResult = {
+  trait: string;
+  score: number;
 };

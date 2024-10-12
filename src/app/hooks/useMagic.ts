@@ -9,7 +9,7 @@ import {
   calculateEVMStreaksAndMetrics,
   calculateNFTActivityStats,
   calculateTokenActivityStats,
-  findLongestHoldingAsset,
+  findLongestHoldingToken,
   formatDuration,
 } from '../../helpers/activity.helper';
 import { listCMCTokenDetail } from '../api/cmcCallers';
@@ -38,6 +38,7 @@ export const StateSubEvents = {
   [StateEvent.GetNftPortfolio]: ThreeStageState,
   [StateEvent.GetTokenActivity]: ThreeStageState,
   [StateEvent.GetNftActivity]: ThreeStageState,
+  [StateEvent.GetTalentScore]: BinaryState,
 };
 
 export const useMagic = () => {
@@ -58,7 +59,8 @@ export const useMagic = () => {
     nftActivity: [, setNftActivity],
 
     // Insights
-    mostActiveChain: [, setMostActiveChain],
+    chainStats: [, setChainStats],
+    dappInteractionStats: [, setDappInteractionStats],
     activityStats: [, setActivityStats],
     defiActivityStats: [, setDefiActivityStats],
     tokenActivityStats: [, setTokenActivityStats],
@@ -92,18 +94,20 @@ export const useMagic = () => {
       const data = await method();
       const event = eventHooks.onFinishEvent;
       dispatchStateEvent(eventName, event.value);
-      if (event.toast)
+      if (event.toast) {
         toast(event.toast, {
           type: 'success',
         });
+      }
       return data;
     } catch (error: any) {
       const event = eventHooks.onErrorEvent;
       dispatchStateEvent(eventName, event.value);
-      if (event.toast)
+      if (event.toast) {
         toast(`${event.toast} - Error: ${error.message}`, {
           type: 'error',
         });
+      }
       throw new Error(error);
     }
   }
@@ -156,20 +160,36 @@ export const useMagic = () => {
         const allTransactions = Object.values(data).flat();
         setAllTransactions(allTransactions);
 
-        // Get Most Active Chain
         const mostActiveChain = Object.keys(data).reduce((a, b) =>
           data[a].length > data[b].length ? a : b,
         );
-        setMostActiveChain(mostActiveChain);
 
         // Get Activity Stats
         const stats = calculateEVMStreaksAndMetrics(allTransactions, address);
         console.log('Activity Stats:', stats);
         setActivityStats(stats);
 
+        // Get chain stats
+        const totalChains = Object.keys(data);
+        const noActivityChains = totalChains.filter(
+          (chain) => data[chain].length === 0,
+        );
+        // Get unique active day, on most active chain 🫠
+        const { uniqueActiveDays } = calculateEVMStreaksAndMetrics(
+          data[mostActiveChain],
+          address,
+        );
+        setChainStats({
+          totalChains,
+          mostActiveChain,
+          noActivityChains,
+          countUniqueDaysActiveChain: uniqueActiveDays,
+        });
+
         // Get Dapp Interaction Stats
         const dappInteractionStats = calculateDappInteraction(allTransactions);
         // TODO: Set new stats
+        setDappInteractionStats(dappInteractionStats);
         console.log('Dapp Stats', dappInteractionStats);
 
         // TODO: Set new stats
@@ -246,7 +266,7 @@ export const useMagic = () => {
         const longestHoldingAssetByChain = Object.entries(
           tokenActivityData,
         ).map(([chain, activities]) => {
-          return findLongestHoldingAsset(chain, activities, address);
+          return findLongestHoldingToken(chain, activities, address);
         });
 
         const longestHoldingAsset = longestHoldingAssetByChain.reduce(

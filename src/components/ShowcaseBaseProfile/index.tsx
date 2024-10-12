@@ -19,7 +19,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
   const {
     allTransactions: [allTransactions],
     activityStats: [activityStats],
-    mostActiveChain: [mostActiveChain],
+    chainStats: [chainStats],
     tokenPortfolio: [tokenPortfolio],
     marketData: [marketData],
   } = useMagicContext();
@@ -46,7 +46,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 <ActivityStats
                   transactions={allTransactions}
                   activityStats={activityStats}
-                  mostActiveChain={mostActiveChain}
+                  mostActiveChain={chainStats.mostActiveChain}
                 />
               )}
             </LoadableContainer>

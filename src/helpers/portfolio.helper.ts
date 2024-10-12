@@ -164,9 +164,9 @@ export const buildCircularPackingChart = (
   return portfolioBuilder.build();
 };
 
-export function formatNumberUSD(num: number) {
+export const formatNumberUSD = (num: number) => {
   return num.toLocaleString('it-IT', { style: 'currency', currency: 'USD' });
-}
+};
 
 export const calculateMultichainNFTPortfolio = (
   nftBalanceList: TNFTBalance[],

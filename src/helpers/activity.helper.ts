@@ -8,6 +8,7 @@ import {
   COW_SWAP,
   CURVE,
   DAGORA,
+  DEX_INTERACTION,
   ENS,
   LEND_BORROW_STAKE_INTERACTION,
   MAGIC_EDEN,
@@ -36,9 +37,6 @@ export const calculateEVMStreaksAndMetrics = (
       totalTxs: 0,
       firstActiveDay: null,
       uniqueActiveDays: 0,
-      uniqueActiveDays12M: 0,
-      uniqueActiveDays6M: 0,
-      uniqueActiveDays3M: 0,
       longestStreakDays: 0,
       currentStreakDays: 0,
       activityPeriod: 0,
@@ -55,51 +53,6 @@ export const calculateEVMStreaksAndMetrics = (
     filteredTransactions.map((tx) =>
       new Date(Number.parseInt(tx.timeStamp, 10) * 1000).toDateString(),
     ),
-  );
-
-  const currentDate = new Date();
-  const dateRanges = [
-    {
-      name: '12M',
-      date: new Date(
-        currentDate.getFullYear() - 1,
-        currentDate.getMonth(),
-        currentDate.getDate(),
-      ),
-    },
-    {
-      name: '6M',
-      date: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() - 6,
-        currentDate.getDate(),
-      ),
-    },
-    {
-      name: '3M',
-      date: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() - 3,
-        currentDate.getDate(),
-      ),
-    },
-  ];
-
-  const uniqueActiveDays = dateRanges.reduce(
-    (acc, range) => {
-      acc[`uniqueActiveDays${range.name}`] = new Set(
-        filteredTransactions
-          .filter((tx) => {
-            const txDate = new Date(Number.parseInt(tx.timeStamp, 10) * 1000);
-            return txDate >= range.date && txDate <= currentDate;
-          })
-          .map((tx) =>
-            new Date(Number.parseInt(tx.timeStamp, 10) * 1000).toDateString(),
-          ),
-      );
-      return acc;
-    },
-    {} as Record<string, Set<string>>,
   );
 
   const sortedDates = Array.from(uniqueActiveDaysSet)
@@ -127,9 +80,6 @@ export const calculateEVMStreaksAndMetrics = (
     totalTxs: countTxs,
     firstActiveDay: firstTransactionDate,
     uniqueActiveDays: uniqueActiveDaysSet.size,
-    uniqueActiveDays12M: uniqueActiveDays.uniqueActiveDays12M.size,
-    uniqueActiveDays6M: uniqueActiveDays.uniqueActiveDays6M.size,
-    uniqueActiveDays3M: uniqueActiveDays.uniqueActiveDays3M.size,
     longestStreakDays,
     currentStreakDays:
       sortedDates[sortedDates.length - 1].toDateString() ===
@@ -163,8 +113,13 @@ export const calculateDeFiActivityStats = (
     (tx) =>
       (tx.functionName &&
         SWAP_FUNCTION_NAMES.some((fn) => tx.functionName?.includes(fn))) ??
-      (ALL_DEFI_INTERACTION.has(tx.to.toLowerCase()) ||
-        ALL_DEFI_INTERACTION.has(tx.from.toLowerCase())),
+      DEX_INTERACTION.has(tx.to.toLowerCase()), // Maybe?
+  ).length;
+
+  const dexCount = transactions.filter(
+    (tx) =>
+      DEX_INTERACTION.has(tx.to.toLowerCase()) ||
+      DEX_INTERACTION.has(tx.from.toLowerCase()),
   ).length;
 
   const lendCount = transactions.filter(
@@ -173,7 +128,7 @@ export const calculateDeFiActivityStats = (
       LEND_BORROW_STAKE_INTERACTION.has(tx.from.toLowerCase()),
   ).length;
 
-  return { sumCount, swapCount, lendCount } as TDeFiActivityStats;
+  return { sumCount, swapCount, dexCount, lendCount } as TDeFiActivityStats;
 };
 
 export const calculateTokenActivityStats = (
@@ -182,6 +137,7 @@ export const calculateTokenActivityStats = (
 ) => {
   const sumCount = tokenActivities.length;
 
+  // Recent token = date_added on CMC less than recent 3 months
   const recentTokenActivities = tokenActivities.filter((act) => {
     const token = marketData.find((data) => data.symbol === act.symbol);
     if (token) {
@@ -192,6 +148,7 @@ export const calculateTokenActivityStats = (
     }
     return false;
   });
+
   const newCount = recentTokenActivities.length;
 
   return { sumCount, newCount } as TTokenActivityStats;
@@ -379,7 +336,7 @@ type Holding = {
  * @param address - The address of the user.
  * @returns The asset with the longest holding duration and the duration in milliseconds.
  */
-export const findLongestHoldingAsset = (
+export const findLongestHoldingToken = (
   chain: string,
   transactions: TTokenActivity[],
   address: string,

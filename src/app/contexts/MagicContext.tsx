@@ -6,9 +6,6 @@ const defaultActivityStats: TActivityStats = {
   totalTxs: 0,
   firstActiveDay: null,
   uniqueActiveDays: 0,
-  uniqueActiveDays12M: 0,
-  uniqueActiveDays6M: 0,
-  uniqueActiveDays3M: 0,
   longestStreakDays: 0,
   currentStreakDays: 0,
   activityPeriod: 0,
@@ -18,11 +15,26 @@ const defaultDeFiActivityStats: TDeFiActivityStats = {
   sumCount: 0,
   lendCount: 0,
   swapCount: 0,
+  dexCount: 0,
 };
 
 const defaultTokenActivityStats: TTokenActivityStats = {
   sumCount: 0,
   newCount: 0,
+};
+
+const defaultChainStats: TChainStats = {
+  totalChains: [],
+  noActivityChains: [],
+  mostActiveChain: '',
+  countUniqueDaysActiveChain: 0,
+};
+
+const defaultDappInteractionStats: TDAppInteractionMap = {
+  marketplace: {},
+  defi: {},
+  bridge: {},
+  nameService: {},
 };
 
 const defaultNFTActivityStats: TNFTActivityStats = {
@@ -49,7 +61,8 @@ interface IMagicContext {
   nftActivity: UseState<TNFTActivity[]>;
 
   // Insights
-  mostActiveChain: UseState<string>;
+  chainStats: UseState<TChainStats>;
+  dappInteractionStats: UseState<TDAppInteractionMap>;
   activityStats: UseState<TActivityStats>;
   defiActivityStats: UseState<TDeFiActivityStats>;
   tokenActivityStats: UseState<TTokenActivityStats>;
@@ -82,7 +95,10 @@ export const MagicProvider = ({ children }: Props) => {
     defaultTokenActivityStats,
   );
   const nftActivityStats = useState<TNFTActivityStats>(defaultNFTActivityStats);
-  const mostActiveChain = useState('');
+  const chainStats = useState<TChainStats>(defaultChainStats);
+  const dappInteractionStats = useState<TDAppInteractionMap>(
+    defaultDappInteractionStats,
+  );
 
   // Multi-chain token portfolio
   const tokenPortfolio = useState<TTokenBalance[]>([]);
@@ -113,7 +129,8 @@ export const MagicProvider = ({ children }: Props) => {
 
         // Insight
         activityStats,
-        mostActiveChain,
+        dappInteractionStats,
+        chainStats,
         defiActivityStats,
         tokenActivityStats,
         nftActivityStats,
