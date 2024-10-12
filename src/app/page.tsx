@@ -5,272 +5,42 @@ import LoadableContainer from '@/components/LoadableContainer';
 import MagicButton from '@/components/MagicButton';
 import TokenPortfolio from '@components/TokenPortfolio';
 import { ONCHAINKIT_LINK } from '@/constants/links';
-import { calculateEVMStreaksAndMetrics } from '@/helpers/activity.helper';
-import { useWagmiConfig } from '@/wagmi';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Spinner, TextField } from '@radix-ui/themes';
-import { getEnsAddress } from '@wagmi/core';
+import { Separator, Spinner, TextField } from '@radix-ui/themes';
+
 import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { normalize } from 'viem/ens';
 import { useAccount } from 'wagmi';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
-import { listCMCTokenDetail } from './api/cmcCallers';
+
+import HowBasedAreYouHeader from '../components/HowBasedAreYouHeader';
 import {
-  getMultichainPortfolio,
   listAllNFTActivityByChain,
-  listAllNFTBalanceByChain,
   listAllTokenActivityByChain,
-  listAllTransactionsByChain,
 } from './api/services';
-import { searchAddressFromOneID } from './api/victionCallers';
-import {
-  BinaryState,
-  StateEvent,
-  type StateEventRegistry,
-  type StateOption,
-  ThreeStageState,
-  type Toastable,
-} from './state.type';
-import { delayMs } from '../helpers';
+import { ThreeStageState } from './state.type';
+import { useMagic } from './hooks/useMagic';
 
 // TODO: Remove this when ready.
 const MOCK_WALLET_ADDRESS = '0x294d404b2d2A46DAb65d0256c5ADC34C901A6842';
 
-const StateSubEvents = {
-  [StateEvent.HowBasedAreYou]: ThreeStageState,
-  [StateEvent.ActivityStats]: ThreeStageState,
-  [StateEvent.GetAddress]: BinaryState,
-  [StateEvent.GetTokenPortfolio]: ThreeStageState,
-};
-
 export default function Page() {
-  const [stateEvents, setStateEvents] = useState<StateEventRegistry>({});
   const { address } = useAccount();
-  const wagmiConfig = useWagmiConfig();
   // TODO: Remove the mock value when ready.
   const [addressInput, setAddressInput] = useState(MOCK_WALLET_ADDRESS);
-  const [inputAddress, setInputAddress] = useState('');
-  // All transactions and activity stats
-  const [allTransactions, setAllTransactions] = useState<TEVMScanTransaction[]>(
-    [],
-  );
-  const [activityStats, setActivityStats] = useState<TActivityStats>({
-    totalTxs: 0,
-    firstActiveDay: null,
-    uniqueActiveDays: 0,
-    uniqueActiveDays12M: 0,
-    uniqueActiveDays6M: 0,
-    uniqueActiveDays3M: 0,
-    longestStreakDays: 0,
-    currentStreakDays: 0,
-    activityPeriod: 0,
-  });
-  const [mostActiveChain, setMostActiveChain] = useState('');
-  // Multi-chain token portfolio
-  const [tokenPortfolio, setTokenPortfolio] = useState<TTokenBalance[]>([]);
-  const [marketData, setMarketData] = useState<TTokenSymbolDetail[]>([]);
-
-  // Multi-chain nft portfolio
-  const [nftPortfolio, setNftPortfolio] = useState<TNFTBalance[]>([]);
-  const dispatchStateEvent = (eventName: StateEvent, status: StateOption) => {
-    setStateEvents((stateEvents) => ({ ...stateEvents, [eventName]: status }));
-  };
-
-  console.log(stateEvents);
-
-  const stateCheck = (
-    event: keyof typeof StateEvent,
-    option: StateOption,
-  ): boolean => {
-    return stateEvents[event] === (StateSubEvents[event] as any)[option];
-  };
-
-  async function newAsyncDispatch<Output>(
-    eventName: StateEvent,
-    eventHooks: {
-      onStartEvent: StateOption;
-      onFinishEvent: Toastable<StateOption>;
-      onErrorEvent: Toastable<StateOption>;
-      onResetEvent: StateOption;
+  const {
+    state: {
+      activityStats,
+      inputAddress,
+      marketData,
+      mostActiveChain,
+      // nftPortfolio,
+      tokenPortfolio,
+      allTransactions,
     },
-    method: () => Promise<Output>,
-  ): Promise<Output> {
-    dispatchStateEvent(eventName, eventHooks.onResetEvent);
-    dispatchStateEvent(eventName, eventHooks.onStartEvent);
-    try {
-      const data = await method();
-      const event = eventHooks.onFinishEvent;
-      dispatchStateEvent(eventName, event.value);
-      if (event.toast)
-        toast(event.toast, {
-          type: 'success',
-        });
-      return data;
-    } catch (error: any) {
-      const event = eventHooks.onErrorEvent;
-      dispatchStateEvent(eventName, event.value);
-      if (event.toast)
-        toast(`${event.toast} - Error: ${error.message}`, {
-          type: 'error',
-        });
-      throw new Error(error);
-    }
-  }
-
-  const getAddress = async (text: string) => {
-    return newAsyncDispatch(
-      StateEvent.GetAddress,
-      {
-        onStartEvent: StateSubEvents.GetAddress.True,
-        onErrorEvent: { value: StateSubEvents.GetAddress.False },
-        onFinishEvent: { value: StateSubEvents.GetAddress.False },
-        onResetEvent: StateSubEvents.GetAddress.False,
-      },
-      async () => {
-        let address = '';
-        if (text.startsWith('0x')) {
-          address = text;
-        } else if (text.endsWith('.eth')) {
-          address = (await getEnsAddress(wagmiConfig, {
-            name: normalize(text),
-            chainId: 1,
-          })) as string;
-          console.log('ENS Address:', address);
-        } else {
-          address = await searchAddressFromOneID(text);
-          console.log('OneID Address:', address);
-        }
-        setInputAddress(address);
-        return address;
-      },
-    );
-  };
-
-  const fetchActivityStats = async (addressInput: string) => {
-    const address = await getAddress(addressInput);
-    return newAsyncDispatch(
-      StateEvent.ActivityStats,
-      {
-        onStartEvent: StateSubEvents.ActivityStats.InProgress,
-        onErrorEvent: { value: StateSubEvents.ActivityStats.Idle },
-        onFinishEvent: {
-          value: StateSubEvents.ActivityStats.Finished,
-          toast: 'Activity stats fetched.',
-        },
-        onResetEvent: StateSubEvents.ActivityStats.Idle,
-      },
-      async () => {
-        const data = await listAllTransactionsByChain(address);
-        console.log('evmTransactions:', data);
-        const allTransactions = Object.values(data).flat();
-        setAllTransactions(allTransactions);
-        const mostActiveChain = Object.keys(data).reduce((a, b) =>
-          data[a].length > data[b].length ? a : b,
-        );
-        setMostActiveChain(mostActiveChain);
-        const stats = calculateEVMStreaksAndMetrics(
-          data[mostActiveChain],
-          address,
-        );
-        setActivityStats(stats);
-        console.log('Activity Stats:', stats);
-        return stats;
-      },
-    );
-  };
-
-  const fetchMultichainTokenPortfolio = async (text: string) => {
-    const address = await getAddress(text);
-    return newAsyncDispatch(
-      StateEvent.GetTokenPortfolio,
-      {
-        onStartEvent: StateSubEvents.GetTokenPortfolio.InProgress,
-        onErrorEvent: {
-          value: StateSubEvents.GetTokenPortfolio.Idle,
-          toast: 'Failed to fetch multichain token portfolio.',
-        },
-        onFinishEvent: {
-          value: StateSubEvents.GetTokenPortfolio.Finished,
-          toast: 'Fetched token portfolio.',
-        },
-        onResetEvent: StateSubEvents.GetTokenPortfolio.Idle,
-      },
-      async () => {
-        const tokenBalanceData = await getMultichainPortfolio(address);
-        console.log(tokenBalanceData);
-        // Get distinct token symbol with non-zero balance
-        const distinctTokenSymbols = [
-          ...new Set(
-            tokenBalanceData
-              .filter((token) => token.tokenBalance !== 0)
-              .map((token) => token.symbol),
-          ),
-        ];
-        // Get token price
-        const marketData = await listCMCTokenDetail(
-          distinctTokenSymbols.join(','),
-        );
-        console.log(marketData);
-        setMarketData(marketData);
-        setTokenPortfolio(tokenBalanceData);
-      },
-    );
-  };
-
-  const fetchMultichainNFTPortfolio = async (text: string) => {
-    const address = await getAddress(text);
-    return newAsyncDispatch(
-      StateEvent.GetTokenPortfolio,
-      {
-        onStartEvent: StateSubEvents.GetTokenPortfolio.InProgress,
-        onErrorEvent: {
-          value: StateSubEvents.GetTokenPortfolio.Idle,
-          toast: 'Failed to fetch NFT portfolio.',
-        },
-        onFinishEvent: {
-          value: StateSubEvents.GetTokenPortfolio.Finished,
-          toast: 'Fetched token portfolio.',
-        },
-        onResetEvent: StateSubEvents.GetTokenPortfolio.Idle,
-      },
-      async () => {
-        const data = await listAllNFTBalanceByChain(address);
-        const allNFTBalance = Object.values(data).flat();
-        console.log(allNFTBalance);
-        setNftPortfolio(allNFTBalance);
-      },
-    );
-  };
-
-  const letsDoSomeMagic = async () => {
-    try {
-      await newAsyncDispatch(
-        StateEvent.HowBasedAreYou,
-        {
-          onStartEvent: StateSubEvents.HowBasedAreYou.InProgress,
-          onErrorEvent: {
-            value: StateSubEvents.HowBasedAreYou.Idle,
-            toast: 'Magic failed!',
-          },
-          onFinishEvent: {
-            value: StateSubEvents.HowBasedAreYou.Finished,
-            toast: 'Magic done!',
-          },
-          onResetEvent: StateSubEvents.HowBasedAreYou.Idle,
-        },
-        async () => {
-          await fetchActivityStats(addressInput);
-          await fetchMultichainTokenPortfolio(addressInput);
-          await delayMs(1000);
-        },
-      );
-      // await fetchMultichainNFTPortfolio(addressInput);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    query: { getAddress, stateCheck },
+    mutate: { letsDoSomeMagic },
+  } = useMagic();
 
   const handleSearchAllNFTActivity = async (text: string) => {
     const address = await getAddress(text);
@@ -303,14 +73,12 @@ export default function Page() {
         </div>
       </section>
       <section className="templateSection flex w-full flex-col items-center justify-center gap-4 rounded-xl px-2 py-10 md:grow">
-        <h1 className="inline-flex text-4xl mb-6">
-          How
-          <span className="flex mx-2 font-bold">
-            <BaseSvg width={40} height={40} />{' '}
-            <span style={{ marginLeft: 5 }}>Based</span>
-          </span>{' '}
-          are you?
-        </h1>
+        <HowBasedAreYouHeader
+          icon={{
+            width: 40,
+            height: 40,
+          }}
+        />
         <TextField.Root
           className="mr-2 w-full rounded-md p-2 shadow-xl"
           placeholder="ENS, Basename, OneID, 0x..."
@@ -337,7 +105,7 @@ export default function Page() {
             )}
             <MagicButton
               text="Let's go 🔥"
-              onClick={letsDoSomeMagic}
+              onClick={() => letsDoSomeMagic(addressInput)}
               loading={stateCheck('HowBasedAreYou', ThreeStageState.InProgress)}
             />
           </TextField.Slot>
@@ -364,38 +132,52 @@ export default function Page() {
           </button>
         </div>
       </section>
-      {stateCheck('ActivityStats', ThreeStageState.Finished) && (
-        <div className="mt-8">
-          <div className="flex items-center justify-center">
-            <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
+      <Separator size={'4'} className="mb-10" />
+      <div className="flex items-center justify-center flex-col">
+        <HowBasedAreYouHeader
+          name="Vitalik Buterin"
+          className="text-xl"
+          icon={{
+            width: 30,
+            height: 30,
+          }}
+        />
+        {stateCheck('ActivityStats', ThreeStageState.Finished) && (
+          <div className="mt-8">
+            <div className="flex items-center justify-center">
+              <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
+            </div>
+            <LoadableContainer
+              isLoading={stateCheck(
+                'ActivityStats',
+                ThreeStageState.InProgress,
+              )}
+              loadComponent={<Spinner />}
+            >
+              {allTransactions.length > 0 && (
+                <ActivityStats
+                  transactions={allTransactions}
+                  activityStats={activityStats}
+                  mostActiveChain={mostActiveChain}
+                />
+              )}
+            </LoadableContainer>
           </div>
-          <LoadableContainer
-            isLoading={stateCheck('ActivityStats', ThreeStageState.InProgress)}
-            loadComponent={<Spinner />}
-          >
-            {allTransactions.length > 0 && (
-              <ActivityStats
-                transactions={allTransactions}
-                activityStats={activityStats}
-                mostActiveChain={mostActiveChain}
+        )}
+        {stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
+          <div className="mt-8">
+            <div className="flex items-center justify-center">
+              <h2 className="mb-4 font-bold text-2xl">Token Portfolio</h2>
+            </div>
+            {tokenPortfolio.length > 0 && (
+              <TokenPortfolio
+                tokenPortfolio={tokenPortfolio}
+                marketData={marketData}
               />
             )}
-          </LoadableContainer>
-        </div>
-      )}
-      {stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
-        <div className="mt-8">
-          <div className="flex items-center justify-center">
-            <h2 className="mb-4 font-bold text-2xl">Token Portfolio</h2>
           </div>
-          {tokenPortfolio.length > 0 && (
-            <TokenPortfolio
-              tokenPortfolio={tokenPortfolio}
-              marketData={marketData}
-            />
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

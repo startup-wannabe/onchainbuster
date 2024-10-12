@@ -151,7 +151,7 @@ const ActivityStats = ({
             </p>
           </div>
 
-          <div className="w-28">
+          <div className="w-30">
             <div className="font-medium text-palette-primary text-xl">
               {activityStats.firstActiveDay
                 ? activityStats.firstActiveDay.toLocaleDateString()
@@ -161,7 +161,7 @@ const ActivityStats = ({
               First Active Day
             </p>
           </div>
-          <div className="w-28">
+          <div className="w-26">
             <div className="font-medium text-palette-primary text-xl">
               {activityStats.uniqueActiveDays}
             </div>
