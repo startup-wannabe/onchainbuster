@@ -1,23 +1,26 @@
-import {
-  BinaryState,
-  StateEvent,
-  StateOption,
-  ThreeStageState,
-  Toastable,
-} from '../state.type';
-import { toast } from 'react-toastify';
-import { listCMCTokenDetail } from '../api/cmcCallers';
-import { getEnsAddress } from '@wagmi/core';
 import { useWagmiConfig } from '@/wagmi';
+import { getEnsAddress } from '@wagmi/core';
+import { toast } from 'react-toastify';
+import { normalize } from 'viem/ens';
+import { delayMs } from '../../helpers';
+import {
+  calculateDappInteraction,
+  calculateEVMStreaksAndMetrics,
+} from '../../helpers/activity.helper';
+import { listCMCTokenDetail } from '../api/cmcCallers';
 import {
   getMultichainPortfolio,
   listAllNFTBalanceByChain,
   listAllTransactionsByChain,
 } from '../api/services';
-import { normalize } from 'viem/ens';
 import { searchAddressFromOneID } from '../api/victionCallers';
-import { delayMs } from '../../helpers';
-import { calculateEVMStreaksAndMetrics } from '../../helpers/activity.helper';
+import {
+  BinaryState,
+  StateEvent,
+  type StateOption,
+  ThreeStageState,
+  type Toastable,
+} from '../state.type';
 import { useMagicContext } from './useMagicContext';
 
 export const StateSubEvents = {
@@ -31,6 +34,7 @@ export const StateSubEvents = {
 };
 
 export const useMagic = () => {
+  // biome-ignore lint/correctness/noEmptyPattern: <explanation>
   const {} = useMagic;
   const wagmiConfig = useWagmiConfig();
   const {
@@ -140,12 +144,12 @@ export const useMagic = () => {
           data[a].length > data[b].length ? a : b,
         );
         setMostActiveChain(mostActiveChain);
-        const stats = calculateEVMStreaksAndMetrics(
-          data[mostActiveChain],
-          address,
-        );
+        const stats = calculateEVMStreaksAndMetrics(allTransactions, address);
         setActivityStats(stats);
         console.log('Activity Stats:', stats);
+
+        const dappInteractionStats = calculateDappInteraction(allTransactions);
+        console.log('Dapp Stats', dappInteractionStats);
         return stats;
       },
     );

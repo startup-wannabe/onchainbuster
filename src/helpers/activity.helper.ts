@@ -1,3 +1,24 @@
+import {
+  AAVE,
+  AERODROME,
+  BASE_BRIDGE,
+  BLUR_NFT_MARKETPLACE,
+  COW_SWAP,
+  CURVE,
+  DAGORA,
+  ENS,
+  MAGIC_EDEN,
+  MOONWELL,
+  ONEID,
+  ONEINCH,
+  OPENSEA_MARKETPLACE,
+  OP_BRIDGE,
+  PENDLE,
+  RELAY,
+  UNISWAP,
+  VELODROME,
+} from '@/constants/dapps';
+
 type Holding = {
   amount: number;
   timestamp: number;
@@ -127,6 +148,165 @@ export const calculateEVMStreaksAndMetrics = (
   };
 };
 
+export const calculateDappInteraction = (
+  transactions: TEVMScanTransaction[],
+): TDAppInteraction12MMap => {
+  return {
+    marketplace: {
+      opensea: {
+        name: 'OpenSea',
+        count: transactions.filter(
+          (tx) =>
+            OPENSEA_MARKETPLACE.has(tx.to.toLowerCase()) ||
+            OPENSEA_MARKETPLACE.has(tx.from.toLowerCase()),
+        ).length,
+      },
+      blur: {
+        name: 'Blur',
+        count: transactions.filter(
+          (tx) =>
+            BLUR_NFT_MARKETPLACE.has(tx.to.toLowerCase()) ||
+            BLUR_NFT_MARKETPLACE.has(tx.from.toLowerCase()),
+        ).length,
+      },
+      magicEden: {
+        name: 'Magic Eden',
+        count: transactions.filter(
+          (tx) =>
+            MAGIC_EDEN.has(tx.to.toLowerCase()) ||
+            MAGIC_EDEN.has(tx.from.toLowerCase()),
+        ).length,
+      },
+      dagora: {
+        name: 'Dagora',
+        count: transactions.filter(
+          (tx) =>
+            DAGORA.has(tx.to.toLowerCase()) ||
+            DAGORA.has(tx.from.toLowerCase()),
+        ).length,
+      },
+    },
+    defi: {
+      uniswap: {
+        name: 'Uniswap',
+        count: transactions.filter(
+          (tx) =>
+            UNISWAP.has(tx.to.toLowerCase()) ||
+            UNISWAP.has(tx.from.toLowerCase()),
+        ).length,
+      },
+      curve: {
+        name: 'Curve',
+        count: transactions.filter(
+          (tx) =>
+            CURVE.has(tx.to.toLowerCase()) || CURVE.has(tx.from.toLowerCase()),
+        ).length,
+      },
+      pendle: {
+        name: 'Pendle',
+        count: transactions.filter(
+          (tx) =>
+            PENDLE.has(tx.to.toLowerCase()) ||
+            PENDLE.has(tx.from.toLowerCase()),
+        ).length,
+      },
+
+      aave: {
+        name: 'Aave',
+        count: transactions.filter(
+          (tx) =>
+            AAVE.has(tx.to.toLowerCase()) || AAVE.has(tx.from.toLowerCase()),
+        ).length,
+      },
+
+      oneinch: {
+        name: '1INCH',
+        count: transactions.filter(
+          (tx) =>
+            ONEINCH.has(tx.to.toLowerCase()) ||
+            ONEINCH.has(tx.from.toLowerCase()),
+        ).length,
+      },
+
+      cow: {
+        name: 'CoW Swap',
+        count: transactions.filter(
+          (tx) =>
+            COW_SWAP.has(tx.to.toLowerCase()) ||
+            COW_SWAP.has(tx.from.toLowerCase()),
+        ).length,
+      },
+
+      aero: {
+        name: 'Aerodrome',
+        count: transactions.filter(
+          (tx) =>
+            AERODROME.has(tx.to.toLowerCase()) ||
+            AERODROME.has(tx.from.toLowerCase()),
+        ).length,
+      },
+
+      velo: {
+        name: 'Velodrome',
+        count: transactions.filter(
+          (tx) =>
+            VELODROME.has(tx.to.toLowerCase()) ||
+            VELODROME.has(tx.from.toLowerCase()),
+        ).length,
+      },
+
+      moonwell: {
+        name: 'Moonwell',
+        count: transactions.filter(
+          (tx) =>
+            MOONWELL.has(tx.to.toLowerCase()) ||
+            MOONWELL.has(tx.from.toLowerCase()),
+        ).length,
+      },
+    },
+    bridge: {
+      relay: {
+        name: 'Relay Bridge',
+        count: transactions.filter(
+          (tx) =>
+            RELAY.has(tx.to.toLowerCase()) || RELAY.has(tx.from.toLowerCase()),
+        ).length,
+      },
+      op: {
+        name: 'OP Native Bridge',
+        count: transactions.filter(
+          (tx) =>
+            OP_BRIDGE === tx.to.toLowerCase() ||
+            OP_BRIDGE === tx.from.toLowerCase(),
+        ).length,
+      },
+      base: {
+        name: 'Base Native Bridge (Deprecated)',
+        count: transactions.filter(
+          (tx) =>
+            BASE_BRIDGE === tx.to.toLowerCase() ||
+            BASE_BRIDGE === tx.from.toLowerCase(),
+        ).length,
+      },
+    },
+    nameService: {
+      ens: {
+        name: 'Ethereum Name Service (ENS)',
+        count: transactions.filter(
+          (tx) =>
+            ENS.has(tx.to.toLowerCase()) || ENS.has(tx.from.toLowerCase()),
+        ).length,
+      },
+      oneid: {
+        name: 'OneID',
+        count: transactions.filter(
+          (tx) =>
+            ONEID.has(tx.to.toLowerCase()) || ONEID.has(tx.from.toLowerCase()),
+        ).length,
+      },
+    },
+  } as TDAppInteractionMap;
+};
 /**
  * Function to find the asset with the longest holding duration.
  * @param transactions - Array of buy/sell transactions.
