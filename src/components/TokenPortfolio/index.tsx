@@ -3,9 +3,8 @@ import {
   calculateMultichainTokenPortfolio,
   formatNumberUSD,
 } from '@/helpers/portfolio.helper';
-import Title from '../Title';
+import { Separator } from '@radix-ui/themes';
 import { CircularPackingChart } from '../CircularPackingChart';
-import { Separator, Table } from '@radix-ui/themes';
 import TokenPortfolioTable from '../TokenPortfolioTable';
 
 type TokenPortfolioProps = {
@@ -64,9 +63,9 @@ const TokenPortfolio = ({
             <span className="font-bold">18 months</span>
           </div>
         </div>
-        <div className="rounded-xl mx-1 border border-palette-line/20 shadow-xl w-fit px-4 py-2">
+        <div className="mx-1 w-fit rounded-xl border border-palette-line/20 px-4 py-2 shadow-xl">
           <h1 className="font-bold text-md">💰 Assets allocation</h1>
-          <Separator className="mb-3 mt-2" size={'4'} />
+          <Separator className="mt-2 mb-3" size={'4'} />
           <div>
             <span className="font-bold">51%</span> of your wallet balance is in
             tokens, <br />

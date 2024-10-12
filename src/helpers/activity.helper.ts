@@ -1,12 +1,15 @@
+import { chainIDMap } from '@/constants/chains';
 import {
   AAVE,
   AERODROME,
+  ALL_DEFI_INTERACTION,
   BASE_BRIDGE,
   BLUR_NFT_MARKETPLACE,
   COW_SWAP,
   CURVE,
   DAGORA,
   ENS,
+  LEND_BORROW_STAKE_INTERACTION,
   MAGIC_EDEN,
   MOONWELL,
   ONEID,
@@ -17,12 +20,7 @@ import {
   RELAY,
   UNISWAP,
   VELODROME,
-} from '@/constants/dapps';
-
-type Holding = {
-  amount: number;
-  timestamp: number;
-};
+} from '@/constants/contracts';
 
 // Acknowledgement: https://github.com/base-org/web/blob/master/apps/web/src/components/Basenames/UsernameProfileSectionHeatmap/index.tsx#L115
 export const calculateEVMStreaksAndMetrics = (
@@ -148,9 +146,70 @@ export const calculateEVMStreaksAndMetrics = (
   };
 };
 
+// Swap Function Names
+const SWAP_FUNCTION_NAMES = ['swap', 'fillOtcOrderWithEth', 'proxiedSwap'];
+
+export const calculateDeFiActivityStats = (
+  transactions: TEVMScanTransaction[],
+): TDeFiActivityStats => {
+  // All defi transactions (swap, lend, stake, borrow)
+  const sumCount = transactions.filter(
+    (tx) =>
+      ALL_DEFI_INTERACTION.has(tx.to.toLowerCase()) ||
+      ALL_DEFI_INTERACTION.has(tx.from.toLowerCase()),
+  ).length;
+
+  const swapCount = transactions.filter(
+    (tx) =>
+      (tx.functionName &&
+        SWAP_FUNCTION_NAMES.some((fn) => tx.functionName?.includes(fn))) ??
+      (ALL_DEFI_INTERACTION.has(tx.to.toLowerCase()) ||
+        ALL_DEFI_INTERACTION.has(tx.from.toLowerCase())),
+  ).length;
+
+  const lendCount = transactions.filter(
+    (tx) =>
+      LEND_BORROW_STAKE_INTERACTION.has(tx.to.toLowerCase()) ||
+      LEND_BORROW_STAKE_INTERACTION.has(tx.from.toLowerCase()),
+  ).length;
+
+  return { sumCount, swapCount, lendCount } as TDeFiActivityStats;
+};
+
+export const calculateTokenActivityStats = (
+  tokenActivities: TTokenActivity[],
+  marketData: TTokenSymbolDetail[],
+) => {
+  const sumCount = tokenActivities.length;
+
+  const recentTokenActivities = tokenActivities.filter((act) => {
+    const token = marketData.find((data) => data.symbol === act.symbol);
+    if (token) {
+      const dateAdded = new Date(token.date_added);
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      return dateAdded > threeMonthsAgo;
+    }
+    return false;
+  });
+  const newCount = recentTokenActivities.length;
+
+  return { sumCount, newCount } as TTokenActivityStats;
+};
+
+export const calculateNFTActivityStats = (nftActivities: TNFTActivity[]) => {
+  // All NFT actions
+  const sumCount = nftActivities.length;
+  const tradeCount = nftActivities.filter((act) =>
+    ['buy', 'sale', 'listing'].includes(act.action),
+  ).length;
+
+  return { sumCount, tradeCount } as TNFTActivityStats;
+};
+
 export const calculateDappInteraction = (
   transactions: TEVMScanTransaction[],
-): TDAppInteraction12MMap => {
+): TDAppInteractionMap => {
   return {
     marketplace: {
       opensea: {
@@ -307,21 +366,35 @@ export const calculateDappInteraction = (
     },
   } as TDAppInteractionMap;
 };
+
+type Holding = {
+  amount: number;
+  timestamp: number;
+};
+
 /**
  * Function to find the asset with the longest holding duration.
+ * @param chain - The blockchain network (e.g., Ethereum, Binance Smart Chain).
  * @param transactions - Array of buy/sell transactions.
+ * @param address - The address of the user.
  * @returns The asset with the longest holding duration and the duration in milliseconds.
  */
 export const findLongestHoldingAsset = (
+  chain: string,
   transactions: TTokenActivity[],
   address: string,
-): { asset: string; duration: number } => {
-  const holdings: Record<string, Holding[]> = {};
+): TLongestHoldingToken => {
+  const holdings: Record<string, Holding[]> = {}; // Updated to include chain
   let longestDuration = 0;
   let longestAsset = '';
 
-  for (const { symbol, from, to, value, timestamp } of transactions) {
-    // If it's a buy transaction, add to holdings
+  // Sort timestamp asc
+  const sortedTransactions = transactions.sort((a, b) =>
+    Number.parseInt(a.timestamp) > Number.parseInt(b.timestamp) ? 1 : -1,
+  );
+
+  // If it's a buy transaction, add to holdings
+  for (const { symbol, from, to, value, timestamp } of sortedTransactions) {
     if (to.toLowerCase() === address.toLowerCase()) {
       if (!holdings[symbol]) {
         holdings[symbol] = [];
@@ -331,10 +404,18 @@ export const findLongestHoldingAsset = (
         amount: Number.parseInt(value || '0'),
         timestamp: Number.parseInt(timestamp),
       });
+
+      if (chain === 'vic') {
+        console.log('After buy:', holdings);
+      }
     }
 
     // If it's a sell transaction, calculate holding duration
     if (from.toLowerCase() === address.toLowerCase()) {
+      if (chain === 'vic') {
+        console.log(symbol, '-', value, 'at', timestamp);
+      }
+
       let remainingSellAmount = Number.parseInt(value || '0');
 
       // Process each holding for this asset
@@ -366,7 +447,8 @@ export const findLongestHoldingAsset = (
   }
 
   return {
-    asset: longestAsset,
+    chain: chainIDMap[chain].name,
+    symbol: longestAsset,
     duration: longestDuration,
   };
 };
@@ -377,24 +459,32 @@ export const findLongestHoldingAsset = (
  * @returns A string representing the time duration.
  */
 export const formatDuration = (seconds: number): string => {
-  const days = Math.floor(seconds / (3600 * 24));
-  const hours = Math.floor((seconds % (3600 * 24)) / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
+  const years = Math.floor(seconds / (3600 * 24 * 365));
+  const months = Math.floor((seconds % (3600 * 24 * 365)) / (3600 * 24 * 30));
+  const days = Math.floor((seconds % (3600 * 24 * 30)) / (3600 * 24));
+  // const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+  // const minutes = Math.floor((seconds % 3600) / 60);
+  // const remainingSeconds = seconds % 60;
 
   const parts = [];
+  if (years > 0) {
+    parts.push(`${years} year${years > 1 ? 's' : ''}`);
+  }
+  if (months > 0) {
+    parts.push(`${months} month${months > 1 ? 's' : ''}`);
+  }
   if (days > 0) {
     parts.push(`${days} day${days > 1 ? 's' : ''}`);
   }
-  if (hours > 0) {
-    parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
-  }
-  if (minutes > 0) {
-    parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
-  }
-  if (remainingSeconds > 0 || parts.length === 0) {
-    parts.push(`${remainingSeconds} second${remainingSeconds > 1 ? 's' : ''}`);
-  }
+  // if (hours > 0) {
+  //   parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+  // }
+  // if (minutes > 0) {
+  //   parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+  // }
+  // if (remainingSeconds > 0 || parts.length === 0) {
+  //   parts.push(`${remainingSeconds} second${remainingSeconds > 1 ? 's' : ''}`);
+  // }
 
   return parts.join(', ');
 };

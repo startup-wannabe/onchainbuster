@@ -38,7 +38,7 @@
         "useArrayLiterals": "warn"
       },
       "nursery": {
-        "useSortedClasses": "warn"
+        "useSortedClasses": "off"
       },
       "style": {
         "noImplicitBoolean": "warn",

@@ -1,4 +1,3 @@
-import React from 'react';
 import BaseSvg from '@/assets/svg/BaseSvg';
 import Address from '../Address';
 
@@ -24,7 +23,11 @@ const HowBasedAreYouHeader = (props: Props) => {
           is{' '}
           <span className="font-bold">
             {props.name.startsWith('0x') ? (
-              <Address truncatedLength={6} truncated value={props.name} />
+              <Address
+                truncatedLength={6}
+                truncated={true}
+                value={props.name}
+              />
             ) : (
               props.name
             )}

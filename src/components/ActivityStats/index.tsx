@@ -91,7 +91,7 @@ const ActivityStats = ({
           </h3>
         )}
       </div>
-      <Collapsible.Root className="mt-6 rounded-3xl shadow-xl border border-palette-line/20">
+      <Collapsible.Root className="mt-6 rounded-3xl border border-palette-line/20 shadow-xl">
         <div className="mb-6 px-6 pt-6">
           <div className="relative mb-6">
             {/* <Tooltip content="Onchain score is a number out of 100 that measures onchain activity">

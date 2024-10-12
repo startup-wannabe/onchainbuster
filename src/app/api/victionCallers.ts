@@ -73,7 +73,7 @@ export const listVicTokenActivity = async (account: string, limit = 100) => {
       symbol: t.tokenSymbol,
       from: t.from,
       to: t.to,
-      value: t.value,
+      value: t.valueNumber.toString(),
       timestamp: t.timestamp.toString(),
     } as TTokenActivity;
   });

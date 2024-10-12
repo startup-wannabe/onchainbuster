@@ -127,7 +127,9 @@ export const listAllTokenBalanceByChain = async (
   };
 };
 
-export const listAllTokenActivityByChain = async (address: string) => {
+export const listAllTokenActivityByChain = async (
+  address: string,
+): Promise<Record<string, TTokenActivity[]>> => {
   if (address === '') {
     return {};
   }
@@ -141,9 +143,9 @@ export const listAllTokenActivityByChain = async (address: string) => {
   // TODO: Process and union type
   return {
     ...Object.fromEntries(
-      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+      chains.map((chain, index) => [chain.toLowerCase(), results[index].token]),
     ),
-    vic: results[results.length - 1],
+    vic: results[results.length - 1].token,
   };
 };
 

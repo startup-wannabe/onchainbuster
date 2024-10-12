@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { StateEventRegistry } from '../state.type';
+import type { StateEventRegistry } from '../state.type';
 
 const defaultActivityStats: TActivityStats = {
   totalTxs: 0,
@@ -14,6 +14,22 @@ const defaultActivityStats: TActivityStats = {
   activityPeriod: 0,
 };
 
+const defaultDeFiActivityStats: TDeFiActivityStats = {
+  sumCount: 0,
+  lendCount: 0,
+  swapCount: 0,
+};
+
+const defaultTokenActivityStats: TTokenActivityStats = {
+  sumCount: 0,
+  newCount: 0,
+};
+
+const defaultNFTActivityStats: TNFTActivityStats = {
+  sumCount: 0,
+  tradeCount: 0,
+};
+
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type UseState<T> = [T, SetState<T>];
 
@@ -23,12 +39,21 @@ interface IMagicContext {
   // Data analytics states
   text: UseState<string>;
   inputAddress: UseState<string>;
-  activityStats: UseState<TActivityStats>;
-  mostActiveChain: UseState<string>;
-  tokenPortfolio: UseState<TTokenBalance[]>;
-  marketData: UseState<TTokenSymbolDetail[]>;
-  nftPortfolio: UseState<TNFTBalance[]>;
+
+  // Raw
   allTransactions: UseState<TEVMScanTransaction[]>;
+  marketData: UseState<TTokenSymbolDetail[]>;
+  tokenPortfolio: UseState<TTokenBalance[]>;
+  nftPortfolio: UseState<TNFTBalance[]>;
+  tokenActivity: UseState<TTokenActivity[]>;
+  nftActivity: UseState<TNFTActivity[]>;
+
+  // Insights
+  mostActiveChain: UseState<string>;
+  activityStats: UseState<TActivityStats>;
+  defiActivityStats: UseState<TDeFiActivityStats>;
+  tokenActivityStats: UseState<TTokenActivityStats>;
+  nftActivityStats: UseState<TNFTActivityStats>;
 }
 
 export const MagicContext = React.createContext<IMagicContext>(
@@ -50,7 +75,15 @@ export const MagicProvider = ({ children }: Props) => {
   // All transactions and activity stats
   const allTransactions = useState<TEVMScanTransaction[]>([]);
   const activityStats = useState<TActivityStats>(defaultActivityStats);
+  const defiActivityStats = useState<TDeFiActivityStats>(
+    defaultDeFiActivityStats,
+  );
+  const tokenActivityStats = useState<TTokenActivityStats>(
+    defaultTokenActivityStats,
+  );
+  const nftActivityStats = useState<TNFTActivityStats>(defaultNFTActivityStats);
   const mostActiveChain = useState('');
+
   // Multi-chain token portfolio
   const tokenPortfolio = useState<TTokenBalance[]>([]);
   const marketData = useState<TTokenSymbolDetail[]>([]);
@@ -58,19 +91,32 @@ export const MagicProvider = ({ children }: Props) => {
   // Multi-chain nft portfolio
   const nftPortfolio = useState<TNFTBalance[]>([]);
 
+  // Multi-chain token & activity
+  const tokenActivity = useState<TTokenActivity[]>([]);
+  const nftActivity = useState<TNFTActivity[]>([]);
+
   return (
     <MagicContext.Provider
       value={{
         stateEvents,
         setStateEvents,
-        allTransactions,
-        inputAddress,
-        activityStats,
-        marketData,
-        mostActiveChain,
-        nftPortfolio,
-        tokenPortfolio,
+
+        // Raw
         text,
+        inputAddress,
+        allTransactions,
+        tokenPortfolio,
+        marketData,
+        tokenActivity,
+        nftPortfolio,
+        nftActivity,
+
+        // Insight
+        activityStats,
+        mostActiveChain,
+        defiActivityStats,
+        tokenActivityStats,
+        nftActivityStats,
       }}
     >
       {children}

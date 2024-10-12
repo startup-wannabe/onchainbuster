@@ -1,13 +1,12 @@
-import React from 'react';
-import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
 import { useMagic } from '@/app/hooks/useMagic';
-import { ThreeStageState } from '@/app/state.type';
-import LoadableContainer from '../LoadableContainer';
-import { Separator, Spinner } from '@radix-ui/themes';
-import TokenPortfolio from '../TokenPortfolio';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
+import { ThreeStageState } from '@/app/state.type';
+import { Separator, Spinner } from '@radix-ui/themes';
 import ActivityStats from '../ActivityStats';
+import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
+import LoadableContainer from '../LoadableContainer';
 import ProfileCard from '../ProfileCard';
+import TokenPortfolio from '../TokenPortfolio';
 
 type Props = {
   addressInput: string;
@@ -38,7 +37,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
       )}
       <ProfileCard address={addressInput as any} />
       {stateCheck('ActivityStats', ThreeStageState.Finished) && (
-        <React.Fragment>
+        <>
           <div className="mt-8">
             <div className="flex items-center justify-center">
               <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
@@ -59,11 +58,11 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
               )}
             </LoadableContainer>
           </div>
-        </React.Fragment>
+        </>
       )}
       {stateCheck('ActivityStats', ThreeStageState.Finished) &&
         stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
-          <React.Fragment>
+          <>
             <Separator className="mt-[80px]" size={'4'} />
             <div className="mt-8">
               <div className="flex items-center justify-center">
@@ -76,7 +75,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 />
               )}
             </div>
-          </React.Fragment>
+          </>
         )}
     </section>
   );

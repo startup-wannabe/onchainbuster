@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import React from 'react';
 
 type CircularPackingProps = {
   width: number;
@@ -17,6 +16,7 @@ export const CircularPackingChart = ({
   const hierarchy = d3
     .hierarchy(data)
     .sum((d) => d.value)
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
     .sort((a, b) => b.value! - a.value!);
 
   const packGenerator = d3
@@ -27,7 +27,7 @@ export const CircularPackingChart = ({
 
   // List of item of level 1 (just under root) & related color scale
   const firstLevelGroups = hierarchy?.children?.map((child) => child.data.name);
-  var colorScale = d3
+  const colorScale = d3
     .scaleOrdinal<string>()
     .domain(firstLevelGroups || [])
     .range(colors);
@@ -91,7 +91,13 @@ export const CircularPackingChart = ({
   });
 
   return (
-    <svg width={width} height={height} style={{ display: 'inline-block' }}>
+    <svg
+      width={width}
+      height={height}
+      style={{ display: 'inline-block' }}
+      role="img"
+      aria-label="svg"
+    >
       {allLevel1Circles}
       {allLeafCircles}
     </svg>

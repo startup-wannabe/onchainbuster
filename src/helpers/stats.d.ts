@@ -71,28 +71,28 @@ type TCircularTreeLeaf = {
 
 type TCircularTree = TCircularTreeNode | TCircularTreeLeaf;
 
-type TProtocolInteraction = {
-  // DeFi
-  sumSwapIntraction: number;
-  sumDeFiInteraction: number;
-
-  // Art Collector
-  sumSaleNFTInteraction: number;
-  sumNFTMarketplaceInteraction: number; // NFT activity
-
-  sumBridgeInteraction: number;
-  sumNameServiceInteraction: number;
-
-  // Token Activity
-  sumNewTokenInteraction: number;
-  sumTokenInteraction: number;
-};
-
+type TLongestHoldingToken = { chain: string; symbol: string; duration: number };
 type TDAppInteraction = Record<string, { name: string; count: number }>;
 
-type TDAppInteraction12MMap = {
+type TDAppInteractionMap = {
   marketplace: TDAppInteraction;
   defi: TDAppInteraction;
   bridge: TDAppInteraction;
   nameService: TDAppInteraction;
+};
+
+type TDeFiActivityStats = {
+  sumCount: number;
+  swapCount: number;
+  lendCount: number;
+};
+
+type TTokenActivityStats = {
+  sumCount: number;
+  newCount: number;
+};
+
+type TNFTActivityStats = {
+  sumCount: number;
+  tradeCount: number;
 };

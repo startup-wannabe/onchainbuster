@@ -1,6 +1,5 @@
-import React from 'react';
-import { useEnsAvatar, useEnsName } from 'wagmi';
 import { normalize } from 'viem/ens';
+import { useEnsAvatar, useEnsName } from 'wagmi';
 
 type Props = {
   address: `0x${string}`;

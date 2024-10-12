@@ -1,7 +1,6 @@
 import { chainIDMap } from '@/constants/chains';
 import { formatNumberUSD } from '@/helpers/portfolio.helper';
 import { Table } from '@radix-ui/themes';
-import React from 'react';
 
 type Props = {
   aggregatedBalanceBySymbol: TSymbolAggregationBalance;
@@ -30,7 +29,7 @@ const TokenPortfolioTable = ({ aggregatedBalanceBySymbol }: Props) => {
               token,
               { chains, logoURI, name, totalUSDValue, totalBalance },
             ]) => (
-              <Table.Row>
+              <Table.Row key={token}>
                 <Table.Cell>
                   <img
                     src={logoURI}
