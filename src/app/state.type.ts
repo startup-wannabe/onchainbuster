@@ -19,3 +19,8 @@ export enum ThreeStageState {
 export type StateOption = BinaryState | ThreeStageState;
 
 export type StateEventRegistry = Partial<Record<StateEvent, StateOption>>;
+
+export interface Toastable<T> {
+  toast?: string;
+  value: T;
+}
