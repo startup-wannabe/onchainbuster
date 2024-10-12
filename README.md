@@ -8,7 +8,9 @@ Made with ❤️️
 
 <br />
 
-## Setup
+## Overview
+
+Touch on theory, concept about personal references, trait been built on a specrum ==> Speculate as such on a Web3 wallet to indicate the behaviors
 
 To ensure all components work seamlessly, set the following environment variables in your `.env` file using `.env.local.example` as a reference.
 
@@ -25,7 +27,9 @@ NEXT_PUBLIC_WC_PROJECT_ID="GET_FROM_WALLET_CONNECT"
 ```
 <br />
 
-## Locally run
+## Product Concept
+
+Explain on the rules and theory made on the product
 
 ```sh
 # Install bun in case you don't have it
