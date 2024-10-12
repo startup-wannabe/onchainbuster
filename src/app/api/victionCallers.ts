@@ -67,7 +67,16 @@ export const listVicTokenActivity = async (account: string, limit = 100) => {
     offset += limit; // Increment offset by limit for the next fetch
   } while (offset < total); // Continue until all data is fetched
 
-  return tokenActivities;
+  return tokenActivities.map((t) => {
+    return {
+      chain: 'vic',
+      symbol: t.tokenSymbol,
+      from: t.from,
+      to: t.to,
+      value: t.value,
+      timestamp: t.timestamp.toString(),
+    } as TTokenActivity;
+  });
 };
 
 export const listVicNFTActivity = async (account: string, limit = 100) => {

@@ -24,5 +24,25 @@ type TNFTBalance = {
 };
 
 type TTokenActivity = {
-  chainID: number;
+  chain: string;
+  symbol: string;
+  from: string; // Address
+  to: string;
+  value: string; // Token amount
+  timestamp: string;
+};
+
+type TNFTActivity = {
+  chain: string;
+  action: string; // buy, sale, mint - exclude transfer,listing,bidding
+  collectionName: string;
+  from: string;
+  to: string;
+
+  tokenId: string;
+  tokenName: string;
+  tokenImage: string;
+
+  amount: string;
+  price?: string; // Value in USD
 };

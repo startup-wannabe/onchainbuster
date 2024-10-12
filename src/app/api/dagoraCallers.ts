@@ -35,7 +35,22 @@ export const listDagoraAddressActivity = async (
   const activityPromises = actionTypes.map((type) => fetchActivities(type));
   const activitiesArrays = await Promise.all(activityPromises);
 
-  return activitiesArrays.flat();
+  return activitiesArrays.flat().map((activity) => {
+    return {
+      chain: 'vic',
+      action: ['listing', 'mint'].includes(activity.type.toLowerCase())
+        ? activity.type.toLowerCase()
+        : 'sale',
+      collectionName: activity.collection?.title || '',
+      from: activity.from,
+      to: activity.to,
+      tokenId: activity.id,
+      tokenName: activity.name,
+      tokenImage: activity.image,
+      amount: activity.amount ? activity.amount.toString() : '1',
+      price: activity.price.toString() || 0,
+    } as TNFTActivity;
+  });
 };
 
 export const listDagoraAddressBalance = async (address: string, size = 100) => {

@@ -144,7 +144,7 @@ export const RELAY = new Set([
 export const BASE_BRIDGE = '0xEa2a41c02fA86A4901826615F9796e603C6a4491'; // OG but deprecated
 export const OP_BRIDGE = '0x4200000000000000000000000000000000000010';
 
-export const BRIDEG_INTERACTION = bridges
+export const BRIDGE_INTERACTION = bridges
   .union(RELAY)
   .union(new Set(BASE_BRIDGE))
   .union(new Set(OP_BRIDGE));
