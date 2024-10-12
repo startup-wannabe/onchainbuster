@@ -10,10 +10,10 @@ import dynamic from 'next/dynamic';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from '@/components/Footer';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 import localFont from 'next/font/local';
 import type React from 'react';
 import { MagicProvider } from './contexts/MagicContext';
-import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 const coinbaseDisplay = localFont({
   src: [

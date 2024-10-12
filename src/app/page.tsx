@@ -1,17 +1,17 @@
 'use client';
 import BaseSvg from '@/assets/svg/BaseSvg';
 import MagicButton from '@/components/MagicButton';
+import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
 import { ONCHAINKIT_LINK } from '@/constants/links';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { TextField } from '@radix-ui/themes';
 import { useAccount } from 'wagmi';
+import HowBasedAreYouHeader from '../components/HowBasedAreYouHeader';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
-import HowBasedAreYouHeader from '../components/HowBasedAreYouHeader';
-import { ThreeStageState } from './state.type';
 import { useMagic } from './hooks/useMagic';
-import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
 import { useMagicContext } from './hooks/useMagicContext';
+import { ThreeStageState } from './state.type';
 
 export default function Page() {
   const { address } = useAccount();
