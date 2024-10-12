@@ -101,7 +101,7 @@ export default function Page() {
     dispatchStateEvent(eventName, eventHooks.onStartEvent);
     try {
       const data = await method();
-      const event = eventHooks.onErrorEvent;
+      const event = eventHooks.onFinishEvent;
       if (event.toast)
         toast(event.toast, {
           type: "success",
@@ -246,7 +246,7 @@ export default function Page() {
 
   const letsDoSomeMagic = async () => {
     try {
-      return newAsyncDispatch(
+      await newAsyncDispatch(
         StateEvent.HowBasedAreYou,
         {
           onStartEvent: StateSubEvents.HowBasedAreYou.InProgress,
@@ -263,9 +263,9 @@ export default function Page() {
         async () => {
           await fetchActivityStats(addressInput);
           await fetchMultichainTokenPortfolio(addressInput);
-          await fetchMultichainNFTPortfolio(addressInput);
         }
       );
+      await fetchMultichainNFTPortfolio(addressInput);
     } catch (error) {
       console.log(error);
     }
