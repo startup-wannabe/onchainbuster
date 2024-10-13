@@ -23,6 +23,11 @@ import {
   VELODROME,
 } from '@/constants/contracts';
 
+export const calculateGasInETH = (gasPrice: number, gasUsed: number) => {
+  const gwei = 10 ** 9;
+  return (gasPrice / gwei) * (gasUsed / gwei);
+};
+
 // Acknowledgement: https://github.com/base-org/web/blob/master/apps/web/src/components/Basenames/UsernameProfileSectionHeatmap/index.tsx#L115
 export const calculateEVMStreaksAndMetrics = (
   transactions: TEVMScanTransaction[],

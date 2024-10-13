@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import type { StateEventRegistry } from '../state.type';
 
 const defaultActivityStats: TActivityStats = {
@@ -76,6 +76,7 @@ interface IMagicContext {
   defiActivityStats: UseState<TDeFiActivityStats>;
   tokenActivityStats: UseState<TTokenActivityStats>;
   nftActivityStats: UseState<TNFTActivityStats>;
+  totalGasInETH: UseState<number>;
 }
 
 export const MagicContext = React.createContext<IMagicContext>(
@@ -124,6 +125,7 @@ export const MagicProvider = ({ children }: Props) => {
   const tokenActivity = useState<TTokenActivity[]>([]);
   const nftActivity = useState<TNFTActivity[]>([]);
 
+  const totalGasInETH = useState(0);
   return (
     <MagicContext.Provider
       value={{
@@ -149,6 +151,7 @@ export const MagicProvider = ({ children }: Props) => {
         defiActivityStats,
         tokenActivityStats,
         nftActivityStats,
+        totalGasInETH,
       }}
     >
       {children}

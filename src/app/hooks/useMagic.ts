@@ -7,6 +7,7 @@ import {
   calculateDappInteraction,
   calculateDeFiActivityStats,
   calculateEVMStreaksAndMetrics,
+  calculateGasInETH,
   calculateNFTActivityStats,
   calculateTokenActivityStats,
   findLongestHoldingToken,
@@ -67,6 +68,7 @@ export const useMagic = () => {
     defiActivityStats: [, setDefiActivityStats],
     tokenActivityStats: [, setTokenActivityStats],
     nftActivityStats: [, setNftActivityStats],
+    totalGasInETH: [, setTotalGasInETH],
   } = useMagicContext();
 
   const dispatchStateEvent = (eventName: StateEvent, status: StateOption) => {
@@ -181,6 +183,29 @@ export const useMagic = () => {
         const data = await listAllTransactionsByChain(address);
         const allTransactions = Object.values(data).flatMap((d) => d.txs);
         setAllTransactions(allTransactions);
+
+        const ethNativeTransactions: TEVMScanTransaction[] = Object.entries(
+          data,
+        )
+          .filter(([key, _]) => key !== 'vic') // exclude VIC since it's a zero-gas fee (VN proud)
+          .flatMap(([_, value]) => value.txs);
+
+        const filteredTransactions = ethNativeTransactions.filter(
+          (tx) => tx.from.toLowerCase() === address.toLowerCase(),
+        );
+
+        const totalGasInETH = filteredTransactions.reduce(
+          (acc, curr) =>
+            acc +
+            calculateGasInETH(
+              Number.parseInt(curr.gasUsed),
+              Number.parseInt(curr.gasPrice),
+            ),
+          0,
+        );
+
+        console.log('totalGasInETH:', totalGasInETH);
+        setTotalGasInETH(totalGasInETH);
 
         const mostActiveChainID = Object.keys(data).reduce((a, b) =>
           data[a].txs.length > data[b].txs.length ? a : b,
