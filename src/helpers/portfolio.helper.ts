@@ -28,6 +28,7 @@ const aggregateTokensByBalance = (
     chain,
     logoURI,
     name,
+    decimals,
   } of tokenBalanceList) {
     if (!aggregatedBalanceBySymbol[symbol]) {
       aggregatedBalanceBySymbol[symbol] = {
@@ -40,6 +41,7 @@ const aggregateTokensByBalance = (
         tags: [],
         date_added: '',
         symbol: '',
+        decimals: 5, // Display only 5 decimals
       };
     }
     const tokenPrice =
@@ -51,6 +53,7 @@ const aggregateTokensByBalance = (
 
     aggregatedBalanceBySymbol[symbol].symbol = symbol;
     aggregatedBalanceBySymbol[symbol].tags = tags;
+    aggregatedBalanceBySymbol[symbol].decimals = decimals;
     aggregatedBalanceBySymbol[symbol].date_added = date_added;
     aggregatedBalanceBySymbol[symbol].price = tokenPrice;
     aggregatedBalanceBySymbol[symbol].chains.push({

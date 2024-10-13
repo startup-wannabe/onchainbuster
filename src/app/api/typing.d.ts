@@ -9,6 +9,7 @@ type TTokenBalance = {
   chain: string;
   name: string;
   symbol: string;
+  decimals: number;
   logoURI?: string;
   tokenBalance: number; // Formatted
 };

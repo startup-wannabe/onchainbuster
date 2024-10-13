@@ -39,6 +39,7 @@ export const listAlchemyTokenBalance = async (
         name: metadata.name,
         symbol: metadata.symbol,
         logoURI: metadata.logoURI,
+        decimals: metadata.decimals,
         tokenBalance:
           Number.parseInt(token.tokenBalance, 16) / 10 ** metadata.decimals,
       } as TTokenBalance;

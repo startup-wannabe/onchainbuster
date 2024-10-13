@@ -13,6 +13,7 @@ type TTokenDetails = {
   tags: string[];
   date_added: string;
   symbol: string;
+  decimals: number;
 };
 
 type TChainStats = {

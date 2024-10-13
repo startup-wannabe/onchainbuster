@@ -138,6 +138,7 @@ export const listVicTokenBalance = async (account: string, limit = 100) => {
         name: metadata.name,
         symbol: token.tokenSymbol,
         logoURI: metadata.image,
+        decimals: metadata.decimals,
         tokenBalance: token.quantityNumber,
       } as TTokenBalance;
     }),
@@ -165,6 +166,7 @@ export const getVicNativeBalance = async (address: string) => {
       name: VIC_METADATA.name,
       logoURI: VIC_METADATA.logoURI,
       symbol: VIC_METADATA.symbol,
+      decimals: VIC_METADATA.decimals,
       tokenBalance: vicAccount.balanceNumber, // Formatted
     } as TTokenBalance,
   ];

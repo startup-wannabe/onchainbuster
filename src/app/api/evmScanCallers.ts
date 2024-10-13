@@ -46,6 +46,10 @@ export const getEVMScanBalance = async (address: string, chain: string) => {
         chain.toUpperCase() === 'BSC'
           ? BNB_METADATA.symbol
           : ETH_METADATA.symbol,
+      decimals:
+        chain.toUpperCase() === 'BSC'
+          ? BNB_METADATA.decimals
+          : ETH_METADATA.decimals,
       logoURI:
         chain.toUpperCase() === 'BSC'
           ? BNB_METADATA.logoURI

@@ -7,6 +7,7 @@ type Props = {
 };
 
 const TokenPortfolioTable = ({ aggregatedBalanceBySymbol }: Props) => {
+  console.log(aggregatedBalanceBySymbol);
   return (
     <Table.Root className="shadow-xl rounded-xl border border-palette-line/20 h-fit">
       <Table.Header>
@@ -27,7 +28,7 @@ const TokenPortfolioTable = ({ aggregatedBalanceBySymbol }: Props) => {
           .map(
             ([
               token,
-              { chains, logoURI, name, totalUSDValue, totalBalance },
+              { chains, logoURI, name, totalUSDValue, totalBalance, decimals },
             ]) => (
               <Table.Row key={token}>
                 <Table.Cell>
@@ -49,7 +50,7 @@ const TokenPortfolioTable = ({ aggregatedBalanceBySymbol }: Props) => {
                     />
                   ))}
                 </Table.Cell>
-                <Table.Cell>{totalBalance.toFixed(9)}</Table.Cell>
+                <Table.Cell>{totalBalance.toFixed(6)}</Table.Cell>
               </Table.Row>
             ),
           )}

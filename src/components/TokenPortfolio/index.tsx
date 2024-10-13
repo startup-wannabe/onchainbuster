@@ -1,4 +1,3 @@
-import { chainIDMap } from '@/constants/chains';
 import {
   calculateMultichainTokenPortfolio,
   formatNumberUSD,
@@ -73,22 +72,6 @@ const TokenPortfolio = ({
           </div>
         </div>
       </div>
-      <p>Portfolio value: {formatNumberUSD(sumPortfolioUSDValue)}</p>
-      <p>Meme value: {formatNumberUSD(sumMemeUSDValue)}</p>
-      <p>Portfolio value by chain:</p>
-      {Object.entries(chainRecordsWithTokens).map(([chain, value]) => (
-        <div key={chain}>
-          <span>
-            <img
-              key={chain}
-              src={chainIDMap[chain].logoURI}
-              alt={`${chainIDMap[chain].name} logo`}
-              className="mr-1 inline-block h-6 w-6 rounded-full"
-            />
-            {chain.toUpperCase()}: {formatNumberUSD(value.totalUSDValue)}
-          </span>
-        </div>
-      ))}
     </section>
   );
 };
