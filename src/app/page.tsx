@@ -37,7 +37,10 @@ export default function Page() {
     <div className="flex w-100 max-w-full flex-col px-1 md:w-[1200px]">
       <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
         <div className="flex w-full flex-row items-center justify-between gap-2 md:gap-0">
-          <OnchainBuster width={100} height={50} />{' '}
+          <div className="flex justify-center items-center">
+            <OnchainBuster width={100} height={50} />{' '}
+            <h1 className="font-bold text-xl">Onchain Buster</h1>
+          </div>
           <div className="flex items-center gap-3">
             <SignupButton />
             {!address && <LoginButton />}
