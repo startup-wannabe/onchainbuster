@@ -5,7 +5,7 @@ import '@radix-ui/themes/styles.css';
 import './global.css';
 import '@coinbase/onchainkit/styles.css';
 import '@rainbow-me/rainbowkit/styles.css';
-import { Theme } from '@radix-ui/themes';
+import { Separator, Theme } from '@radix-ui/themes';
 import dynamic from 'next/dynamic';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -132,6 +132,7 @@ export default function RootLayout({
                   }}
                 >
                   {children}
+                  {/* <Separator size={"4"} className="mt-[40px]" /> */}
                   <Footer />
                 </div>
                 <ToastContainer />

@@ -36,7 +36,7 @@ import {
   calculateMultichainNFTPortfolio,
   calculateMultichainTokenPortfolio,
 } from '@/helpers/portfolio.helper';
-import TokenPortfolio from '@/components/TokenPortfolio';
+import MultiAssetsPortfolio from '@/components/MultiAssetsPortfolio';
 
 export const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
@@ -306,7 +306,7 @@ export const useMagic = () => {
           _marketData,
         );
         setState(tokenPortfolioStats)(_tokenPortfolioStats);
-        return TokenPortfolio;
+        return MultiAssetsPortfolio;
       },
     );
   };

@@ -8,12 +8,13 @@ type Props = {
 
 const TokenPortfolioTable = ({ aggregatedBalanceBySymbol }: Props) => {
   return (
-    <Table.Root className="shadow-xl rounded-xl border border-palette-line/20 h-fit">
+    <Table.Root className="shadow-xl rounded-xl border border-palette-line/20">
       <Table.Header>
         <Table.Row>
           <Table.ColumnHeaderCell>Token</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>USD Value</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>Chain</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Market Price</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>Total Balance</Table.ColumnHeaderCell>
         </Table.Row>
       </Table.Header>
@@ -27,7 +28,15 @@ const TokenPortfolioTable = ({ aggregatedBalanceBySymbol }: Props) => {
           .map(
             ([
               token,
-              { chains, logoURI, name, totalUSDValue, totalBalance, decimals },
+              {
+                chains,
+                logoURI,
+                name,
+                totalUSDValue,
+                totalBalance,
+                decimals,
+                price,
+              },
             ]) => (
               <Table.Row key={token}>
                 <Table.Cell>
@@ -49,7 +58,10 @@ const TokenPortfolioTable = ({ aggregatedBalanceBySymbol }: Props) => {
                     />
                   ))}
                 </Table.Cell>
-                <Table.Cell>{totalBalance.toFixed(6)}</Table.Cell>
+                <Table.Cell>{formatNumberUSD(price)}</Table.Cell>
+                <Table.Cell>
+                  {totalBalance.toFixed(Math.min(decimals, 5))}
+                </Table.Cell>
               </Table.Row>
             ),
           )}

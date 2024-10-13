@@ -3,7 +3,7 @@ import BaseSvg from '@/assets/svg/BaseSvg';
 import MagicButton from '@/components/MagicButton';
 import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Box, Progress, TextField } from '@radix-ui/themes';
+import { Box, Progress, Spinner, TextField } from '@radix-ui/themes';
 import { useAccount } from 'wagmi';
 import HowBasedAreYouHeader from '../components/HowBasedAreYouHeader';
 import LoginButton from '../components/LoginButton';
@@ -14,6 +14,9 @@ import { ThreeStageState } from './state.type';
 import ProfileCard from '@/components/ProfileCard';
 import AnimatedComponent from '@/components/AnimatedComponent';
 import { useMagicTraits } from './hooks/useMagicTraits';
+import { UserTrait } from '@/helpers/trait.helper';
+import LoadableContainer from '@/components/LoadableContainer';
+import React from 'react';
 
 export default function Page() {
   const { address } = useAccount();
@@ -49,9 +52,7 @@ export default function Page() {
           backgroundSize: 'cover',
         }}
       >
-        <AnimatedComponent.OpacityFadeInDiv delay={300}>
-          <HowBasedAreYouHeader />
-        </AnimatedComponent.OpacityFadeInDiv>
+        <HowBasedAreYouHeader />
         <TextField.Root
           className="mr-2 w-full rounded-md p-2 shadow-xl"
           disabled={stateCheck('HowBasedAreYou', ThreeStageState.InProgress)}
@@ -85,65 +86,103 @@ export default function Page() {
             />
           </TextField.Slot>
         </TextField.Root>
-        {addressInput && (
-          <div className="sm:absolute block bottom-[-140px] flex justify-center items-center flex-col">
-            <AnimatedComponent.OpacityFadeInDiv delay={300}>
-              <div className="w-fit">
-                <ProfileCard address={addressInput as any} />
+        {addressInput &&
+          stateCheck('ActivityStats', ThreeStageState.Finished) && (
+            <div className="sm:absolute block bottom-[-140px] flex justify-center items-center flex-col">
+              <AnimatedComponent.OpacityFadeInDiv delay={300}>
+                <div className="w-fit">
+                  <ProfileCard address={addressInput as any} />
+                </div>
+              </AnimatedComponent.OpacityFadeInDiv>
+              <div className="flex flex-wrap items-center justify-center sm:mt-[-20px] mt-[15px] gap-4">
+                <Box
+                  width="350px"
+                  className="shadow-xl h-fit bg-white py-3 px-5 rounded-2xl border border-palette-line/20"
+                >
+                  <LoadableContainer
+                    isLoading={
+                      !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
+                    }
+                    loadComponent={<Spinner loading />}
+                  >
+                    <React.Fragment>
+                      <div className="flex justify-between mb-3">
+                        <h1 className="font-bold text-sm">
+                          🎨 {UserTrait.DeFi}
+                        </h1>
+                        <h1 className="font-bold text-sm">{UserTrait.Art}</h1>
+                      </div>
+                      <Progress
+                        size={'3'}
+                        color="indigo"
+                        radius="full"
+                        value={defitOrArtTraitResult.score}
+                        max={1}
+                      />
+                    </React.Fragment>
+                  </LoadableContainer>
+                </Box>
+                <Box
+                  width="350px"
+                  className="shadow-xl h-fit bg-white py-3 px-5 rounded-2xl border border-palette-line/20 sm:mt-[35px] mt-0"
+                >
+                  <LoadableContainer
+                    isLoading={
+                      !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
+                    }
+                    loadComponent={<Spinner loading />}
+                  >
+                    <React.Fragment>
+                      <div className="flex justify-between mb-3">
+                        <h1 className="font-bold text-sm">
+                          💸 {UserTrait.Degen}
+                        </h1>
+                        <h1 className="font-bold text-sm">
+                          {UserTrait.DiamondHand}
+                        </h1>
+                      </div>
+                      <Progress
+                        size={'3'}
+                        color="cyan"
+                        radius="full"
+                        value={degenOrDiamondHandResult.score}
+                        max={1}
+                      />
+                    </React.Fragment>
+                  </LoadableContainer>
+                </Box>
+                <Box
+                  width="350px"
+                  className="shadow-xl h-fit bg-white py-3 px-5 rounded-2xl border border-palette-line/20"
+                >
+                  <LoadableContainer
+                    isLoading={
+                      !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
+                    }
+                    loadComponent={<Spinner loading />}
+                  >
+                    <React.Fragment>
+                      <div className="flex justify-between mb-3">
+                        <h1 className="font-bold text-sm">
+                          👷‍♂️ {UserTrait.OriginalBuilder}
+                        </h1>
+                        <h1 className="font-bold text-sm">
+                          {UserTrait.MultichainCitizen}
+                        </h1>
+                      </div>
+                      <Progress
+                        size={'3'}
+                        color="pink"
+                        radius="full"
+                        value={originalBuilderOrMultichainCitizen.score}
+                        max={1}
+                      />
+                    </React.Fragment>
+                  </LoadableContainer>
+                </Box>
               </div>
-            </AnimatedComponent.OpacityFadeInDiv>
-            <div className="flex flex-wrap items-center justify-center sm:mt-[-20px] mt-[15px] gap-4">
-              <Box
-                width="350px"
-                className="shadow-xl h-fit bg-white py-3 px-5 rounded-2xl border border-palette-line/20"
-              >
-                <div className="flex justify-between mb-3">
-                  <h1 className="font-bold text-sm">🎨 DeFi Enthusiast</h1>
-                  <h1 className="font-bold text-sm">Art Collector</h1>
-                </div>
-                <Progress
-                  size={'3'}
-                  color="indigo"
-                  radius="full"
-                  value={defitOrArtTraitResult.score}
-                  max={1}
-                />
-              </Box>
-              <Box
-                width="350px"
-                className="shadow-xl h-fit bg-white py-3 px-5 rounded-2xl border border-palette-line/20 sm:mt-[35px] mt-0"
-              >
-                <div className="flex justify-between mb-3">
-                  <h1 className="font-bold text-sm">💸 Degen</h1>
-                  <h1 className="font-bold text-sm">Diamond Hand</h1>
-                </div>
-                <Progress
-                  size={'3'}
-                  color="cyan"
-                  radius="full"
-                  value={degenOrDiamondHandResult.score}
-                  max={1}
-                />
-              </Box>
-              <Box
-                width="350px"
-                className="shadow-xl h-fit bg-white py-3 px-5 rounded-2xl border border-palette-line/20"
-              >
-                <div className="flex justify-between mb-3">
-                  <h1 className="font-bold text-sm">👷‍♂️ Original Builder</h1>
-                  <h1 className="font-bold text-sm">Multichain Citizen</h1>
-                </div>
-                <Progress
-                  size={'3'}
-                  color="pink"
-                  radius="full"
-                  value={originalBuilderOrMultichainCitizen.score}
-                  max={1}
-                />
-              </Box>
             </div>
-          </div>
-        )}
+          )}
       </section>
       <ShowcaseBaseProfile addressInput={addressInput} />
     </div>

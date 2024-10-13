@@ -59,7 +59,7 @@ type TTokenPortfolioStats = {
 
 type TNFTPortfolioStats = {
   sumPortfolioUSDValue: number;
-  mostValuableNFTCollection: TNFTBalance;
+  mostValuableNFTCollection: TNFTBalance | undefined;
 };
 
 type TCircularTreeNode = {
@@ -112,4 +112,15 @@ type TNFTActivityStats = {
 type TUserTraitResult = {
   trait: string;
   score: number;
+};
+
+type TNumberInPercentage = number;
+
+type TNumberInMillisecond = number;
+
+type TPieChartData = {
+  id: string;
+  label: string;
+  value: number;
+  color: string;
 };

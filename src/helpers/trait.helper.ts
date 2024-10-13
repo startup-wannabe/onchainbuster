@@ -82,7 +82,7 @@ export const isDeFiOrArt = (
   const totalPortfolioValue = tokenPortfolioValue + nftPortfolioValue;
 
   const mostTokenValue = tokenPortfolio.mostValuableToken.value;
-  const mostNftValue = nftPortfolio.mostValuableNFTCollection.totalValue;
+  const mostNftValue = nftPortfolio.mostValuableNFTCollection?.totalValue || 0;
 
   const defiLendCount = defiActivityStats.lendCount;
   const defiSwapCount = defiActivityStats.swapCount;

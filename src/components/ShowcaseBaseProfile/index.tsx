@@ -10,7 +10,7 @@ import AnimatedComponent from '../AnimatedComponent';
 import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
 import StatisticsCard from '../StatisticsCard';
 import { selectState } from '@/helpers';
-import TokenPortfolio from '../TokenPortfolio';
+import MultiAssetsPortfolio from '../MultiAssetsPortfolio';
 import { formatNumberUSD } from '@/helpers/portfolio.helper';
 import { formatDuration } from '@/helpers/activity.helper';
 
@@ -31,6 +31,8 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     defiActivityStats,
     tokenPortfolioStats,
     longestHoldingToken,
+    nftPortfolioStats,
+    nftPortfolio,
   } = useMagicContext();
 
   const { mostValuableToken } = useMemo(
@@ -38,8 +40,14 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     [selectState(tokenPortfolioStats)],
   );
 
-  const windowToMonths = (window: [number, number]) =>
-    formatDuration((window[1] - window[0]) / (1000 * 60 * 24 * 12));
+  const { mostValuableNFTCollection } = useMemo(
+    () => selectState(nftPortfolioStats),
+    [selectState(nftPortfolioStats)],
+  );
+
+  const windowToMonths = (
+    window: [TNumberInMillisecond, TNumberInMillisecond],
+  ) => formatDuration((window[1] - window[0]) / (1000 * 60 * 24 * 12));
 
   const mostActiveDappInteraction = useMemo<TDappInteraction>(() => {
     let currentDappInteraction: TDappInteraction = {
@@ -62,6 +70,17 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     }
     return currentDappInteraction;
   }, [dappInteractionStats]);
+
+  const [tokenBalancePercentage, nftBalancePercentage] = useMemo<
+    [TNumberInPercentage, TNumberInPercentage]
+  >(() => {
+    const tokenBalance = selectState(tokenPortfolioStats).sumPortfolioUSDValue;
+    console.log(tokenBalance);
+    const nftBalance = selectState(nftPortfolioStats).sumPortfolioUSDValue;
+    console.log(nftBalance);
+    const total = tokenBalance + nftBalance;
+    return [(tokenBalance / total) * 100, (nftBalance / total) * 100];
+  }, [selectState(tokenPortfolioStats), selectState(nftPortfolioStats)]);
 
   return (
     <section className="flex items-center justify-center flex-col">
@@ -87,7 +106,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 mostActiveChain={selectState(chainStats).mostActiveChainID}
               />
             )}
-            <div className="flex">
+            <div className="flex flex-wrap sm:flex-nowrap gap-4">
               <StatisticsCard
                 title="👋 Most active on-chain activity"
                 className="w-full mt-5"
@@ -168,7 +187,10 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
         </AnimatedComponent.OpacityFadeInDiv>
       )}
       {stateCheck('ActivityStats', ThreeStageState.Finished) &&
-        stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
+        stateCheck('GetTokenActivity', ThreeStageState.Finished) &&
+        stateCheck('GetTokenPortfolio', ThreeStageState.Finished) &&
+        stateCheck('GetNftActivity', ThreeStageState.Finished) &&
+        stateCheck('GetNftPortfolio', ThreeStageState.Finished) && (
           <React.Fragment>
             <Separator className="mt-[80px]" size={'4'} />
             <div className="mt-8">
@@ -177,12 +199,15 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
               </div>
               {tokenPortfolio.length > 0 && (
                 <section className="mt-2 flex justify-center items-center flex-col">
-                  <TokenPortfolio
+                  <MultiAssetsPortfolio
                     tokenPortfolioStats={selectState(tokenPortfolioStats)}
+                    nftPortfolio={selectState(nftPortfolio)}
+                    nftPortfolioStats={selectState(nftPortfolioStats)}
                   />
-                  <div className="flex flex-wrap mt-5">
+                  <div className="flex flex-wrap sm:flex-nowrap mt-5 gap-4">
                     <AnimatedComponent.OpacityFadeInDiv delay={300}>
                       <StatisticsCard
+                        className="w-full"
                         title="🏆 Most valuable asset"
                         content={
                           <div>
@@ -204,6 +229,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                     </AnimatedComponent.OpacityFadeInDiv>
                     <AnimatedComponent.OpacityFadeInDiv delay={400}>
                       <StatisticsCard
+                        className="w-full"
                         title="💪 Longest holding streak"
                         content={
                           <div>
@@ -211,7 +237,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                             <span className="font-bold">
                               {selectState(longestHoldingToken).symbol}
                             </span>{' '}
-                            for over <br />
+                            for over
                             <span className="font-bold">
                               {formatDuration(
                                 selectState(longestHoldingToken).duration,
@@ -224,16 +250,42 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                     <AnimatedComponent.OpacityFadeInDiv delay={500}>
                       <StatisticsCard
                         title="💰 Assets allocation"
+                        className="w-full"
                         content={
                           <div>
-                            <span className="font-bold">51%</span> of your
-                            wallet balance is in tokens, <br />
-                            compared in <span className="font-bold">49%</span>{' '}
+                            <span className="font-bold">
+                              {tokenBalancePercentage.toFixed(2)}%
+                            </span>{' '}
+                            of your wallet balance is in tokens, compared in{' '}
+                            <span className="font-bold">
+                              {nftBalancePercentage.toFixed(2)}%
+                            </span>{' '}
                             in NFTs.
                           </div>
                         }
                       />
                     </AnimatedComponent.OpacityFadeInDiv>
+                    {mostValuableNFTCollection && (
+                      <AnimatedComponent.OpacityFadeInDiv delay={400}>
+                        <StatisticsCard
+                          title="💸 Most valuable NFT"
+                          className="w-full"
+                          content={
+                            <div>
+                              <span className="font-bold">
+                                {mostValuableNFTCollection.collectionName}
+                              </span>{' '}
+                              worths{' '}
+                              <span className="font-bold">
+                                {formatNumberUSD(
+                                  mostValuableNFTCollection.totalValue,
+                                )}
+                              </span>
+                            </div>
+                          }
+                        />
+                      </AnimatedComponent.OpacityFadeInDiv>
+                    )}
                   </div>
                 </section>
               )}

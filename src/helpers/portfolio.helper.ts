@@ -56,10 +56,15 @@ const aggregateTokensByBalance = (
     aggregatedBalanceBySymbol[symbol].decimals = decimals;
     aggregatedBalanceBySymbol[symbol].date_added = date_added;
     aggregatedBalanceBySymbol[symbol].price = tokenPrice;
-    aggregatedBalanceBySymbol[symbol].chains.push({
-      chainName: chain,
-      value: tokenUSDValue,
-    });
+    if (
+      !aggregatedBalanceBySymbol[symbol].chains.some(
+        (c) => c.chainName === chain,
+      )
+    )
+      aggregatedBalanceBySymbol[symbol].chains.push({
+        chainName: chain,
+        value: tokenUSDValue,
+      });
     aggregatedBalanceBySymbol[symbol].price = tokenPrice;
     aggregatedBalanceBySymbol[symbol].totalBalance += tokenBalance;
     aggregatedBalanceBySymbol[symbol].totalUSDValue += tokenUSDValue;
@@ -149,6 +154,26 @@ export const calculateMultichainTokenPortfolio = (
   };
 };
 
+export const buildTotalBalancePieChart = (
+  tokenPortfolioStats: TTokenPortfolioStats,
+  nftPortfolioStats: TNFTPortfolioStats,
+): TPieChartData[] => {
+  return [
+    {
+      color: '#266EFF',
+      id: 'token',
+      label: 'ERC20 Tokens',
+      value: tokenPortfolioStats.sumPortfolioUSDValue,
+    },
+    {
+      color: '#92B6FF',
+      id: 'nft',
+      label: 'ERC721 Tokens',
+      value: nftPortfolioStats.sumPortfolioUSDValue,
+    },
+  ];
+};
+
 export const buildCircularPackingChart = (
   chains: TChainRecordWithTokens,
 ): TCircularTree => {
@@ -181,9 +206,12 @@ export const calculateMultichainNFTPortfolio = (
   }
 
   // Calculate mostValuableNFTCollection
-  const mostValuableNFTCollection = nftBalanceList.reduce((prev, current) =>
-    prev && prev.totalValue > current.totalValue ? prev : current,
-  );
+  const mostValuableNFTCollection =
+    nftBalanceList.length > 0
+      ? nftBalanceList.reduce((prev, current) =>
+          prev && prev.totalValue > current.totalValue ? prev : current,
+        )
+      : undefined;
 
   return {
     sumPortfolioUSDValue,
