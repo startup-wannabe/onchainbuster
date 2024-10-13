@@ -1,5 +1,6 @@
 'use client';
 
+import { ProductTag } from '@/helpers/trait.helper';
 import ecosystemApps from '@data/ecosystem.json';
 import { useState } from 'react';
 import { List } from './List';
@@ -14,14 +15,11 @@ export type EcosystemApp = {
   imageUrl: string;
 };
 
-const tags = [
-  'all',
-  ...ecosystemApps
-    .flatMap((app) => app.tags)
-    .filter((value, index, array) => {
-      return array.indexOf(value.toLocaleLowerCase()) === index;
-    }),
-];
+const tags = ecosystemApps
+  .flatMap((app) => app.tags)
+  .filter((value, index, array) => {
+    return array.indexOf(value.toLocaleLowerCase()) === index;
+  });
 
 function orderedEcosystemAppsAsc() {
   return ecosystemApps.sort((a, b) => {
@@ -43,31 +41,26 @@ const decoratedEcosystemApps: EcosystemApp[] = orderedEcosystemAppsAsc().map(
 );
 
 export default function Content() {
-  const [selectedTags, setSelectedTags] = useState<string[]>(['all']);
+  const [selectedTag, setSelectedTag] = useState<string>(ProductTag.DeFi);
 
   const selectTag = (tag: string): void => {
-    setSelectedTags((prevTags) => {
-      if (tag === 'all') {
-        return ['all'];
-      }
-      const newTags = prevTags.includes(tag)
-        ? prevTags.filter((t) => t !== tag)
-        : [...prevTags.filter((t) => t !== 'all'), tag];
-      return newTags.length === 0 ? ['all'] : newTags;
-    });
+    setSelectedTag(tag);
   };
+  console.log(decoratedEcosystemApps);
 
   // TODO: Load filter result later
-  const filteredEcosystemApps = decoratedEcosystemApps;
+  const filteredEcosystemApps = decoratedEcosystemApps.filter((app) =>
+    app.tags.includes(selectedTag),
+  );
 
   return (
     <div className="flex min-h-32 w-full flex-col gap-10 pb-32">
       <div className="flex flex-col justify-between gap-8 lg:flex-row lg:gap-12">
-        <div className="flex flex-row flex-wrap gap-3 ">
+        <div className="flex flex-row flex-wrap gap-3">
           {tags.map((tag) => (
             <TagChip
               tag={tag}
-              isSelected={selectedTags.includes(tag)}
+              isSelected={selectedTag === tag}
               key={tag}
               selectTag={selectTag}
             />

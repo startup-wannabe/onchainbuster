@@ -8,13 +8,13 @@ export enum UserTrait {
 }
 
 export enum ProductTag {
-  DeFi = 'DeFi',
-  SocialFi = 'SocialFi',
-  GameFi = 'GameFi',
-  NFT = 'NFT',
-  Bridge = 'Bridge',
-  Wallet = 'Wallet',
-  DAO = 'DAO',
+  DeFi = 'defi',
+  DeFiProfessional = 'defi-professional',
+  SocialFi = 'social',
+  Gaming = 'gaming',
+  NFT = 'nft',
+  Bridge = 'bridge',
+  DAO = 'dao',
 }
 
 export const getBaseTraits = (userTraits: UserTrait[]): ProductTag => {
@@ -28,13 +28,13 @@ export const getBaseTraits = (userTraits: UserTrait[]): ProductTag => {
     userTraits.includes(UserTrait.DeFi) &&
     userTraits.includes(UserTrait.DiamondHand)
   ) {
-    return ProductTag.DeFi;
+    return ProductTag.DeFiProfessional;
   }
   if (
     userTraits.includes(UserTrait.Art) &&
     userTraits.includes(UserTrait.Degen)
   ) {
-    return ProductTag.GameFi;
+    return ProductTag.Gaming;
   }
   if (
     userTraits.includes(UserTrait.Art) &&
@@ -52,7 +52,7 @@ export const getBaseTraits = (userTraits: UserTrait[]): ProductTag => {
     userTraits.includes(UserTrait.DeFi) &&
     userTraits.includes(UserTrait.MultichainCitizen)
   ) {
-    return ProductTag.Wallet;
+    return ProductTag.DeFi;
   }
   if (
     userTraits.includes(UserTrait.Art) &&

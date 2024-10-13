@@ -1,3 +1,4 @@
+import { selectState } from '@/helpers';
 import {
   isDeFiOrArt,
   isDegenOrDiamondHand,
@@ -5,7 +6,6 @@ import {
 } from '@/helpers/trait.helper';
 import { useMemo } from 'react';
 import { useMagicContext } from './useMagicContext';
-import { selectState } from '@/helpers';
 
 export const useMagicTraits = () => {
   const {

@@ -1,7 +1,6 @@
 import { formatNumberUSD } from '@/helpers/portfolio.helper';
 import AnimatedComponent from '../AnimatedComponent';
 import { CircularPackingChart } from '../CircularPackingChart';
-import StatisticsCard from '../StatisticsCard';
 import TokenPortfolioTable from '../TokenPortfolioTable';
 
 type TokenPortfolioProps = {
