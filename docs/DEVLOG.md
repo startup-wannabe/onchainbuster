@@ -70,3 +70,10 @@ Data support summary
 - Aggregate/Unify Transactions, Token Balance, NFT Balance types (see TEVMTransction, TTokenBalance, TNFTBalance)
 - Remove BSC data source since it didn't have Token Balance API
 - Compute metric/insight + start polish UI (Multi-chain heatmap, Multi-chain portfolio)
+
+## 2024-10-13
+
+- Finalized all logical components
+- UI Polishment
+- You are ready to get Based!
+  ![detailed-flow](./assets/detailed-flow.png)
