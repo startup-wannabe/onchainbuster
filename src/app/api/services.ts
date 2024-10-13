@@ -196,6 +196,8 @@ export const listAllNFTActivityByChain = async (
 };
 
 // Talent Passport
-export const getTalentPassport = async (address: string) => {
-  return await getTalentPassportByWallet(address);
+export const getTalentScore = async (
+  address: string,
+): Promise<TTalentPassportScore> => {
+  return (await getTalentPassportByWallet(address)) as TTalentPassportScore;
 };

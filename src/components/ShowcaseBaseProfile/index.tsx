@@ -22,6 +22,12 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     chainStats: [chainStats],
     tokenPortfolio: [tokenPortfolio],
     marketData: [marketData],
+
+    longestHoldingToken: [longestHoldingToken],
+    defiActivityStats: [defiActivityStats],
+    nftActivityStats: [nftActivityStats],
+    tokenActivityStats: [tokenActivityStats],
+    dappInteractionStats: [dappInteractionStats],
   } = useMagicContext();
   return (
     <section className="flex items-center justify-center flex-col">

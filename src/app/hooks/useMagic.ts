@@ -15,6 +15,7 @@ import {
 import { listCMCTokenDetail } from '../api/cmcCallers';
 import {
   getMultichainPortfolio,
+  getTalentScore,
   listAllNFTActivityByChain,
   listAllNFTBalanceByChain,
   listAllTokenActivityByChain,
@@ -50,8 +51,8 @@ export const useMagic = () => {
     setStateEvents,
     // Raw
     inputAddress: [, setInputAddress],
+    builderScore: [, setBuilderScore],
     allTransactions: [, setAllTransactions],
-
     tokenPortfolio: [, setTokenPortfolio],
     marketData: [, setMarketData],
     nftPortfolio: [, setNftPortfolio],
@@ -59,6 +60,7 @@ export const useMagic = () => {
     nftActivity: [, setNftActivity],
 
     // Insights
+    longestHoldingToken: [, setLongestHoldingToken],
     chainStats: [, setChainStats],
     dappInteractionStats: [, setDappInteractionStats],
     activityStats: [, setActivityStats],
@@ -142,6 +144,26 @@ export const useMagic = () => {
     );
   };
 
+  const fetchBuilderScore = async (text: string) => {
+    const address = await getAddress(text);
+    return newAsyncDispatch(
+      StateEvent.GetTalentScore,
+      {
+        onStartEvent: StateSubEvents.GetTalentScore.True,
+        onErrorEvent: { value: StateSubEvents.GetTalentScore.False },
+        onFinishEvent: { value: StateSubEvents.GetTalentScore.False },
+        onResetEvent: StateSubEvents.GetTalentScore.False,
+      },
+      async () => {
+        const data = await getTalentScore(address);
+        console.log('Talent score:', data);
+        const builderScore = data.skills_score;
+        setBuilderScore(builderScore);
+        return builderScore;
+      },
+    );
+  };
+
   const fetchActivityStats = async (addressInput: string) => {
     const address = await getAddress(addressInput);
     return newAsyncDispatch(
@@ -179,23 +201,26 @@ export const useMagic = () => {
           data[mostActiveChain],
           address,
         );
-        setChainStats({
+
+        const chainStats: TChainStats = {
           totalChains,
           mostActiveChain,
           noActivityChains,
           countUniqueDaysActiveChain: uniqueActiveDays,
-        });
+        };
+        console.log('Chain stats:', chainStats);
+        setChainStats(chainStats);
 
         // Get Dapp Interaction Stats
         const dappInteractionStats = calculateDappInteraction(allTransactions);
         // TODO: Set new stats
-        setDappInteractionStats(dappInteractionStats);
         console.log('Dapp Stats', dappInteractionStats);
+        setDappInteractionStats(dappInteractionStats);
 
         // TODO: Set new stats
         const defiActivityStats = calculateDeFiActivityStats(allTransactions);
-        setDefiActivityStats(defiActivityStats);
         console.log('DeFi', defiActivityStats);
+        setDefiActivityStats(defiActivityStats);
 
         return stats;
       },
@@ -220,7 +245,8 @@ export const useMagic = () => {
       },
       async () => {
         const tokenBalanceData = await getMultichainPortfolio(address);
-        console.log(tokenBalanceData);
+        console.log('Token balance:', tokenBalanceData);
+
         // Get distinct token symbol with non-zero balance
         const distinctTokenSymbols = [
           ...new Set(
@@ -233,7 +259,7 @@ export const useMagic = () => {
         const marketData = await listCMCTokenDetail(
           distinctTokenSymbols.join(','),
         );
-        // console.log(marketData);
+        console.log('Price market data:', marketData);
         setMarketData(marketData);
         setTokenPortfolio(tokenBalanceData);
       },
@@ -263,24 +289,25 @@ export const useMagic = () => {
         setTokenActivity(allTokenActivities);
 
         // Get longest holding assets
-        const longestHoldingAssetByChain = Object.entries(
+        const longestHoldingTokenByChain = Object.entries(
           tokenActivityData,
         ).map(([chain, activities]) => {
           return findLongestHoldingToken(chain, activities, address);
         });
 
-        const longestHoldingAsset = longestHoldingAssetByChain.reduce(
+        const longestHoldingToken = longestHoldingTokenByChain.reduce(
           (prev, current) => {
             return prev.duration > current.duration ? prev : current;
           },
         );
-        if (longestHoldingAsset.duration === 0) {
+        if (longestHoldingToken.duration === 0) {
           console.log("You don't have any asset yet!");
         } else {
           console.log(
-            `You've been loyal in holding ${longestHoldingAsset.symbol} at ${longestHoldingAsset.chain} for over ${formatDuration(longestHoldingAsset.duration)}`,
+            `You've been loyal in holding ${longestHoldingToken.symbol} at ${longestHoldingToken.chain} for over ${formatDuration(longestHoldingToken.duration)}`,
           );
         }
+        setLongestHoldingToken(longestHoldingToken);
 
         // TODO ---- Can we reuse the market data previously fetched?
         // Get distinct token symbol with non-zero balance
@@ -377,6 +404,7 @@ export const useMagic = () => {
           onResetEvent: StateSubEvents.HowBasedAreYou.Idle,
         },
         async () => {
+          await fetchBuilderScore(addressInput);
           await fetchActivityStats(addressInput);
           await fetchMultichainTokenPortfolio(addressInput);
           await fetchMultichainTokenActivity(addressInput);
@@ -392,6 +420,7 @@ export const useMagic = () => {
 
   return {
     query: {
+      fetchBuilderScore,
       fetchMultichainNftPortfolio,
       fetchActivityStats,
       fetchMultichainTokenPortfolio,

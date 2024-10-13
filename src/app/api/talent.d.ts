@@ -1,3 +1,9 @@
+type TTalentPassportScore = {
+  activity_score: number;
+  identity_score: number;
+  skills_score: number;
+};
+
 type TTalentPassport = {
   activity_score: number;
   identity_score: number;

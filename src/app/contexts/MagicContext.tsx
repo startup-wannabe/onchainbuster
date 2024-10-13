@@ -11,6 +11,12 @@ const defaultActivityStats: TActivityStats = {
   activityPeriod: 0,
 };
 
+const defaultLongestHoldingToken: TLongestHoldingToken = {
+  chain: '',
+  symbol: '',
+  duration: 0,
+};
+
 const defaultDeFiActivityStats: TDeFiActivityStats = {
   sumCount: 0,
   lendCount: 0,
@@ -51,6 +57,7 @@ interface IMagicContext {
   // Data analytics states
   text: UseState<string>;
   inputAddress: UseState<string>;
+  builderScore: UseState<number>;
 
   // Raw
   allTransactions: UseState<TEVMScanTransaction[]>;
@@ -61,6 +68,7 @@ interface IMagicContext {
   nftActivity: UseState<TNFTActivity[]>;
 
   // Insights
+  longestHoldingToken: UseState<TLongestHoldingToken>;
   chainStats: UseState<TChainStats>;
   dappInteractionStats: UseState<TDAppInteractionMap>;
   activityStats: UseState<TActivityStats>;
@@ -88,6 +96,10 @@ export const MagicProvider = ({ children }: Props) => {
   // All transactions and activity stats
   const allTransactions = useState<TEVMScanTransaction[]>([]);
   const activityStats = useState<TActivityStats>(defaultActivityStats);
+  const longestHoldingToken = useState<TLongestHoldingToken>(
+    defaultLongestHoldingToken,
+  );
+  const builderScore = useState(0);
   const defiActivityStats = useState<TDeFiActivityStats>(
     defaultDeFiActivityStats,
   );
@@ -120,6 +132,7 @@ export const MagicProvider = ({ children }: Props) => {
         // Raw
         text,
         inputAddress,
+        builderScore,
         allTransactions,
         tokenPortfolio,
         marketData,
@@ -129,6 +142,7 @@ export const MagicProvider = ({ children }: Props) => {
 
         // Insight
         activityStats,
+        longestHoldingToken,
         dappInteractionStats,
         chainStats,
         defiActivityStats,
