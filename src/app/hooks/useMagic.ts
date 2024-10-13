@@ -179,9 +179,7 @@ export const useMagic = () => {
       },
       async () => {
         const data = await listAllTransactionsByChain(address);
-        const allTransactions = Object.values(data)
-          .map((d) => d.txs)
-          .flat();
+        const allTransactions = Object.values(data).flatMap((d) => d.txs);
         setAllTransactions(allTransactions);
 
         const mostActiveChainID = Object.keys(data).reduce((a, b) =>
@@ -218,11 +216,9 @@ export const useMagic = () => {
 
         // Get Dapp Interaction Stats
         const dappInteractionStats = calculateDappInteraction(allTransactions);
-        // TODO: Set new stats
         console.log('Dapp Stats', dappInteractionStats);
         setDappInteractionStats(dappInteractionStats);
 
-        // TODO: Set new stats
         const defiActivityStats = calculateDeFiActivityStats(allTransactions);
         console.log('DeFi', defiActivityStats);
         setDefiActivityStats(defiActivityStats);
@@ -330,7 +326,6 @@ export const useMagic = () => {
           marketData,
         );
 
-        // TODO: set tokenActivityStats
         setTokenActivityStats(tokenActivityStats);
         console.log('tokenActivityStats:', tokenActivityStats);
       },
@@ -385,7 +380,6 @@ export const useMagic = () => {
         // console.log('allNftActivities:', allNftActivities);
 
         const nftActivityStats = calculateNFTActivityStats(allNftActivities);
-        // TODO: set nftActivityStats
         setNftActivityStats(nftActivityStats);
         console.log('nftActivityStats:', nftActivityStats);
       },

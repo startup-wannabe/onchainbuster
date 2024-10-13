@@ -112,7 +112,6 @@ export const getAllANativeTokenByChain = async (
     getVicNativeBalance(address),
   ]);
 
-  // TODO: Process and union type
   return {
     ...Object.fromEntries(
       chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
@@ -146,7 +145,6 @@ export const listAllTokenBalanceByChain = async (
     listVicTokenBalance(address),
   ]);
 
-  // TODO: Process and union type
   return {
     ...Object.fromEntries(
       chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
@@ -168,7 +166,6 @@ export const listAllTokenActivityByChain = async (
     listVicAllActivity(address),
   ]);
 
-  // TODO: Process and union type
   return {
     ...Object.fromEntries(
       chains.map((chain, index) => [chain.toLowerCase(), results[index].token]),
@@ -191,7 +188,6 @@ export const listAllNFTBalanceByChain = async (
     listDagoraAddressBalance(address),
   ]);
 
-  // TODO: Process and union type
   return {
     ...Object.fromEntries(
       chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
@@ -213,7 +209,6 @@ export const listAllNFTActivityByChain = async (
     listDagoraAddressActivity(address),
   ]);
 
-  // TODO: Process and union type
   return {
     ...Object.fromEntries(
       chains.map((chain, index) => [chain.toLowerCase(), results[index]]),

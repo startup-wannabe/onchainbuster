@@ -2,10 +2,10 @@ import {
   calculateMultichainTokenPortfolio,
   formatNumberUSD,
 } from '@/helpers/portfolio.helper';
-import { CircularPackingChart } from '../CircularPackingChart';
-import TokenPortfolioTable from '../TokenPortfolioTable';
 import AnimatedComponent from '../AnimatedComponent';
+import { CircularPackingChart } from '../CircularPackingChart';
 import StatisticsCard from '../StatisticsCard';
+import TokenPortfolioTable from '../TokenPortfolioTable';
 
 type TokenPortfolioProps = {
   tokenPortfolio: TTokenBalance[];
@@ -22,6 +22,7 @@ const TokenPortfolio = ({
     aggregatedBalanceBySymbol,
     chainCircularPackingData,
   } = calculateMultichainTokenPortfolio(tokenPortfolio, marketData);
+
   return (
     <section className="mt-2 flex justify-center items-center flex-col">
       <AnimatedComponent.OpacityFadeInDiv delay={200}>

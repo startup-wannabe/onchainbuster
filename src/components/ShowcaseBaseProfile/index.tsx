@@ -2,12 +2,12 @@ import { useMagic } from '@/app/hooks/useMagic';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
 import { ThreeStageState } from '@/app/state.type';
 import { Separator } from '@radix-ui/themes';
-import ActivityStats from '../ActivityStats';
-import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
-import TokenPortfolio from '../TokenPortfolio';
 import React, { useMemo } from 'react';
+import ActivityStats from '../ActivityStats';
 import AnimatedComponent from '../AnimatedComponent';
+import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
 import StatisticsCard from '../StatisticsCard';
+import TokenPortfolio from '../TokenPortfolio';
 
 type Props = {
   addressInput: string;

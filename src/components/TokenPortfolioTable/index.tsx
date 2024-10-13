@@ -7,7 +7,6 @@ type Props = {
 };
 
 const TokenPortfolioTable = ({ aggregatedBalanceBySymbol }: Props) => {
-  console.log(aggregatedBalanceBySymbol);
   return (
     <Table.Root className="shadow-xl rounded-xl border border-palette-line/20 h-fit">
       <Table.Header>
