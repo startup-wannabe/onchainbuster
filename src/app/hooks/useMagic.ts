@@ -179,12 +179,16 @@ export const useMagic = () => {
       },
       async () => {
         const data = await listAllTransactionsByChain(address);
-        const allTransactions = Object.values(data).flat();
+        const allTransactions = Object.values(data)
+          .map((d) => d.txs)
+          .flat();
         setAllTransactions(allTransactions);
 
-        const mostActiveChain = Object.keys(data).reduce((a, b) =>
-          data[a].length > data[b].length ? a : b,
+        const mostActiveChainID = Object.keys(data).reduce((a, b) =>
+          data[a].txs.length > data[b].txs.length ? a : b,
         );
+
+        const mostActiveChainName = data[mostActiveChainID].chainName;
 
         // Get Activity Stats
         const stats = calculateEVMStreaksAndMetrics(allTransactions, address);
@@ -194,17 +198,18 @@ export const useMagic = () => {
         // Get chain stats
         const totalChains = Object.keys(data);
         const noActivityChains = totalChains.filter(
-          (chain) => data[chain].length === 0,
+          (chain) => data[chain].txs.length === 0,
         );
         // Get unique active day, on most active chain 🫠
         const { uniqueActiveDays } = calculateEVMStreaksAndMetrics(
-          data[mostActiveChain],
+          data[mostActiveChainID].txs,
           address,
         );
 
         const chainStats: TChainStats = {
           totalChains,
-          mostActiveChain,
+          mostActiveChainName,
+          mostActiveChainID,
           noActivityChains,
           countUniqueDaysActiveChain: uniqueActiveDays,
         };

@@ -36,6 +36,7 @@
     "react": "^18",
     "react-calendar-heatmap": "^1.9.0",
     "react-dom": "^18",
+    "react-spring": "^9.7.4",
     "react-toastify": "^10.0.5",
     "siwe": "^2.3.2",
     "usehooks-ts": "^3.1.0"

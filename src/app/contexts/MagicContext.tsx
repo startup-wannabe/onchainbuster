@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { StateEventRegistry } from '../state.type';
 
 const defaultActivityStats: TActivityStats = {
@@ -32,7 +32,8 @@ const defaultTokenActivityStats: TTokenActivityStats = {
 const defaultChainStats: TChainStats = {
   totalChains: [],
   noActivityChains: [],
-  mostActiveChain: '',
+  mostActiveChainID: '',
+  mostActiveChainName: '',
   countUniqueDaysActiveChain: 0,
 };
 

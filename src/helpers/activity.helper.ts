@@ -28,6 +28,7 @@ export const calculateEVMStreaksAndMetrics = (
   transactions: TEVMScanTransaction[],
   address: string,
 ): TActivityStats => {
+  console.log(transactions, address);
   const countTxs = transactions.length;
   const filteredTransactions = transactions.filter(
     (tx) => tx.from.toLowerCase() === address.toLowerCase(),
@@ -167,161 +168,101 @@ export const calculateNFTActivityStats = (nftActivities: TNFTActivity[]) => {
 export const calculateDappInteraction = (
   transactions: TEVMScanTransaction[],
 ): TDAppInteractionMap => {
-  return {
+  // Initialize all the platform interaction maps with default values
+  const defaultWindow: [number, number] = [
+    Number.MAX_SAFE_INTEGER,
+    Number.MIN_SAFE_INTEGER,
+  ];
+  const dappInteractionMap: TDAppInteractionMap = {
     marketplace: {
-      opensea: {
-        name: 'OpenSea',
-        count: transactions.filter(
-          (tx) =>
-            OPENSEA_MARKETPLACE.has(tx.to.toLowerCase()) ||
-            OPENSEA_MARKETPLACE.has(tx.from.toLowerCase()),
-        ).length,
-      },
-      blur: {
-        name: 'Blur',
-        count: transactions.filter(
-          (tx) =>
-            BLUR_NFT_MARKETPLACE.has(tx.to.toLowerCase()) ||
-            BLUR_NFT_MARKETPLACE.has(tx.from.toLowerCase()),
-        ).length,
-      },
-      magicEden: {
-        name: 'Magic Eden',
-        count: transactions.filter(
-          (tx) =>
-            MAGIC_EDEN.has(tx.to.toLowerCase()) ||
-            MAGIC_EDEN.has(tx.from.toLowerCase()),
-        ).length,
-      },
-      dagora: {
-        name: 'Dagora',
-        count: transactions.filter(
-          (tx) =>
-            DAGORA.has(tx.to.toLowerCase()) ||
-            DAGORA.has(tx.from.toLowerCase()),
-        ).length,
-      },
+      opensea: { name: 'OpenSea', window: defaultWindow, count: 0 },
+      blur: { name: 'Blur', window: defaultWindow, count: 0 },
+      magicEden: { name: 'Magic Eden', window: defaultWindow, count: 0 },
+      dagora: { name: 'Dagora', window: defaultWindow, count: 0 },
     },
     defi: {
-      uniswap: {
-        name: 'Uniswap',
-        count: transactions.filter(
-          (tx) =>
-            UNISWAP.has(tx.to.toLowerCase()) ||
-            UNISWAP.has(tx.from.toLowerCase()),
-        ).length,
-      },
-      curve: {
-        name: 'Curve',
-        count: transactions.filter(
-          (tx) =>
-            CURVE.has(tx.to.toLowerCase()) || CURVE.has(tx.from.toLowerCase()),
-        ).length,
-      },
-      pendle: {
-        name: 'Pendle',
-        count: transactions.filter(
-          (tx) =>
-            PENDLE.has(tx.to.toLowerCase()) ||
-            PENDLE.has(tx.from.toLowerCase()),
-        ).length,
-      },
-
-      aave: {
-        name: 'Aave',
-        count: transactions.filter(
-          (tx) =>
-            AAVE.has(tx.to.toLowerCase()) || AAVE.has(tx.from.toLowerCase()),
-        ).length,
-      },
-
-      oneinch: {
-        name: '1INCH',
-        count: transactions.filter(
-          (tx) =>
-            ONEINCH.has(tx.to.toLowerCase()) ||
-            ONEINCH.has(tx.from.toLowerCase()),
-        ).length,
-      },
-
-      cow: {
-        name: 'CoW Swap',
-        count: transactions.filter(
-          (tx) =>
-            COW_SWAP.has(tx.to.toLowerCase()) ||
-            COW_SWAP.has(tx.from.toLowerCase()),
-        ).length,
-      },
-
-      aero: {
-        name: 'Aerodrome',
-        count: transactions.filter(
-          (tx) =>
-            AERODROME.has(tx.to.toLowerCase()) ||
-            AERODROME.has(tx.from.toLowerCase()),
-        ).length,
-      },
-
-      velo: {
-        name: 'Velodrome',
-        count: transactions.filter(
-          (tx) =>
-            VELODROME.has(tx.to.toLowerCase()) ||
-            VELODROME.has(tx.from.toLowerCase()),
-        ).length,
-      },
-
-      moonwell: {
-        name: 'Moonwell',
-        count: transactions.filter(
-          (tx) =>
-            MOONWELL.has(tx.to.toLowerCase()) ||
-            MOONWELL.has(tx.from.toLowerCase()),
-        ).length,
-      },
+      uniswap: { name: 'Uniswap', window: defaultWindow, count: 0 },
+      curve: { name: 'Curve', window: defaultWindow, count: 0 },
+      pendle: { name: 'Pendle', window: defaultWindow, count: 0 },
+      aave: { name: 'Aave', window: defaultWindow, count: 0 },
+      oneinch: { name: '1INCH', window: defaultWindow, count: 0 },
+      cow: { name: 'CoW Swap', window: defaultWindow, count: 0 },
+      aero: { name: 'Aerodrome', window: defaultWindow, count: 0 },
+      velo: { name: 'Velodrome', window: defaultWindow, count: 0 },
+      moonwell: { name: 'Moonwell', window: defaultWindow, count: 0 },
     },
     bridge: {
-      relay: {
-        name: 'Relay Bridge',
-        count: transactions.filter(
-          (tx) =>
-            RELAY.has(tx.to.toLowerCase()) || RELAY.has(tx.from.toLowerCase()),
-        ).length,
-      },
-      op: {
-        name: 'OP Native Bridge',
-        count: transactions.filter(
-          (tx) =>
-            OP_BRIDGE === tx.to.toLowerCase() ||
-            OP_BRIDGE === tx.from.toLowerCase(),
-        ).length,
-      },
+      relay: { name: 'Relay Bridge', window: defaultWindow, count: 0 },
+      op: { name: 'OP Native Bridge', window: defaultWindow, count: 0 },
       base: {
         name: 'Base Native Bridge (Deprecated)',
-        count: transactions.filter(
-          (tx) =>
-            BASE_BRIDGE === tx.to.toLowerCase() ||
-            BASE_BRIDGE === tx.from.toLowerCase(),
-        ).length,
+        window: [0, 0],
+        count: 0,
       },
     },
     nameService: {
-      ens: {
-        name: 'Ethereum Name Service (ENS)',
-        count: transactions.filter(
-          (tx) =>
-            ENS.has(tx.to.toLowerCase()) || ENS.has(tx.from.toLowerCase()),
-        ).length,
-      },
-      oneid: {
-        name: 'OneID',
-        count: transactions.filter(
-          (tx) =>
-            ONEID.has(tx.to.toLowerCase()) || ONEID.has(tx.from.toLowerCase()),
-        ).length,
-      },
+      ens: { name: 'Ethereum Name Service (ENS)', window: [0, 0], count: 0 },
+      oneid: { name: 'OneID', window: [0, 0], count: 0 },
     },
-  } as TDAppInteractionMap;
+  };
+
+  const updateWindow = (
+    tx: TEVMScanTransaction,
+    dappInteraction: TDappInteraction,
+  ) => {
+    const [windowStart, windowEnd] = dappInteraction.window;
+    dappInteraction.window = [
+      Math.min(parseInt(tx.timeStamp), windowStart),
+      Math.max(parseInt(tx.timeStamp), windowEnd),
+    ];
+  };
+
+  // List of DApp interaction maps paired with their respective contract sets
+  const dappAndContractList: [TDappInteraction, Set<string> | string][] = [
+    [dappInteractionMap.marketplace.opensea, OPENSEA_MARKETPLACE],
+    [dappInteractionMap.marketplace.blur, BLUR_NFT_MARKETPLACE],
+    [dappInteractionMap.marketplace.magicEden, MAGIC_EDEN],
+    [dappInteractionMap.marketplace.dagora, DAGORA],
+    [dappInteractionMap.defi.uniswap, UNISWAP],
+    [dappInteractionMap.defi.curve, CURVE],
+    [dappInteractionMap.defi.pendle, PENDLE],
+    [dappInteractionMap.defi.aave, AAVE],
+    [dappInteractionMap.defi.oneinch, ONEINCH],
+    [dappInteractionMap.defi.cow, COW_SWAP],
+    [dappInteractionMap.defi.aero, AERODROME],
+    [dappInteractionMap.defi.velo, VELODROME],
+    [dappInteractionMap.defi.moonwell, MOONWELL],
+    [dappInteractionMap.bridge.relay, RELAY],
+    [dappInteractionMap.bridge.op, OP_BRIDGE],
+    [dappInteractionMap.bridge.base, BASE_BRIDGE],
+    [dappInteractionMap.nameService.ens, ENS],
+    [dappInteractionMap.nameService.oneid, ONEID],
+  ];
+
+  for (const tx of transactions) {
+    const lowerCaseTo = tx.to.toLowerCase();
+    const lowerCaseFrom = tx.from.toLowerCase();
+    const txTimestamp = parseInt(tx.timeStamp);
+    // Iterate over the dappAndContractList to update counts and windows
+    for (const [dapp, contract] of dappAndContractList) {
+      const contractIncluded =
+        typeof contract === 'string'
+          ? contract === lowerCaseTo.toLowerCase() ||
+            contract === lowerCaseFrom.toLowerCase()
+          : contract.has(lowerCaseTo) || contract.has(lowerCaseFrom);
+      if (contractIncluded) {
+        dapp.count++;
+        // Update the window for the DApp
+        const [windowStart, windowEnd] = dapp.window;
+        dapp.window = [
+          Math.min(txTimestamp, windowStart),
+          Math.max(txTimestamp, windowEnd),
+        ];
+      }
+    }
+  }
+
+  return dappInteractionMap;
 };
 
 type Holding = {

@@ -19,7 +19,8 @@ type TTokenDetails = {
 type TChainStats = {
   totalChains: string[];
   noActivityChains: string[];
-  mostActiveChain: string;
+  mostActiveChainName: string;
+  mostActiveChainID: string;
   countUniqueDaysActiveChain: number;
 };
 
@@ -76,14 +77,19 @@ type TCircularTreeLeaf = {
 
 type TCircularTree = TCircularTreeNode | TCircularTreeLeaf;
 
+type TDappInteraction = {
+  name: string;
+  count: number;
+  window: [number, number];
+};
 type TLongestHoldingToken = { chain: string; symbol: string; duration: number };
-type TDAppInteraction = Record<string, { name: string; count: number }>;
+type TDAppInteractionRecord = Record<string, TDappInteraction>;
 
 type TDAppInteractionMap = {
-  marketplace: TDAppInteraction;
-  defi: TDAppInteraction;
-  bridge: TDAppInteraction;
-  nameService: TDAppInteraction;
+  marketplace: TDAppInteractionRecord;
+  defi: TDAppInteractionRecord;
+  bridge: TDAppInteractionRecord;
+  nameService: TDAppInteractionRecord;
 };
 
 type TDeFiActivityStats = {

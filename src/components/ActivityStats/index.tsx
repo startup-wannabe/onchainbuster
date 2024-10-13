@@ -4,11 +4,11 @@ import { useCallback, useRef } from 'react';
 import CalendarHeatmap, {
   type ReactCalendarHeatmapValue,
 } from 'react-calendar-heatmap';
-import { Icon } from '../Icon/Icon';
 import Title from '../Title';
 // import { Address } from 'viem';
 import './cal.css';
 import { chainIDMap } from '@/constants/chains';
+import { Separator } from '@radix-ui/themes';
 
 type HeatmapValue = {
   date: string;
@@ -137,11 +137,8 @@ const ActivityStats = ({
             />
           </div>
         </div>
-        <Collapsible.Trigger className="flex w-full flex-row items-center border-palette-line/20 border-t px-6 py-4">
-          <Icon name="caret" color="currentColor" width="1rem" height="1rem" />
-          <p className="ml-1">View details</p>
-        </Collapsible.Trigger>
-        <Collapsible.Content className="flex flex-row flex-wrap items-start justify-around gap-8 px-6 pb-9 data-[state=closed]:pb-0">
+        <Separator size={'4'} className="mt-5 mb-5" />
+        <div className="flex flex-row flex-wrap items-start justify-around gap-8 px-6 pb-9 data-[state=closed]:pb-0">
           <div className="w-28">
             <div className="font-medium text-palette-primary text-xl">
               {activityStats.totalTxs}
@@ -194,7 +191,7 @@ const ActivityStats = ({
               Day activity period
             </p>
           </div>
-        </Collapsible.Content>
+        </div>
       </Collapsible.Root>
     </section>
   );

@@ -24,7 +24,7 @@ const TokenPortfolioTable = ({ aggregatedBalanceBySymbol }: Props) => {
           .sort(([, tokenA], [, tokenB]) =>
             tokenA.totalUSDValue > tokenB.totalUSDValue ? -1 : 1,
           )
-          .slice(0, 5)
+          .slice(0, 6)
           .map(
             ([
               token,

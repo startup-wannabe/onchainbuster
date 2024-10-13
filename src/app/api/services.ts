@@ -25,16 +25,33 @@ import {
 // ---- Blockchain Transactions ----
 export const listAllTransactionsByChain = async (
   address: string,
-): Promise<Record<string, TEVMScanTransaction[]>> => {
-  if (address === '') {
-    return {
-      eth: [],
-      base: [],
-      op: [],
-      arb: [],
-      vic: [],
+): Promise<
+  Record<string, { txs: TEVMScanTransaction[]; chainName: string }>
+> => {
+  let value: Record<string, { txs: TEVMScanTransaction[]; chainName: string }> =
+    {
+      eth: {
+        chainName: 'Ethereum',
+        txs: [],
+      },
+      base: {
+        chainName: 'Base',
+        txs: [],
+      },
+      op: {
+        chainName: 'Optimism',
+        txs: [],
+      },
+      arb: {
+        chainName: 'Arbitrum',
+        txs: [],
+      },
+      vic: {
+        chainName: 'Viction',
+        txs: [],
+      },
     };
-  }
+  if (address === '') return value;
 
   const chains = ['ETH', 'BASE', 'OP', 'ARB'];
   const results = await Promise.all([
@@ -42,14 +59,24 @@ export const listAllTransactionsByChain = async (
     listVicTransactions(address),
   ]);
 
-  return {
+  value = {
     ...Object.fromEntries(
-      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+      chains.map((chain, index) => [
+        chain.toLowerCase(),
+        {
+          txs: results[index],
+          chainName: (value as any)[chain.toLowerCase()].chainName,
+        },
+      ]),
     ),
-    vic: castVICToEVMTransactionType(
-      results[results.length - 1] as TVicscanTransaction[],
-    ),
+    vic: {
+      txs: castVICToEVMTransactionType(
+        results[results.length - 1] as TVicscanTransaction[],
+      ),
+      chainName: 'Viction',
+    },
   };
+  return value;
 };
 
 // --- Token Balance & Activity ---
@@ -124,7 +151,7 @@ export const listAllTokenBalanceByChain = async (
     ...Object.fromEntries(
       chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
     ),
-    vic: results[results.length - 1],
+    vic: results[results.length - 1] as any,
   };
 };
 

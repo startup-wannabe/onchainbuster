@@ -11,6 +11,8 @@ import SignupButton from '../components/SignupButton';
 import { useMagic } from './hooks/useMagic';
 import { useMagicContext } from './hooks/useMagicContext';
 import { ThreeStageState } from './state.type';
+import ProfileCard from '@/components/ProfileCard';
+import AnimatedComponent from '@/components/AnimatedComponent';
 
 export default function Page() {
   const { address } = useAccount();
@@ -34,16 +36,19 @@ export default function Page() {
         </div>
       </section>
       <section
-        className="templateSection flex w-full h-[300px] mb-[50px] flex-col items-center justify-center gap-4 rounded-xl px-2 py-10 md:grow"
+        className="templateSection relative flex w-full h-[300px] mb-[120px] flex-col items-center justify-center gap-4 rounded-xl px-2 py-10 md:grow"
         style={{
           background: `url('/background.avif')`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
         }}
       >
-        <HowBasedAreYouHeader />
+        <AnimatedComponent.OpacityFadeInDiv delay={300}>
+          <HowBasedAreYouHeader />
+        </AnimatedComponent.OpacityFadeInDiv>
         <TextField.Root
           className="mr-2 w-full rounded-md p-2 shadow-xl"
+          disabled={stateCheck('HowBasedAreYou', ThreeStageState.InProgress)}
           placeholder="ENS, Basename, OneID, 0x..."
           style={{
             borderRadius: 50,
@@ -74,6 +79,13 @@ export default function Page() {
             />
           </TextField.Slot>
         </TextField.Root>
+        {addressInput && addressInput.startsWith('0x') && (
+          <div className="absolute bottom-[-70px]">
+            <AnimatedComponent.OpacityFadeInDiv delay={300}>
+              <ProfileCard address={addressInput as any} />
+            </AnimatedComponent.OpacityFadeInDiv>
+          </div>
+        )}
       </section>
       <ShowcaseBaseProfile addressInput={addressInput} />
     </div>
