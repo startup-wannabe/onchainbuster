@@ -457,7 +457,8 @@ export const useMagic = () => {
           await fetchMultichainTokenPortfolio(addressInput);
           await fetchMultichainTokenActivity(addressInput);
           await fetchMultichainNftPortfolio(addressInput);
-          await fetchMultichainNftActivity(addressInput);
+          // TODO: Fix this please Minh
+          // await fetchMultichainNftActivity(addressInput);
 
           await delayMs(1000);
         },
