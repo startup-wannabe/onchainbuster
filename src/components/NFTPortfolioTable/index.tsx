@@ -18,7 +18,7 @@ const NFTPortfolioTable = ({ nftPortfolio }: NFTPortfolioProps) => {
             <Table.ColumnHeaderCell>Items</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Chain</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Total Valuation</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Total Valuation</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Address</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
