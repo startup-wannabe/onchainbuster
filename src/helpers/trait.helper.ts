@@ -155,8 +155,8 @@ export const isOriginalBuilderOrMultichainCitizen = (
   activityStats: TActivityStats,
   chainStats: TChainStats,
   dappInteractionStats: TDAppInteractionMap,
-  talentPassport: TTalentPassport,
-): UserTrait => {
+  talentPassportScore: TTalentPassportScore,
+): TUserTraitResult => {
   // Degen (interact with new stuffs) or long-term Holders?
   const noActivityChains = chainStats.noActivityChains.length;
   const totalChains = chainStats.totalChains.length;
@@ -169,7 +169,7 @@ export const isOriginalBuilderOrMultichainCitizen = (
     0,
   );
 
-  const skillsScore = talentPassport.skills_score;
+  const skillsScore = talentPassportScore.skills_score;
 
   // 35% * (noActivityChains / totalChains)
   // 30% * (swapCount DeFi / swapCount + lpCount is NFT then 1 else 0)
@@ -190,5 +190,9 @@ export const isOriginalBuilderOrMultichainCitizen = (
     0.1 * (skillsScore !== 0 ? 1 : 0);
 
   // Chain-dedicated builder (rather stay & build on 1 chain) if >50% else Multi-chain user
-  return score > 0.5 ? UserTrait.OriginalBuilder : UserTrait.MultichainCitizen;
+  return {
+    trait:
+      score > 0.5 ? UserTrait.OriginalBuilder : UserTrait.MultichainCitizen,
+    score,
+  };
 };

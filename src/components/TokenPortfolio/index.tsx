@@ -1,28 +1,20 @@
-import {
-  calculateMultichainTokenPortfolio,
-  formatNumberUSD,
-} from '@/helpers/portfolio.helper';
-import AnimatedComponent from '../AnimatedComponent';
-import { CircularPackingChart } from '../CircularPackingChart';
-import StatisticsCard from '../StatisticsCard';
-import TokenPortfolioTable from '../TokenPortfolioTable';
+import { formatNumberUSD } from "@/helpers/portfolio.helper";
+import AnimatedComponent from "../AnimatedComponent";
+import { CircularPackingChart } from "../CircularPackingChart";
+import StatisticsCard from "../StatisticsCard";
+import TokenPortfolioTable from "../TokenPortfolioTable";
 
 type TokenPortfolioProps = {
-  tokenPortfolio: TTokenBalance[];
-  marketData: TTokenSymbolDetail[];
+  tokenPortfolioStats: TTokenPortfolioStats;
 };
 
-const TokenPortfolio = ({
-  tokenPortfolio,
-  marketData,
-}: TokenPortfolioProps) => {
+const TokenPortfolio = ({ tokenPortfolioStats }: TokenPortfolioProps) => {
   const {
-    sumPortfolioUSDValue,
-    mostValuableToken,
     aggregatedBalanceBySymbol,
     chainCircularPackingData,
-  } = calculateMultichainTokenPortfolio(tokenPortfolio, marketData);
-
+    sumPortfolioUSDValue,
+    mostValuableToken,
+  } = tokenPortfolioStats;
   return (
     <section className="mt-2 flex justify-center items-center flex-col">
       <AnimatedComponent.OpacityFadeInDiv delay={200}>

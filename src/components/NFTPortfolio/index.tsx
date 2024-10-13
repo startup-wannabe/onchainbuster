@@ -9,8 +9,6 @@ type NFTPortfolioProps = {
 };
 
 const NFTPortfolio = ({ nftPortfolio }: NFTPortfolioProps) => {
-  console.log(nftPortfolio);
-
   const { sumPortfolioUSDValue, mostValuableNFTCollection } =
     calculateMultichainNFTPortfolio(nftPortfolio);
 

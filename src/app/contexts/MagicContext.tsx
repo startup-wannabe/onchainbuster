@@ -29,6 +29,37 @@ const defaultTokenActivityStats: TTokenActivityStats = {
   newCount: 0,
 };
 
+const defaultTokenPortfolioStats: TTokenPortfolioStats = {
+  aggregatedBalanceBySymbol: {},
+  chainCircularPackingData: {
+    type: 'leaf',
+    name: '',
+    value: 0,
+  },
+  chainRecordsWithTokens: {},
+  mostValuableToken: {
+    name: '',
+    symbol: '',
+    value: 0,
+    logoURI: '',
+  },
+  sumMemeUSDValue: 0,
+  sumPortfolioUSDValue: 0,
+};
+
+const defaultNftPortfolioStats: TNFTPortfolioStats = {
+  mostValuableNFTCollection: {
+    chain: '',
+    collectionAddress: '',
+    collectionImage: '',
+    collectionName: '',
+    floorPrice: 0,
+    totalCount: 0,
+    totalValue: 0,
+  },
+  sumPortfolioUSDValue: 0,
+};
+
 const defaultChainStats: TChainStats = {
   totalChains: [],
   noActivityChains: [],
@@ -49,8 +80,14 @@ const defaultNFTActivityStats: TNFTActivityStats = {
   tradeCount: 0,
 };
 
-type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
-type UseState<T> = [T, SetState<T>];
+const defaultTalentPassportScore: TTalentPassportScore = {
+  activity_score: 0,
+  identity_score: 0,
+  skills_score: 0,
+};
+
+export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
+export type UseState<T> = [T, SetState<T>];
 
 interface IMagicContext {
   stateEvents: StateEventRegistry;
@@ -58,7 +95,7 @@ interface IMagicContext {
   // Data analytics states
   text: UseState<string>;
   inputAddress: UseState<string>;
-  builderScore: UseState<number>;
+  talentPassportScore: UseState<TTalentPassportScore>;
 
   // Raw
   allTransactions: UseState<TEVMScanTransaction[]>;
@@ -74,9 +111,11 @@ interface IMagicContext {
   dappInteractionStats: UseState<TDAppInteractionMap>;
   activityStats: UseState<TActivityStats>;
   defiActivityStats: UseState<TDeFiActivityStats>;
+  tokenPortfolioStats: UseState<TTokenPortfolioStats>;
   tokenActivityStats: UseState<TTokenActivityStats>;
   nftActivityStats: UseState<TNFTActivityStats>;
   totalGasInETH: UseState<number>;
+  nftPortfolioStats: UseState<TNFTPortfolioStats>;
 }
 
 export const MagicContext = React.createContext<IMagicContext>(
@@ -101,7 +140,9 @@ export const MagicProvider = ({ children }: Props) => {
   const longestHoldingToken = useState<TLongestHoldingToken>(
     defaultLongestHoldingToken,
   );
-  const builderScore = useState(0);
+  const talentPassportScore = useState<TTalentPassportScore>(
+    defaultTalentPassportScore,
+  );
   const defiActivityStats = useState<TDeFiActivityStats>(
     defaultDeFiActivityStats,
   );
@@ -116,10 +157,16 @@ export const MagicProvider = ({ children }: Props) => {
 
   // Multi-chain token portfolio
   const tokenPortfolio = useState<TTokenBalance[]>([]);
+  const tokenPortfolioStats = useState<TTokenPortfolioStats>(
+    defaultTokenPortfolioStats,
+  );
   const marketData = useState<TTokenSymbolDetail[]>([]);
 
   // Multi-chain nft portfolio
   const nftPortfolio = useState<TNFTBalance[]>([]);
+  const nftPortfolioStats = useState<TNFTPortfolioStats>(
+    defaultNftPortfolioStats,
+  );
 
   // Multi-chain token & activity
   const tokenActivity = useState<TTokenActivity[]>([]);
@@ -135,12 +182,14 @@ export const MagicProvider = ({ children }: Props) => {
         // Raw
         text,
         inputAddress,
-        builderScore,
+        talentPassportScore,
         allTransactions,
         tokenPortfolio,
+        tokenPortfolioStats,
         marketData,
         tokenActivity,
         nftPortfolio,
+        nftPortfolioStats,
         nftActivity,
 
         // Insight

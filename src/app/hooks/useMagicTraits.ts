@@ -1,0 +1,78 @@
+import {
+  isDeFiOrArt,
+  isDegenOrDiamondHand,
+  isOriginalBuilderOrMultichainCitizen,
+} from '@/helpers/trait.helper';
+import { useMemo } from 'react';
+import { useMagicContext } from './useMagicContext';
+import { selectState } from '@/helpers';
+
+export const useMagicTraits = () => {
+  const {
+    defiActivityStats,
+    chainStats,
+    tokenPortfolioStats,
+    nftActivityStats,
+    nftPortfolioStats,
+    tokenActivityStats,
+    longestHoldingToken,
+    dappInteractionStats,
+    activityStats,
+    talentPassportScore,
+  } = useMagicContext();
+
+  const defitOrArtTraitResult = useMemo(
+    () =>
+      isDeFiOrArt(
+        selectState(defiActivityStats),
+        selectState(tokenPortfolioStats),
+        selectState(nftActivityStats),
+        selectState(nftPortfolioStats),
+        selectState(activityStats).firstActiveDay || new Date(),
+      ),
+    [
+      defiActivityStats,
+      tokenPortfolioStats,
+      nftActivityStats,
+      nftPortfolioStats,
+    ],
+  );
+
+  const degenOrDiamondHandResult = useMemo(
+    () =>
+      isDegenOrDiamondHand(
+        selectState(tokenPortfolioStats),
+        selectState(tokenActivityStats),
+        selectState(defiActivityStats),
+        selectState(longestHoldingToken),
+      ),
+    [
+      defiActivityStats,
+      tokenPortfolioStats,
+      nftActivityStats,
+      nftPortfolioStats,
+    ],
+  );
+
+  const originalBuilderOrMultichainCitizen = useMemo(
+    () =>
+      isOriginalBuilderOrMultichainCitizen(
+        selectState(activityStats),
+        selectState(chainStats),
+        selectState(dappInteractionStats),
+        selectState(talentPassportScore),
+      ),
+    [
+      defiActivityStats,
+      tokenPortfolioStats,
+      nftActivityStats,
+      nftPortfolioStats,
+    ],
+  );
+
+  return {
+    defitOrArtTraitResult,
+    degenOrDiamondHandResult,
+    originalBuilderOrMultichainCitizen,
+  };
+};
