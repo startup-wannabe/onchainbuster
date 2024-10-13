@@ -1,15 +1,16 @@
-import { useMagic } from '@/app/hooks/useMagic';
-import { useMagicContext } from '@/app/hooks/useMagicContext';
-import { ThreeStageState } from '@/app/state.type';
-import { supportedDappMetadata } from '@/constants/dapps';
-import { Separator } from '@radix-ui/themes';
-import Image from 'next/image';
-import React, { useMemo } from 'react';
-import ActivityStats from '../ActivityStats';
-import AnimatedComponent from '../AnimatedComponent';
-import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
-import StatisticsCard from '../StatisticsCard';
-import { selectState } from '@/helpers';
+import { useMagic } from "@/app/hooks/useMagic";
+import { useMagicContext } from "@/app/hooks/useMagicContext";
+import { ThreeStageState } from "@/app/state.type";
+import { supportedDappMetadata } from "@/constants/dapps";
+import { Separator } from "@radix-ui/themes";
+import Image from "next/image";
+import React, { useMemo } from "react";
+import ActivityStats from "../ActivityStats";
+import AnimatedComponent from "../AnimatedComponent";
+import HowBasedAreYouHeader from "../HowBasedAreYouHeader";
+import StatisticsCard from "../StatisticsCard";
+import { selectState } from "@/helpers";
+import TokenPortfolio from "../TokenPortfolio";
 
 type Props = {
   addressInput: string;
@@ -34,13 +35,13 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
 
   const mostActiveDappInteraction = useMemo<TDappInteraction>(() => {
     let currentDappInteraction: TDappInteraction = {
-      name: 'Unknown',
+      name: "Unknown",
       count: 0,
       window: [0, 0],
     };
     for (const dappGenre of Object.keys(dappInteractionStats)) {
       for (const dappName of Object.keys(
-        (dappInteractionStats as any)[dappGenre],
+        (dappInteractionStats as any)[dappGenre]
       )) {
         const dappInteraction: TDappInteraction = (dappInteractionStats as any)[
           dappGenre
@@ -55,7 +56,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
 
   return (
     <section className="flex items-center justify-center flex-col">
-      {stateCheck('ActivityStats', ThreeStageState.Finished) && (
+      {stateCheck("ActivityStats", ThreeStageState.Finished) && (
         <>
           <HowBasedAreYouHeader
             scale={0.6}
@@ -64,7 +65,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           />
         </>
       )}
-      {stateCheck('ActivityStats', ThreeStageState.Finished) && (
+      {stateCheck("ActivityStats", ThreeStageState.Finished) && (
         <AnimatedComponent.OpacityFadeInDiv delay={300}>
           <div className="max-w-[1200px]">
             <div className="flex items-center justify-center">
@@ -83,7 +84,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    <span>You have interacted with </span>{' '}
+                    <span>You have interacted with </span>{" "}
                     {supportedDappMetadata[
                       mostActiveDappInteraction.name as keyof typeof supportedDappMetadata
                     ] && (
@@ -99,11 +100,11 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                         className="mr-2 ml-1 inline-block"
                       />
                     )}
-                    {mostActiveDappInteraction.name}{' '}
+                    {mostActiveDappInteraction.name}{" "}
                     <span className="font-bold">
                       {mostActiveDappInteraction.count} times
-                    </span>{' '}
-                    in the last{' '}
+                    </span>{" "}
+                    in the last{" "}
                     <span className="font-bold">
                       {windowToMonths(mostActiveDappInteraction.window)} months.
                     </span>
@@ -115,10 +116,10 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    Total DeFi transactions you made is{' '}
+                    Total DeFi transactions you made is{" "}
                     <span className="font-bold">
                       {selectState(defiActivityStats).sumCount}
-                    </span>{' '}
+                    </span>{" "}
                     in total.
                   </div>
                 }
@@ -128,10 +129,10 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    You are acitve for{' '}
+                    You are acitve for{" "}
                     <span className="font-bold">
                       {selectState(activityStats).longestStreakDays}
-                    </span>{' '}
+                    </span>{" "}
                     unique days.
                   </div>
                 }
@@ -141,14 +142,14 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    You are most active on{' '}
+                    You are most active on{" "}
                     <span className="font-bold">
                       {selectState(chainStats).mostActiveChainName}
                     </span>
-                    . Longest streak{' '}
+                    . Longest streak{" "}
                     <span className="font-bold">
                       {selectState(chainStats).countUniqueDaysActiveChain}
-                    </span>{' '}
+                    </span>{" "}
                     days.
                   </div>
                 }
@@ -157,10 +158,10 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           </div>
         </AnimatedComponent.OpacityFadeInDiv>
       )}
-      {stateCheck('ActivityStats', ThreeStageState.Finished) &&
-        stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
+      {stateCheck("ActivityStats", ThreeStageState.Finished) &&
+        stateCheck("GetTokenPortfolio", ThreeStageState.Finished) && (
           <React.Fragment>
-            <Separator className="mt-[80px]" size={'4'} />
+            <Separator className="mt-[80px]" size={"4"} />
             <div className="mt-8">
               <div className="flex items-center justify-center">
                 <h2 className="mb-4 font-bold text-2xl">Multi-chain Assets</h2>
