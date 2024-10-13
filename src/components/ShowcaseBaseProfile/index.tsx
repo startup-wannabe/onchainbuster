@@ -1,16 +1,18 @@
-import { useMagic } from "@/app/hooks/useMagic";
-import { useMagicContext } from "@/app/hooks/useMagicContext";
-import { ThreeStageState } from "@/app/state.type";
-import { supportedDappMetadata } from "@/constants/dapps";
-import { Separator } from "@radix-ui/themes";
-import Image from "next/image";
-import React, { useMemo } from "react";
-import ActivityStats from "../ActivityStats";
-import AnimatedComponent from "../AnimatedComponent";
-import HowBasedAreYouHeader from "../HowBasedAreYouHeader";
-import StatisticsCard from "../StatisticsCard";
-import { selectState } from "@/helpers";
-import TokenPortfolio from "../TokenPortfolio";
+import { useMagic } from '@/app/hooks/useMagic';
+import { useMagicContext } from '@/app/hooks/useMagicContext';
+import { ThreeStageState } from '@/app/state.type';
+import { supportedDappMetadata } from '@/constants/dapps';
+import { Separator } from '@radix-ui/themes';
+import Image from 'next/image';
+import React, { useMemo } from 'react';
+import ActivityStats from '../ActivityStats';
+import AnimatedComponent from '../AnimatedComponent';
+import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
+import StatisticsCard from '../StatisticsCard';
+import { selectState } from '@/helpers';
+import TokenPortfolio from '../TokenPortfolio';
+import { formatNumberUSD } from '@/helpers/portfolio.helper';
+import { formatDuration } from '@/helpers/activity.helper';
 
 type Props = {
   addressInput: string;
@@ -28,24 +30,31 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     dappInteractionStats,
     defiActivityStats,
     tokenPortfolioStats,
+    longestHoldingToken,
   } = useMagicContext();
 
+  const { mostValuableToken } = useMemo(
+    () => selectState(tokenPortfolioStats),
+    [selectState(tokenPortfolioStats)],
+  );
+
   const windowToMonths = (window: [number, number]) =>
-    ((window[1] - window[0]) / (1000 * 60 * 24 * 12)).toFixed(0);
+    formatDuration((window[1] - window[0]) / (1000 * 60 * 24 * 12));
 
   const mostActiveDappInteraction = useMemo<TDappInteraction>(() => {
     let currentDappInteraction: TDappInteraction = {
-      name: "Unknown",
+      name: 'Unknown',
       count: 0,
-      window: [0, 0],
+      window: [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER],
     };
-    for (const dappGenre of Object.keys(dappInteractionStats)) {
+    for (const dappGenre of Object.keys(selectState(dappInteractionStats))) {
+      console.log('dappGenre: ', dappGenre);
       for (const dappName of Object.keys(
-        (dappInteractionStats as any)[dappGenre]
+        (selectState(dappInteractionStats) as any)[dappGenre],
       )) {
-        const dappInteraction: TDappInteraction = (dappInteractionStats as any)[
-          dappGenre
-        ][dappName];
+        const dappInteraction: TDappInteraction = (
+          selectState(dappInteractionStats) as any
+        )[dappGenre][dappName];
         if (dappInteraction.count > currentDappInteraction.count) {
           currentDappInteraction = dappInteraction;
         }
@@ -56,7 +65,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
 
   return (
     <section className="flex items-center justify-center flex-col">
-      {stateCheck("ActivityStats", ThreeStageState.Finished) && (
+      {stateCheck('ActivityStats', ThreeStageState.Finished) && (
         <>
           <HowBasedAreYouHeader
             scale={0.6}
@@ -65,13 +74,13 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           />
         </>
       )}
-      {stateCheck("ActivityStats", ThreeStageState.Finished) && (
+      {stateCheck('ActivityStats', ThreeStageState.Finished) && (
         <AnimatedComponent.OpacityFadeInDiv delay={300}>
           <div className="max-w-[1200px]">
             <div className="flex items-center justify-center">
               <h2 className="mb-4 font-bold text-2xl">Activity Statistics</h2>
             </div>
-            {allTransactions.length > 0 && (
+            {selectState(allTransactions).length > 0 && (
               <ActivityStats
                 transactions={selectState(allTransactions)}
                 activityStats={selectState(activityStats)}
@@ -84,7 +93,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    <span>You have interacted with </span>{" "}
+                    <span>You have interacted with </span>{' '}
                     {supportedDappMetadata[
                       mostActiveDappInteraction.name as keyof typeof supportedDappMetadata
                     ] && (
@@ -100,13 +109,13 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                         className="mr-2 ml-1 inline-block"
                       />
                     )}
-                    {mostActiveDappInteraction.name}{" "}
+                    {mostActiveDappInteraction.name}{' '}
                     <span className="font-bold">
                       {mostActiveDappInteraction.count} times
-                    </span>{" "}
-                    in the last{" "}
+                    </span>{' '}
+                    in the last{' '}
                     <span className="font-bold">
-                      {windowToMonths(mostActiveDappInteraction.window)} months.
+                      {windowToMonths(mostActiveDappInteraction.window)}
                     </span>
                   </div>
                 }
@@ -116,10 +125,10 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    Total DeFi transactions you made is{" "}
+                    Total DeFi transactions you made is{' '}
                     <span className="font-bold">
                       {selectState(defiActivityStats).sumCount}
-                    </span>{" "}
+                    </span>{' '}
                     in total.
                   </div>
                 }
@@ -129,10 +138,10 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    You are acitve for{" "}
+                    You are acitve for{' '}
                     <span className="font-bold">
                       {selectState(activityStats).longestStreakDays}
-                    </span>{" "}
+                    </span>{' '}
                     unique days.
                   </div>
                 }
@@ -142,14 +151,14 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    You are most active on{" "}
+                    You are most active on{' '}
                     <span className="font-bold">
                       {selectState(chainStats).mostActiveChainName}
                     </span>
-                    . Longest streak{" "}
+                    . Longest streak{' '}
                     <span className="font-bold">
                       {selectState(chainStats).countUniqueDaysActiveChain}
-                    </span>{" "}
+                    </span>{' '}
                     days.
                   </div>
                 }
@@ -158,18 +167,75 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           </div>
         </AnimatedComponent.OpacityFadeInDiv>
       )}
-      {stateCheck("ActivityStats", ThreeStageState.Finished) &&
-        stateCheck("GetTokenPortfolio", ThreeStageState.Finished) && (
+      {stateCheck('ActivityStats', ThreeStageState.Finished) &&
+        stateCheck('GetTokenPortfolio', ThreeStageState.Finished) && (
           <React.Fragment>
-            <Separator className="mt-[80px]" size={"4"} />
+            <Separator className="mt-[80px]" size={'4'} />
             <div className="mt-8">
               <div className="flex items-center justify-center">
                 <h2 className="mb-4 font-bold text-2xl">Multi-chain Assets</h2>
               </div>
               {tokenPortfolio.length > 0 && (
-                <TokenPortfolio
-                  tokenPortfolioStats={selectState(tokenPortfolioStats)}
-                />
+                <section className="mt-2 flex justify-center items-center flex-col">
+                  <TokenPortfolio
+                    tokenPortfolioStats={selectState(tokenPortfolioStats)}
+                  />
+                  <div className="flex flex-wrap mt-5">
+                    <AnimatedComponent.OpacityFadeInDiv delay={300}>
+                      <StatisticsCard
+                        title="🏆 Most valuable asset"
+                        content={
+                          <div>
+                            <img
+                              src={mostValuableToken.logoURI}
+                              alt={`${mostValuableToken.name} logo`}
+                              className="mr-1 inline-block h-6 w-6 rounded-full"
+                            />
+                            <span>
+                              {mostValuableToken.name} (
+                              {mostValuableToken.symbol}), worth&nbsp;
+                              <span className="font-bold">
+                                {formatNumberUSD(mostValuableToken.value)}
+                              </span>
+                            </span>
+                          </div>
+                        }
+                      />
+                    </AnimatedComponent.OpacityFadeInDiv>
+                    <AnimatedComponent.OpacityFadeInDiv delay={400}>
+                      <StatisticsCard
+                        title="💪 Longest holding streak"
+                        content={
+                          <div>
+                            You've been holding{' '}
+                            <span className="font-bold">
+                              {selectState(longestHoldingToken).symbol}
+                            </span>{' '}
+                            for over <br />
+                            <span className="font-bold">
+                              {formatDuration(
+                                selectState(longestHoldingToken).duration,
+                              )}
+                            </span>
+                          </div>
+                        }
+                      />
+                    </AnimatedComponent.OpacityFadeInDiv>
+                    <AnimatedComponent.OpacityFadeInDiv delay={500}>
+                      <StatisticsCard
+                        title="💰 Assets allocation"
+                        content={
+                          <div>
+                            <span className="font-bold">51%</span> of your
+                            wallet balance is in tokens, <br />
+                            compared in <span className="font-bold">49%</span>{' '}
+                            in NFTs.
+                          </div>
+                        }
+                      />
+                    </AnimatedComponent.OpacityFadeInDiv>
+                  </div>
+                </section>
               )}
             </div>
           </React.Fragment>

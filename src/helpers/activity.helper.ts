@@ -211,17 +211,6 @@ export const calculateDappInteraction = (
     },
   };
 
-  const updateWindow = (
-    tx: TEVMScanTransaction,
-    dappInteraction: TDappInteraction,
-  ) => {
-    const [windowStart, windowEnd] = dappInteraction.window;
-    dappInteraction.window = [
-      Math.min(Number.parseInt(tx.timeStamp), windowStart),
-      Math.max(Number.parseInt(tx.timeStamp), windowEnd),
-    ];
-  };
-
   // List of DApp interaction maps paired with their respective contract sets
   const dappAndContractList: [TDappInteraction, Set<string> | string][] = [
     [dappInteractionMap.marketplace.opensea, OPENSEA_MARKETPLACE],
