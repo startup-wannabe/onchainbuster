@@ -1,22 +1,22 @@
 'use client';
-import BaseSvg from '@/assets/svg/BaseSvg';
+import OnchainBuster from '@/assets/svg/OnchainBusterSvg';
+import AnimatedComponent from '@/components/AnimatedComponent';
+import LoadableContainer from '@/components/LoadableContainer';
 import MagicButton from '@/components/MagicButton';
+import ProfileCard from '@/components/ProfileCard';
 import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
+import { UserTrait } from '@/helpers/trait.helper';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { Box, Progress, Spinner, TextField } from '@radix-ui/themes';
+import React from 'react';
 import { useAccount } from 'wagmi';
 import HowBasedAreYouHeader from '../components/HowBasedAreYouHeader';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
 import { useMagic } from './hooks/useMagic';
 import { useMagicContext } from './hooks/useMagicContext';
-import { ThreeStageState } from './state.type';
-import ProfileCard from '@/components/ProfileCard';
-import AnimatedComponent from '@/components/AnimatedComponent';
 import { useMagicTraits } from './hooks/useMagicTraits';
-import { UserTrait } from '@/helpers/trait.helper';
-import LoadableContainer from '@/components/LoadableContainer';
-import React from 'react';
+import { ThreeStageState } from './state.type';
 
 export default function Page() {
   const { address } = useAccount();
@@ -37,7 +37,7 @@ export default function Page() {
     <div className="flex w-100 max-w-full flex-col px-1 md:w-[1200px]">
       <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
         <div className="flex w-full flex-row items-center justify-between gap-2 md:gap-0">
-          <BaseSvg width={30} height={30} />{' '}
+          <OnchainBuster width={100} height={50} />{' '}
           <div className="flex items-center gap-3">
             <SignupButton />
             {!address && <LoginButton />}
@@ -103,7 +103,7 @@ export default function Page() {
                     isLoading={
                       !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
                     }
-                    loadComponent={<Spinner loading />}
+                    loadComponent={<Spinner loading={true} />}
                   >
                     <React.Fragment>
                       <div className="flex justify-between mb-3">
@@ -130,7 +130,7 @@ export default function Page() {
                     isLoading={
                       !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
                     }
-                    loadComponent={<Spinner loading />}
+                    loadComponent={<Spinner loading={true} />}
                   >
                     <React.Fragment>
                       <div className="flex justify-between mb-3">
@@ -159,7 +159,7 @@ export default function Page() {
                     isLoading={
                       !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
                     }
-                    loadComponent={<Spinner loading />}
+                    loadComponent={<Spinner loading={true} />}
                   >
                     <React.Fragment>
                       <div className="flex justify-between mb-3">
