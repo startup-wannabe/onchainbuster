@@ -1,6 +1,8 @@
 'use client';
 import BaseSvg from '@/assets/svg/BaseSvg';
+import AnimatedComponent from '@/components/AnimatedComponent';
 import MagicButton from '@/components/MagicButton';
+import ProfileCard from '@/components/ProfileCard';
 import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { TextField } from '@radix-ui/themes';
@@ -11,8 +13,6 @@ import SignupButton from '../components/SignupButton';
 import { useMagic } from './hooks/useMagic';
 import { useMagicContext } from './hooks/useMagicContext';
 import { ThreeStageState } from './state.type';
-import ProfileCard from '@/components/ProfileCard';
-import AnimatedComponent from '@/components/AnimatedComponent';
 
 export default function Page() {
   const { address } = useAccount();
@@ -79,7 +79,7 @@ export default function Page() {
             />
           </TextField.Slot>
         </TextField.Root>
-        {addressInput && addressInput.startsWith('0x') && (
+        {addressInput?.startsWith('0x') && (
           <div className="absolute bottom-[-70px]">
             <AnimatedComponent.OpacityFadeInDiv delay={300}>
               <ProfileCard address={addressInput as any} />

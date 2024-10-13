@@ -1,7 +1,9 @@
 import { useMagic } from '@/app/hooks/useMagic';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
 import { ThreeStageState } from '@/app/state.type';
+import { supportedDappMetadata } from '@/constants/dapps';
 import { Separator } from '@radix-ui/themes';
+import Image from 'next/image';
 import React, { useMemo } from 'react';
 import ActivityStats from '../ActivityStats';
 import AnimatedComponent from '../AnimatedComponent';
@@ -54,13 +56,13 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
   return (
     <section className="flex items-center justify-center flex-col">
       {stateCheck('ActivityStats', ThreeStageState.Finished) && (
-        <React.Fragment>
+        <>
           <HowBasedAreYouHeader
             scale={0.6}
             name={addressInput}
             className="text-xl"
           />
-        </React.Fragment>
+        </>
       )}
       {stateCheck('ActivityStats', ThreeStageState.Finished) && (
         <AnimatedComponent.OpacityFadeInDiv delay={300}>
@@ -81,7 +83,23 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    You have interacted with {mostActiveDappInteraction.name}{' '}
+                    <span>You have interacted with </span>{' '}
+                    {supportedDappMetadata[
+                      mostActiveDappInteraction.name as keyof typeof supportedDappMetadata
+                    ] && (
+                      <Image
+                        src={
+                          supportedDappMetadata[
+                            mostActiveDappInteraction.name as keyof typeof supportedDappMetadata
+                          ]
+                        }
+                        alt={`Logo of ${mostActiveDappInteraction.name}`}
+                        width={40}
+                        height={40}
+                        className="mr-2 ml-1 inline-block"
+                      />
+                    )}
+                    {mostActiveDappInteraction.name}{' '}
                     <span className="font-bold">
                       {mostActiveDappInteraction.count} times
                     </span>{' '}

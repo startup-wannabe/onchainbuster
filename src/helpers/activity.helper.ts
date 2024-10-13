@@ -212,8 +212,8 @@ export const calculateDappInteraction = (
   ) => {
     const [windowStart, windowEnd] = dappInteraction.window;
     dappInteraction.window = [
-      Math.min(parseInt(tx.timeStamp), windowStart),
-      Math.max(parseInt(tx.timeStamp), windowEnd),
+      Math.min(Number.parseInt(tx.timeStamp), windowStart),
+      Math.max(Number.parseInt(tx.timeStamp), windowEnd),
     ];
   };
 
@@ -242,7 +242,7 @@ export const calculateDappInteraction = (
   for (const tx of transactions) {
     const lowerCaseTo = tx.to.toLowerCase();
     const lowerCaseFrom = tx.from.toLowerCase();
-    const txTimestamp = parseInt(tx.timeStamp);
+    const txTimestamp = Number.parseInt(tx.timeStamp);
     // Iterate over the dappAndContractList to update counts and windows
     for (const [dapp, contract] of dappAndContractList) {
       const contractIncluded =
