@@ -1,19 +1,19 @@
-"use client";
-import BaseSvg from "@/assets/svg/BaseSvg";
-import MagicButton from "@/components/MagicButton";
-import ShowcaseBaseProfile from "@/components/ShowcaseBaseProfile";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Box, Progress, TextField } from "@radix-ui/themes";
-import { useAccount } from "wagmi";
-import HowBasedAreYouHeader from "../components/HowBasedAreYouHeader";
-import LoginButton from "../components/LoginButton";
-import SignupButton from "../components/SignupButton";
-import { useMagic } from "./hooks/useMagic";
-import { useMagicContext } from "./hooks/useMagicContext";
-import { ThreeStageState } from "./state.type";
-import ProfileCard from "@/components/ProfileCard";
-import AnimatedComponent from "@/components/AnimatedComponent";
-import { useMagicTraits } from "./hooks/useMagicTraits";
+'use client';
+import BaseSvg from '@/assets/svg/BaseSvg';
+import MagicButton from '@/components/MagicButton';
+import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { Box, Progress, TextField } from '@radix-ui/themes';
+import { useAccount } from 'wagmi';
+import HowBasedAreYouHeader from '../components/HowBasedAreYouHeader';
+import LoginButton from '../components/LoginButton';
+import SignupButton from '../components/SignupButton';
+import { useMagic } from './hooks/useMagic';
+import { useMagicContext } from './hooks/useMagicContext';
+import { ThreeStageState } from './state.type';
+import ProfileCard from '@/components/ProfileCard';
+import AnimatedComponent from '@/components/AnimatedComponent';
+import { useMagicTraits } from './hooks/useMagicTraits';
 
 export default function Page() {
   const { address } = useAccount();
@@ -34,7 +34,7 @@ export default function Page() {
     <div className="flex w-100 max-w-full flex-col px-1 md:w-[1200px]">
       <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
         <div className="flex w-full flex-row items-center justify-between gap-2 md:gap-0">
-          <BaseSvg width={30} height={30} />{" "}
+          <BaseSvg width={30} height={30} />{' '}
           <div className="flex items-center gap-3">
             <SignupButton />
             {!address && <LoginButton />}
@@ -45,8 +45,8 @@ export default function Page() {
         className="templateSection relative flex w-full h-[300px] mb-[170px] flex-col items-center justify-center gap-4 rounded-xl px-2 py-10 md:grow"
         style={{
           background: `url('/background.avif')`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
         }}
       >
         <AnimatedComponent.OpacityFadeInDiv delay={300}>
@@ -54,15 +54,15 @@ export default function Page() {
         </AnimatedComponent.OpacityFadeInDiv>
         <TextField.Root
           className="mr-2 w-full rounded-md p-2 shadow-xl"
-          disabled={stateCheck("HowBasedAreYou", ThreeStageState.InProgress)}
+          disabled={stateCheck('HowBasedAreYou', ThreeStageState.InProgress)}
           placeholder="ENS, Basename, OneID, 0x..."
           style={{
             borderRadius: 50,
-            height: "70px",
-            maxWidth: "900px",
-            border: "1px solid lightgray",
+            height: '70px',
+            maxWidth: '900px',
+            border: '1px solid lightgray',
           }}
-          size={"3"}
+          size={'3'}
           value={addressInput}
           onChange={(e) => setAddressInput(e.target.value)}
         >
@@ -81,7 +81,7 @@ export default function Page() {
             <MagicButton
               text="Let's go 🔥"
               onClick={() => letsDoSomeMagic(addressInput)}
-              loading={stateCheck("HowBasedAreYou", ThreeStageState.InProgress)}
+              loading={stateCheck('HowBasedAreYou', ThreeStageState.InProgress)}
             />
           </TextField.Slot>
         </TextField.Root>
@@ -102,7 +102,7 @@ export default function Page() {
                   <h1 className="font-bold text-sm">Art Collector</h1>
                 </div>
                 <Progress
-                  size={"3"}
+                  size={'3'}
                   color="indigo"
                   radius="full"
                   value={defitOrArtTraitResult.score}
@@ -118,7 +118,7 @@ export default function Page() {
                   <h1 className="font-bold text-sm">Diamond Hand</h1>
                 </div>
                 <Progress
-                  size={"3"}
+                  size={'3'}
                   color="cyan"
                   radius="full"
                   value={degenOrDiamondHandResult.score}
@@ -134,7 +134,7 @@ export default function Page() {
                   <h1 className="font-bold text-sm">Multichain Citizen</h1>
                 </div>
                 <Progress
-                  size={"3"}
+                  size={'3'}
                   color="pink"
                   radius="full"
                   value={originalBuilderOrMultichainCitizen.score}

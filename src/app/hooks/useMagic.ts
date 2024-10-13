@@ -1,8 +1,8 @@
-import { useWagmiConfig } from "@/wagmi";
-import { getEnsAddress } from "@wagmi/core";
-import { toast } from "react-toastify";
-import { normalize } from "viem/ens";
-import { delayMs, setState } from "../../helpers";
+import { useWagmiConfig } from '@/wagmi';
+import { getEnsAddress } from '@wagmi/core';
+import { toast } from 'react-toastify';
+import { normalize } from 'viem/ens';
+import { delayMs, setState } from '../../helpers';
 import {
   calculateDappInteraction,
   calculateDeFiActivityStats,
@@ -12,8 +12,8 @@ import {
   calculateTokenActivityStats,
   findLongestHoldingToken,
   formatDuration,
-} from "../../helpers/activity.helper";
-import { listCMCTokenDetail } from "../api/cmcCallers";
+} from '../../helpers/activity.helper';
+import { listCMCTokenDetail } from '../api/cmcCallers';
 import {
   getMultichainPortfolio,
   getTalentScore,
@@ -21,22 +21,22 @@ import {
   listAllNFTBalanceByChain,
   listAllTokenActivityByChain,
   listAllTransactionsByChain,
-} from "../api/services";
-import { searchAddressFromOneID } from "../api/victionCallers";
+} from '../api/services';
+import { searchAddressFromOneID } from '../api/victionCallers';
 import {
   BinaryState,
   StateEvent,
   type StateOption,
   ThreeStageState,
   type Toastable,
-} from "../state.type";
-import { useMagicContext } from "./useMagicContext";
-import { useEffect } from "react";
+} from '../state.type';
+import { useMagicContext } from './useMagicContext';
+import { useEffect } from 'react';
 import {
   calculateMultichainNFTPortfolio,
   calculateMultichainTokenPortfolio,
-} from "@/helpers/portfolio.helper";
-import TokenPortfolio from "@/components/TokenPortfolio";
+} from '@/helpers/portfolio.helper';
+import TokenPortfolio from '@/components/TokenPortfolio';
 
 export const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
@@ -85,7 +85,7 @@ export const useMagic = () => {
 
   const stateCheck = (
     event: keyof typeof StateEvent,
-    option: StateOption
+    option: StateOption,
   ): boolean => {
     return stateEvents[event] === (StateSubEvents[event] as any)[option];
   };
@@ -98,7 +98,7 @@ export const useMagic = () => {
       onErrorEvent: Toastable<StateOption>;
       onResetEvent: StateOption;
     },
-    method: () => Promise<Output>
+    method: () => Promise<Output>,
   ): Promise<Output> {
     dispatchStateEvent(eventName, eventHooks.onResetEvent);
     dispatchStateEvent(eventName, eventHooks.onStartEvent);
@@ -108,7 +108,7 @@ export const useMagic = () => {
       dispatchStateEvent(eventName, event.value);
       if (event.toast) {
         toast(event.toast, {
-          type: "success",
+          type: 'success',
         });
       }
       return data;
@@ -117,7 +117,7 @@ export const useMagic = () => {
       dispatchStateEvent(eventName, event.value);
       if (event.toast) {
         toast(`${event.toast} - Error: ${error.message}`, {
-          type: "error",
+          type: 'error',
         });
       }
       throw new Error(error);
@@ -134,23 +134,23 @@ export const useMagic = () => {
         onResetEvent: StateSubEvents.GetAddress.False,
       },
       async () => {
-        let address = "";
-        if (text.startsWith("0x")) {
+        let address = '';
+        if (text.startsWith('0x')) {
           address = text;
-        } else if (text.endsWith(".eth")) {
+        } else if (text.endsWith('.eth')) {
           address = (await getEnsAddress(wagmiConfig, {
             name: normalize(text),
             chainId: 1,
           })) as string;
-          console.log("ENS Address:", address);
+          console.log('ENS Address:', address);
           setState(inputAddress)(address);
         } else {
           address = await searchAddressFromOneID(text);
-          console.log("OneID Address:", address);
+          console.log('OneID Address:', address);
         }
         setState(inputAddress)(address);
         return address;
-      }
+      },
     );
   };
 
@@ -166,10 +166,10 @@ export const useMagic = () => {
       },
       async () => {
         const data = await getTalentScore(address);
-        console.log("Talent score:", data);
+        console.log('Talent score:', data);
         setState(talentPassportScore)(data);
         return data;
-      }
+      },
     );
   };
 
@@ -182,7 +182,7 @@ export const useMagic = () => {
         onErrorEvent: { value: StateSubEvents.ActivityStats.Idle },
         onFinishEvent: {
           value: StateSubEvents.ActivityStats.Finished,
-          toast: "Activity stats fetched.",
+          toast: 'Activity stats fetched.',
         },
         onResetEvent: StateSubEvents.ActivityStats.Idle,
       },
@@ -194,13 +194,13 @@ export const useMagic = () => {
         setState(allTransactions)(_allTransactions);
 
         const ethNativeTransactions: TEVMScanTransaction[] = Object.entries(
-          data
+          data,
         )
-          .filter(([key, _]) => key !== "vic") // exclude VIC since it's a zero-gas fee (VN proud)
+          .filter(([key, _]) => key !== 'vic') // exclude VIC since it's a zero-gas fee (VN proud)
           .flatMap(([_, value]) => value.txs);
 
         const filteredTransactions = ethNativeTransactions.filter(
-          (tx) => tx.from.toLowerCase() === address.toLowerCase()
+          (tx) => tx.from.toLowerCase() === address.toLowerCase(),
         );
 
         const _totalGasInETH = filteredTransactions.reduce(
@@ -208,34 +208,34 @@ export const useMagic = () => {
             acc +
             calculateGasInETH(
               Number.parseInt(curr.gasUsed),
-              Number.parseInt(curr.gasPrice)
+              Number.parseInt(curr.gasPrice),
             ),
-          0
+          0,
         );
 
-        console.log("totalGasInETH:", totalGasInETH);
+        console.log('totalGasInETH:', totalGasInETH);
         setState(totalGasInETH)(_totalGasInETH);
 
         const mostActiveChainID = Object.keys(data).reduce((a, b) =>
-          data[a].txs.length > data[b].txs.length ? a : b
+          data[a].txs.length > data[b].txs.length ? a : b,
         );
 
         const mostActiveChainName = data[mostActiveChainID].chainName;
 
         // Get Activity Stats
         const stats = calculateEVMStreaksAndMetrics(_allTransactions, address);
-        console.log("Activity Stats:", stats);
+        console.log('Activity Stats:', stats);
         setState(activityStats)(stats);
 
         // Get chain stats
         const totalChains = Object.keys(data);
         const noActivityChains = totalChains.filter(
-          (chain) => data[chain].txs.length === 0
+          (chain) => data[chain].txs.length === 0,
         );
         // Get unique active day, on most active chain 🫠
         const { uniqueActiveDays } = calculateEVMStreaksAndMetrics(
           data[mostActiveChainID].txs,
-          address
+          address,
         );
 
         const _chainStats: TChainStats = {
@@ -245,23 +245,23 @@ export const useMagic = () => {
           noActivityChains,
           countUniqueDaysActiveChain: uniqueActiveDays,
         };
-        console.log("Chain stats:", _chainStats);
+        console.log('Chain stats:', _chainStats);
         setState(chainStats)(_chainStats);
 
         // Get Dapp Interaction Stats
         const _dappInteractionStats =
           calculateDappInteraction(_allTransactions);
         // TODO: Set new stats
-        console.log("Dapp Stats", _dappInteractionStats);
+        console.log('Dapp Stats', _dappInteractionStats);
         setState(dappInteractionStats)(_dappInteractionStats);
 
         // TODO: Set new stats
         const _defiActivityStats = calculateDeFiActivityStats(_allTransactions);
-        console.log("DeFi", _defiActivityStats);
+        console.log('DeFi', _defiActivityStats);
         setState(defiActivityStats)(_defiActivityStats);
 
         return stats;
-      }
+      },
     );
   };
 
@@ -273,41 +273,41 @@ export const useMagic = () => {
         onStartEvent: StateSubEvents.GetTokenPortfolio.InProgress,
         onErrorEvent: {
           value: StateSubEvents.GetTokenPortfolio.Idle,
-          toast: "Failed to fetch multichain token portfolio.",
+          toast: 'Failed to fetch multichain token portfolio.',
         },
         onFinishEvent: {
           value: StateSubEvents.GetTokenPortfolio.Finished,
-          toast: "Fetched token portfolio.",
+          toast: 'Fetched token portfolio.',
         },
         onResetEvent: StateSubEvents.GetTokenPortfolio.Idle,
       },
       async () => {
         const tokenBalanceData = await getMultichainPortfolio(address);
-        console.log("Token balance:", tokenBalanceData);
+        console.log('Token balance:', tokenBalanceData);
 
         // Get distinct token symbol with non-zero balance
         const distinctTokenSymbols = [
           ...new Set(
             tokenBalanceData
               .filter((token) => token.tokenBalance !== 0)
-              .map((token) => token.symbol)
+              .map((token) => token.symbol),
           ),
         ];
         // Get token price
         const _marketData = await listCMCTokenDetail(
-          distinctTokenSymbols.join(",")
+          distinctTokenSymbols.join(','),
         );
-        console.log("Price market data:", _marketData);
+        console.log('Price market data:', _marketData);
         setState(marketData)(_marketData);
         setState(tokenPortfolio)(tokenBalanceData);
 
         const _tokenPortfolioStats = calculateMultichainTokenPortfolio(
           tokenBalanceData,
-          _marketData
+          _marketData,
         );
         setState(tokenPortfolioStats)(_tokenPortfolioStats);
         return TokenPortfolio;
-      }
+      },
     );
   };
 
@@ -319,11 +319,11 @@ export const useMagic = () => {
         onStartEvent: StateSubEvents.GetTokenActivity.InProgress,
         onErrorEvent: {
           value: StateSubEvents.GetTokenActivity.Idle,
-          toast: "Failed to fetch multichain token activities.",
+          toast: 'Failed to fetch multichain token activities.',
         },
         onFinishEvent: {
           value: StateSubEvents.GetTokenActivity.Finished,
-          toast: "Fetched token activities.",
+          toast: 'Fetched token activities.',
         },
         onResetEvent: StateSubEvents.GetTokenActivity.Idle,
       },
@@ -335,7 +335,7 @@ export const useMagic = () => {
 
         // Get longest holding assets
         const longestHoldingTokenByChain = Object.entries(
-          tokenActivityData
+          tokenActivityData,
         ).map(([chain, activities]) => {
           return findLongestHoldingToken(chain, activities, address);
         });
@@ -343,13 +343,13 @@ export const useMagic = () => {
         const _longestHoldingToken = longestHoldingTokenByChain.reduce(
           (prev, current) => {
             return prev.duration > current.duration ? prev : current;
-          }
+          },
         );
         if (_longestHoldingToken.duration === 0) {
           console.log("You don't have any asset yet!");
         } else {
           console.log(
-            `You've been loyal in holding ${_longestHoldingToken.symbol} at ${_longestHoldingToken.chain} for over ${formatDuration(_longestHoldingToken.duration)}`
+            `You've been loyal in holding ${_longestHoldingToken.symbol} at ${_longestHoldingToken.chain} for over ${formatDuration(_longestHoldingToken.duration)}`,
           );
         }
         setState(longestHoldingToken)(_longestHoldingToken);
@@ -361,19 +361,19 @@ export const useMagic = () => {
         ];
         // Get token price
         const marketData = await listCMCTokenDetail(
-          distinctTokenSymbols.join(",")
+          distinctTokenSymbols.join(','),
         );
         // End of TODO --------
 
         const _tokenActivityStats = calculateTokenActivityStats(
           allTokenActivities,
-          marketData
+          marketData,
         );
 
         // TODO: set tokenActivityStats
         setState(tokenActivityStats)(_tokenActivityStats);
-        console.log("tokenActivityStats:", tokenActivityStats);
-      }
+        console.log('tokenActivityStats:', tokenActivityStats);
+      },
     );
   };
 
@@ -385,11 +385,11 @@ export const useMagic = () => {
         onStartEvent: StateSubEvents.GetNftPortfolio.InProgress,
         onErrorEvent: {
           value: StateSubEvents.GetNftPortfolio.Idle,
-          toast: "Failed to fetch NFT portfolio.",
+          toast: 'Failed to fetch NFT portfolio.',
         },
         onFinishEvent: {
           value: StateSubEvents.GetNftPortfolio.Finished,
-          toast: "Fetched NFT portfolio.",
+          toast: 'Fetched NFT portfolio.',
         },
         onResetEvent: StateSubEvents.GetNftPortfolio.Idle,
       },
@@ -401,7 +401,7 @@ export const useMagic = () => {
 
         const _nftPortfolio = calculateMultichainNFTPortfolio(allNFTBalance);
         setState(nftPortfolioStats)(_nftPortfolio);
-      }
+      },
     );
   };
 
@@ -413,11 +413,11 @@ export const useMagic = () => {
         onStartEvent: StateSubEvents.GetNftActivity.InProgress,
         onErrorEvent: {
           value: StateSubEvents.GetNftActivity.Idle,
-          toast: "Failed to fetch multichain NFT activities.",
+          toast: 'Failed to fetch multichain NFT activities.',
         },
         onFinishEvent: {
           value: StateSubEvents.GetNftActivity.Finished,
-          toast: "Fetched NFT activities.",
+          toast: 'Fetched NFT activities.',
         },
         onResetEvent: StateSubEvents.GetNftActivity.Idle,
       },
@@ -430,8 +430,8 @@ export const useMagic = () => {
         const _nftActivityStats = calculateNFTActivityStats(allNftActivities);
         // TODO: set nftActivityStats
         setState(nftActivityStats)(_nftActivityStats);
-        console.log("nftActivityStats:", nftActivityStats);
-      }
+        console.log('nftActivityStats:', nftActivityStats);
+      },
     );
   };
 
@@ -443,11 +443,11 @@ export const useMagic = () => {
           onStartEvent: StateSubEvents.HowBasedAreYou.InProgress,
           onErrorEvent: {
             value: StateSubEvents.HowBasedAreYou.Idle,
-            toast: "Magic failed!",
+            toast: 'Magic failed!',
           },
           onFinishEvent: {
             value: StateSubEvents.HowBasedAreYou.Finished,
-            toast: "Magic done!",
+            toast: 'Magic done!',
           },
           onResetEvent: StateSubEvents.HowBasedAreYou.Idle,
         },
@@ -460,7 +460,7 @@ export const useMagic = () => {
           await fetchMultichainNftActivity(addressInput);
 
           await delayMs(1000);
-        }
+        },
       );
     } catch (error) {
       console.log(error);
