@@ -12,16 +12,16 @@ type Props = {
 
 const ProfileCard = ({ address }: Props) => {
   return (
-    <div className="h-[fit] w-[fit] rounded-3xl shadow-2xl py-3 px-4 text-white bg-blue-500">
+    <div className="h-full w-[fit] rounded-3xl py-3 px-4 text-black">
       <Identity
         address={address}
-        className="px-4 pt-3 pb-2 bg-blue-500 hover:bg-blue-300"
+        className="px-4 pt-3 pb-2 hover:bg-blue-300 bg-white"
         hasCopyAddressOnClick={true}
       >
-        <Avatar className="h-[50px] w-[50px] text-white" />
-        <Name className="text-white text-xl" />
-        <Address className="text-white" />
-        <EthBalance className="text-white text-md font-bold" />
+        <Avatar className="h-[200px] w-[200px] mr-5" />
+        <Name className="text-black text-4xl" />
+        <Address className="text-black text-2xl" />
+        <EthBalance className="text-black text-2xl font-bold" />
       </Identity>
     </div>
   );

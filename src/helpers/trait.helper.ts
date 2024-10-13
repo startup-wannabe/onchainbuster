@@ -141,8 +141,8 @@ export const isDegenOrDiamondHand = (
     // 25% * (longest holding token is > 12 months)
     0.25 *
       (Math.floor(longestHoldingToken.duration / (3600 * 24 * 365)) > 1 // 1 year
-        ? 1
-        : 0);
+        ? 0
+        : 1);
 
   // Degen (interact with new stuffs) if >50% else long-term Holder
   return {
@@ -179,11 +179,11 @@ export const isOriginalBuilderOrMultichainCitizen = (
   const score =
     // 35% * (noActivityChains / totalChains)
     0.35 * (totalChains === 0 ? totalChains : noActivityChains / totalChains) +
-    0.3 +
-    // 30% * (countUniqueDaysActiveChain / uniqueActiveDaysAll)
-    (uniqueActiveDaysAll === 0
-      ? uniqueActiveDaysAll
-      : countUniqueDaysActiveChain / uniqueActiveDaysAll) +
+    0.3 *
+      // 30% * (countUniqueDaysActiveChain / uniqueActiveDaysAll)
+      (uniqueActiveDaysAll === 0
+        ? uniqueActiveDaysAll
+        : countUniqueDaysActiveChain / uniqueActiveDaysAll) +
     // 25% * (if bridgeCount < 3 then 1 else 0)
     0.25 * (bridgeCount < 3 ? 1 : 0) +
     // 10% * (if skillsScore != 0 then 1 else 0)

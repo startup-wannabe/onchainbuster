@@ -7,7 +7,7 @@ import ProfileCard from '@/components/ProfileCard';
 import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
 import { UserTrait } from '@/helpers/trait.helper';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Box, Progress, Spinner, TextField } from '@radix-ui/themes';
+import { Box, Spinner, TextField } from '@radix-ui/themes';
 import React from 'react';
 import { useAccount } from 'wagmi';
 import HowBasedAreYouHeader from '../components/HowBasedAreYouHeader';
@@ -17,6 +17,7 @@ import { useMagic } from './hooks/useMagic';
 import { useMagicContext } from './hooks/useMagicContext';
 import { useMagicTraits } from './hooks/useMagicTraits';
 import { ThreeStageState } from './state.type';
+import ProgressBar from '@/components/ProgressBar';
 
 export default function Page() {
   const { address } = useAccount();
@@ -48,7 +49,7 @@ export default function Page() {
         </div>
       </section>
       <section
-        className="templateSection relative flex w-full h-[300px] mb-[170px] flex-col items-center justify-center gap-4 rounded-xl px-2 py-10 md:grow"
+        className="templateSection relative flex w-full h-[300px] mb-[20px] flex-col items-center justify-center gap-4 rounded-xl px-2 py-10 md:grow"
         style={{
           background: `url('/background.avif')`,
           backgroundRepeat: 'no-repeat',
@@ -89,103 +90,6 @@ export default function Page() {
             />
           </TextField.Slot>
         </TextField.Root>
-        {addressInput &&
-          stateCheck('ActivityStats', ThreeStageState.Finished) && (
-            <div className="sm:absolute block bottom-[-140px] flex justify-center items-center flex-col">
-              <AnimatedComponent.OpacityFadeInDiv delay={300}>
-                <div className="w-fit">
-                  <ProfileCard address={addressInput as any} />
-                </div>
-              </AnimatedComponent.OpacityFadeInDiv>
-              <div className="flex flex-wrap items-center justify-center sm:mt-[-20px] mt-[15px] gap-4">
-                <Box
-                  width="350px"
-                  className="shadow-xl h-fit bg-white py-3 px-5 rounded-2xl border border-palette-line/20"
-                >
-                  <LoadableContainer
-                    isLoading={
-                      !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
-                    }
-                    loadComponent={<Spinner loading={true} />}
-                  >
-                    <React.Fragment>
-                      <div className="flex justify-between mb-3">
-                        <h1 className="font-bold text-sm">
-                          🎨 {UserTrait.DeFi}
-                        </h1>
-                        <h1 className="font-bold text-sm">{UserTrait.Art}</h1>
-                      </div>
-                      <Progress
-                        size={'3'}
-                        color="indigo"
-                        radius="full"
-                        value={defitOrArtTraitResult.score}
-                        max={1}
-                      />
-                    </React.Fragment>
-                  </LoadableContainer>
-                </Box>
-                <Box
-                  width="350px"
-                  className="shadow-xl h-fit bg-white py-3 px-5 rounded-2xl border border-palette-line/20 sm:mt-[35px] mt-0"
-                >
-                  <LoadableContainer
-                    isLoading={
-                      !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
-                    }
-                    loadComponent={<Spinner loading={true} />}
-                  >
-                    <React.Fragment>
-                      <div className="flex justify-between mb-3">
-                        <h1 className="font-bold text-sm">
-                          💸 {UserTrait.Degen}
-                        </h1>
-                        <h1 className="font-bold text-sm">
-                          {UserTrait.DiamondHand}
-                        </h1>
-                      </div>
-                      <Progress
-                        size={'3'}
-                        color="cyan"
-                        radius="full"
-                        value={degenOrDiamondHandResult.score}
-                        max={1}
-                      />
-                    </React.Fragment>
-                  </LoadableContainer>
-                </Box>
-                <Box
-                  width="350px"
-                  className="shadow-xl h-fit bg-white py-3 px-5 rounded-2xl border border-palette-line/20"
-                >
-                  <LoadableContainer
-                    isLoading={
-                      !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
-                    }
-                    loadComponent={<Spinner loading={true} />}
-                  >
-                    <React.Fragment>
-                      <div className="flex justify-between mb-3">
-                        <h1 className="font-bold text-sm">
-                          👷‍♂️ {UserTrait.OriginalBuilder}
-                        </h1>
-                        <h1 className="font-bold text-sm">
-                          {UserTrait.MultichainCitizen}
-                        </h1>
-                      </div>
-                      <Progress
-                        size={'3'}
-                        color="pink"
-                        radius="full"
-                        value={originalBuilderOrMultichainCitizen.score}
-                        max={1}
-                      />
-                    </React.Fragment>
-                  </LoadableContainer>
-                </Box>
-              </div>
-            </div>
-          )}
       </section>
       <ShowcaseBaseProfile addressInput={addressInput} />
     </div>
