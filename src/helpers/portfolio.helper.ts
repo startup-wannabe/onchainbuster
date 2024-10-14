@@ -193,7 +193,10 @@ export const buildCircularPackingChart = (
 };
 
 export const formatNumberUSD = (num: number) => {
-  return num.toLocaleString('it-IT', { style: 'currency', currency: 'USD' });
+  return num.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
 };
 
 export const calculateMultichainNFTPortfolio = (

@@ -4,7 +4,7 @@ import { listAlchemyTokenBalance } from './alchemyCallers';
 import {
   listDagoraAddressActivity,
   listDagoraAddressBalance,
-} from './dagoraCallers';
+} from './dagoraServices';
 import {
   getEVMScanBalance,
   listEVMScanTokenActivity,
