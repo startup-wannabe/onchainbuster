@@ -86,9 +86,10 @@ export const isDeFiOrArt = (
 
   const defiLendCount = defiActivityStats.lendCount;
   const defiSwapCount = defiActivityStats.swapCount;
-  const nftTradeCount = nftActivityStats.tradeCount;
+  const nftActionCount =
+    nftActivityStats.tradeCount + nftActivityStats.mintCount;
 
-  const allTradingCount = defiSwapCount + nftTradeCount;
+  const allTradingCount = defiSwapCount + nftActionCount;
 
   const score =
     // 45% * (sum of $Token / sum of ($Token + $NFT))

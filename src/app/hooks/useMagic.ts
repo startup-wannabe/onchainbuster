@@ -23,7 +23,7 @@ import { listCMCTokenDetail } from '../api/cmcCallers';
 import {
   getMultichainPortfolio,
   getTalentScore,
-  listAllNFTActivityByChain,
+  listAllNFTActivityV2ByChain,
   listAllNFTBalanceByChain,
   listAllTokenActivityByChain,
   listAllTransactionsByChain,
@@ -420,15 +420,17 @@ export const useMagic = () => {
         onResetEvent: StateSubEvents.GetNftActivity.Idle,
       },
       async () => {
-        const nftActivityData = await listAllNFTActivityByChain(address);
+        const nftActivityData = await listAllNFTActivityV2ByChain(address);
         const allNftActivities = Object.values(nftActivityData).flat();
         setState(nftActivity)(allNftActivities);
-        // console.log('allNftActivities:', allNftActivities);
 
-        const _nftActivityStats = calculateNFTActivityStats(allNftActivities);
+        const _nftActivityStats = calculateNFTActivityStats(
+          allNftActivities,
+          address,
+        );
         // TODO: set nftActivityStats
+        console.log('nftActivityStats:', _nftActivityStats);
         setState(nftActivityStats)(_nftActivityStats);
-        console.log('nftActivityStats:', nftActivityStats);
       },
     );
   };
@@ -450,15 +452,12 @@ export const useMagic = () => {
           onResetEvent: StateSubEvents.HowBasedAreYou.Idle,
         },
         async () => {
-          // TODO: Enable after running prod
-          // await fetchTalentPassportScore(addressInput);
+          await fetchTalentPassportScore(addressInput);
           await fetchActivityStats(addressInput);
           await fetchMultichainTokenPortfolio(addressInput);
           await fetchMultichainTokenActivity(addressInput);
           await fetchMultichainNftPortfolio(addressInput);
-          // TODO: Enable after fix
-          // await fetchMultichainNftActivity(addressInput);
-
+          await fetchMultichainNftActivity(addressInput);
           await delayMs(1000);
         },
       );

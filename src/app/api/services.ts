@@ -7,6 +7,7 @@ import {
 } from './dagoraServices';
 import {
   getEVMScanBalance,
+  listEVMScanNFTActivity,
   listEVMScanTokenActivity,
   listEVMScanTransactions,
 } from './evmScanCallers';
@@ -17,7 +18,8 @@ import {
 import { getTalentPassportByWallet } from './talentCallers';
 import {
   getVicNativeBalance,
-  listVicAllActivity,
+  listVicNFTActivity,
+  listVicTokenActivity,
   listVicTokenBalance,
   listVicTransactions,
 } from './victionCallers';
@@ -163,14 +165,35 @@ export const listAllTokenActivityByChain = async (
   const chains = ['ETH', 'BASE', 'OP', 'ARB'];
   const results = await Promise.all([
     ...chains.map((chain) => listEVMScanTokenActivity(address, chain)),
-    listVicAllActivity(address),
+    listVicTokenActivity(address),
   ]);
 
   return {
     ...Object.fromEntries(
-      chains.map((chain, index) => [chain.toLowerCase(), results[index].token]),
+      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
     ),
-    vic: results[results.length - 1].token,
+    vic: results[results.length - 1],
+  };
+};
+
+export const listAllNFTActivityV2ByChain = async (
+  address: string,
+): Promise<Record<string, TNFTActivityV2[]>> => {
+  if (address === '') {
+    return {};
+  }
+
+  const chains = ['ETH', 'BASE', 'OP', 'ARB'];
+  const results = await Promise.all([
+    ...chains.map((chain) => listEVMScanNFTActivity(address, chain)),
+    listVicNFTActivity(address),
+  ]);
+
+  return {
+    ...Object.fromEntries(
+      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+    ),
+    vic: results[results.length - 1],
   };
 };
 

@@ -114,11 +114,8 @@ export const calculateDeFiActivityStats = (
       ALL_DEFI_INTERACTION.has(tx.from.toLowerCase()),
   ).length;
 
-  const swapCount = transactions.filter(
-    (tx) =>
-      (tx.functionName &&
-        SWAP_FUNCTION_NAMES.some((fn) => tx.functionName?.includes(fn))) ??
-      DEX_INTERACTION.has(tx.to.toLowerCase()), // Maybe?
+  const swapCount = transactions.filter((tx) =>
+    DEX_INTERACTION.has(tx.to.toLowerCase()),
   ).length;
 
   const dexCount = transactions.filter(
@@ -159,14 +156,64 @@ export const calculateTokenActivityStats = (
   return { sumCount, newCount } as TTokenActivityStats;
 };
 
-export const calculateNFTActivityStats = (nftActivities: TNFTActivity[]) => {
+export const calculateNFTActivityStats = (
+  nftActivities: TNFTActivityV2[],
+  address: string,
+) => {
   // All NFT actions
   const sumCount = nftActivities.length;
-  const tradeCount = nftActivities.filter((act) =>
-    ['buy', 'sale', 'listing'].includes(act.action),
+
+  // 1 buy/sale action with have additional transfer transaction
+  // -> Dedup on records with the same blockHash, tokenId, tokenName, tokenSymbol, from, to
+  const seen = new Set();
+  const dedupKeys = [
+    'chain',
+    'blockHash',
+    'tokenId',
+    'tokenName',
+    'tokenSymbol',
+    'from',
+    'to',
+  ];
+  const uniqueNFTActivities = nftActivities.filter((item) => {
+    // Create a unique key based on the specified fields
+    const key = dedupKeys
+      .map((field) => item[field as keyof TNFTActivityV2])
+      .join('|');
+    if (seen.has(key)) {
+      return false; // Duplicate found
+    }
+    seen.add(key); // Mark this combination as seen
+    return true; // Keep this item
+  });
+
+  // Activity type:
+  // Mint: from === 0x00000...
+  // Sale: from !== 0x00000... && to === address
+  // Buy: from === address
+  const mintCount = uniqueNFTActivities.filter((act) =>
+    act.from.toLowerCase().includes('0x0000000'),
   ).length;
 
-  return { sumCount, tradeCount } as TNFTActivityStats;
+  const saleCount = uniqueNFTActivities.filter(
+    (act) =>
+      act.from.toLowerCase() !== '0x0000000000000000000000000000000000000000' &&
+      act.to.toLowerCase() === address.toLowerCase(),
+  ).length;
+
+  const buyCount = uniqueNFTActivities.filter(
+    (act) => act.from.toLowerCase() === address.toLowerCase(),
+  ).length;
+
+  const tradeCount = buyCount + saleCount;
+
+  return {
+    sumCount,
+    tradeCount,
+    saleCount,
+    buyCount,
+    mintCount,
+  } as TNFTActivityStats;
 };
 
 export const calculateDappInteraction = (

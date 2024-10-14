@@ -65,64 +65,104 @@ export const listEVMScanTokenActivity = async (
   limit = 100,
 ) => {
   if (address === '') {
-    return {
-      token: [],
-      nft: [],
-    };
+    return [];
   }
 
-  // Ommit token1155tx
-  const tokenActions = ['tokentx', 'tokennfttx'];
+  const action = 'tokentx';
   let token: TEVMScanTokenActivity[] = [];
+
+  let offset = 0;
+  let previousResultCount = 0;
+
+  while (true) {
+    const data = await fetch(
+      `/api/evmscan/token?address=${address}&chain=${chain}&action=${action}&limit=${limit}&offset=${offset}`,
+      {
+        method: 'GET',
+      },
+    );
+
+    const res = await data.json();
+    const evmScanResp: TEVMScanResponse = res.data;
+
+    const currentResultCount = evmScanResp.result.length;
+
+    token = token.concat(evmScanResp.result as TEVMScanTokenActivity[]);
+
+    if (
+      currentResultCount === 0 ||
+      currentResultCount === previousResultCount
+    ) {
+      break;
+    }
+
+    previousResultCount = currentResultCount;
+    offset += limit;
+  }
+
+  return token.map((t) => {
+    return {
+      chain: chain.toLowerCase(),
+      symbol: t.tokenSymbol,
+      from: t.from,
+      to: t.to,
+      value: t.value,
+      timestamp: t.timeStamp,
+    } as TTokenActivity;
+  });
+};
+
+export const listEVMScanNFTActivity = async (
+  address: string,
+  chain: string,
+  limit = 100,
+) => {
+  if (address === '') {
+    return [];
+  }
+
+  const action = 'tokennfttx';
   let nft: TEVMScanTokenActivity[] = [];
 
-  for (const action of tokenActions) {
-    let offset = 0;
-    let previousResultCount = 0;
+  let offset = 0;
+  let previousResultCount = 0;
 
-    // Etherscan will always return max data when offset reach infinity -> need to compare with existing array length
-    while (true) {
-      const data = await fetch(
-        `/api/evmscan/token?address=${address}&chain=${chain}&action=${action}&limit=${limit}&offset=${offset}`,
-        {
-          method: 'GET',
-        },
-      );
+  while (true) {
+    const data = await fetch(
+      `/api/evmscan/token?address=${address}&chain=${chain}&action=${action}&limit=${limit}&offset=${offset}`,
+      {
+        method: 'GET',
+      },
+    );
 
-      const res = await data.json();
-      const evmScanResp: TEVMScanResponse = res.data;
+    const res = await data.json();
+    const evmScanResp: TEVMScanResponse = res.data;
 
-      const currentResultCount = evmScanResp.result.length;
+    const currentResultCount = evmScanResp.result.length;
 
-      if (action === 'tokentx') {
-        token = token.concat(evmScanResp.result as TEVMScanTokenActivity[]);
-      } else {
-        nft = nft.concat(evmScanResp.result as TEVMScanTokenActivity[]);
-      }
+    nft = nft.concat(evmScanResp.result as TEVMScanTokenActivity[]);
 
-      if (
-        currentResultCount === 0 ||
-        currentResultCount === previousResultCount
-      ) {
-        break;
-      }
-
-      previousResultCount = currentResultCount;
-      offset += limit;
+    if (
+      currentResultCount === 0 ||
+      currentResultCount === previousResultCount
+    ) {
+      break;
     }
+
+    previousResultCount = currentResultCount;
+    offset += limit;
   }
 
-  return {
-    token: token.map((t) => {
-      return {
-        chain: chain.toLowerCase(),
-        symbol: t.tokenSymbol,
-        from: t.from,
-        to: t.to,
-        value: t.value,
-        timestamp: t.timeStamp,
-      } as TTokenActivity;
-    }),
-    nft,
-  };
+  return nft.map((t) => {
+    return {
+      chain: chain.toLowerCase(),
+      blockHash: t.blockHash,
+      from: t.from,
+      to: t.to,
+      tokenId: t.tokenID,
+      tokenName: t.tokenName,
+      tokenSymbol: t.tokenSymbol,
+      timestamp: t.timeStamp,
+    } as TNFTActivityV2;
+  });
 };

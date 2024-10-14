@@ -106,6 +106,9 @@ type TTokenActivityStats = {
 
 type TNFTActivityStats = {
   sumCount: number;
+  mintCount: number;
+  buyCount: number;
+  saleCount: number;
   tradeCount: number;
 };
 

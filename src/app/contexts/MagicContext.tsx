@@ -77,6 +77,9 @@ const defaultDappInteractionStats: TDAppInteractionMap = {
 
 const defaultNFTActivityStats: TNFTActivityStats = {
   sumCount: 0,
+  mintCount: 0,
+  buyCount: 0,
+  saleCount: 0,
   tradeCount: 0,
 };
 
@@ -103,7 +106,7 @@ interface IMagicContext {
   tokenPortfolio: UseState<TTokenBalance[]>;
   nftPortfolio: UseState<TNFTBalance[]>;
   tokenActivity: UseState<TTokenActivity[]>;
-  nftActivity: UseState<TNFTActivity[]>;
+  nftActivity: UseState<TNFTActivityV2[]>;
 
   // Insights
   longestHoldingToken: UseState<TLongestHoldingToken>;
@@ -170,7 +173,7 @@ export const MagicProvider = ({ children }: Props) => {
 
   // Multi-chain token & activity
   const tokenActivity = useState<TTokenActivity[]>([]);
-  const nftActivity = useState<TNFTActivity[]>([]);
+  const nftActivity = useState<TNFTActivityV2[]>([]);
 
   const totalGasInETH = useState(0);
   return (
