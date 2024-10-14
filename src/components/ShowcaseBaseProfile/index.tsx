@@ -84,9 +84,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     [TNumberInPercentage, TNumberInPercentage]
   >(() => {
     const tokenBalance = selectState(tokenPortfolioStats).sumPortfolioUSDValue;
-    console.log(tokenBalance);
     const nftBalance = selectState(nftPortfolioStats).sumPortfolioUSDValue;
-    console.log(nftBalance);
     const total = tokenBalance + nftBalance;
     return [(tokenBalance / total) * 100, (nftBalance / total) * 100];
   }, [selectState(tokenPortfolioStats), selectState(nftPortfolioStats)]);
@@ -301,7 +299,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                             <span className="font-bold">
                               {selectState(longestHoldingToken).symbol}
                             </span>{' '}
-                            for over
+                            for over{' '}
                             <span className="font-bold">
                               {formatDuration(
                                 selectState(longestHoldingToken).duration,

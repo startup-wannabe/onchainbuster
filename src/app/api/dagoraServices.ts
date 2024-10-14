@@ -26,7 +26,7 @@ export const listDagoraAddressActivity = async (
       );
 
       const res = await data.json();
-      const dagoraResp: TDagoraAccountActivityResponse = res.data.data;
+      const dagoraResp: TDagoraAccountActivityResponse = res.data;
 
       allActivities = allActivities.concat(dagoraResp.data);
       total = dagoraResp.total;
@@ -79,7 +79,7 @@ export const listDagoraAddressBalance = async (
     );
 
     const res = await data.json();
-    const dagoraResp: TDagoraAccountBalanceResponse = res.data.data;
+    const dagoraResp: TDagoraAccountBalanceResponse = res.data;
 
     accountCollections = accountCollections.concat(dagoraResp.data);
     total = dagoraResp.total;
@@ -158,7 +158,7 @@ export const getDagoraCollectionStats = async (
   );
 
   const res = await data.json();
-  const accountStats: TDagoraCollectionStats = res.data.data.stats;
+  const accountStats: TDagoraCollectionStats = res.data.stats;
   return accountStats;
 };
 
@@ -178,6 +178,6 @@ export const getDagoraCollectionMetadata = async (
   );
 
   const res = await data.json();
-  const metadata: TDagoraCollectionMetadata = res.data.data.collection;
+  const metadata: TDagoraCollectionMetadata = res.data.collection;
   return metadata;
 };
