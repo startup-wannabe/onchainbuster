@@ -45,11 +45,13 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     originalBuilderOrMultichainCitizen,
   } = useMagicTraits();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const { mostValuableToken } = useMemo(
     () => selectState(tokenPortfolioStats),
     [selectState(tokenPortfolioStats)],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const { mostValuableNFTCollection } = useMemo(
     () => selectState(nftPortfolioStats),
     [selectState(nftPortfolioStats)],
@@ -80,6 +82,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     return currentDappInteraction;
   }, [dappInteractionStats]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const [tokenBalancePercentage, nftBalancePercentage] = useMemo<
     [TNumberInPercentage, TNumberInPercentage]
   >(() => {
@@ -115,40 +118,62 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 }
                 loadComponent={<Spinner loading={true} />}
               >
-                <Box className="flex gap-[20px] items-center justify-center">
-                  <h1 className="font-bold text-sm">{UserTrait.DeFi}</h1>
-                  <ProgressBar percentage={defitOrArtTraitResult.score} />
-                  <h1 className="font-bold text-sm">{UserTrait.Art}</h1>
+                <Box className=" gap-[20px] items-center justify-center grid grid-cols-12">
+                  <div className="col-span-2">
+                    <h1 className="font-bold text-sm">{UserTrait.DeFi}</h1>
+                  </div>
+                  <div className="col-span-8">
+                    <ProgressBar percentage={defitOrArtTraitResult.score} />
+                  </div>
+                  <div className="col-span-2">
+                    <h1 className="font-bold text-sm">{UserTrait.Art}</h1>
+                  </div>
                 </Box>
               </LoadableContainer>
+
               <LoadableContainer
                 isLoading={
                   !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
                 }
                 loadComponent={<Spinner loading={true} />}
               >
-                <Box className="flex gap-[20px] items-center justify-center">
-                  <h1 className="font-bold text-sm">{UserTrait.Degen}</h1>
-                  <ProgressBar percentage={degenOrDiamondHandResult.score} />
-                  <h1 className="font-bold text-sm">{UserTrait.DiamondHand}</h1>
+                <Box className=" gap-[20px] items-center justify-center grid grid-cols-12">
+                  <div className="col-span-2">
+                    <h1 className="font-bold text-sm">{UserTrait.Degen}</h1>
+                  </div>
+                  <div className="col-span-8">
+                    <ProgressBar percentage={degenOrDiamondHandResult.score} />
+                  </div>
+                  <div className="col-span-2">
+                    <h1 className="font-bold text-sm">
+                      {UserTrait.DiamondHand}
+                    </h1>
+                  </div>
                 </Box>
               </LoadableContainer>
+
               <LoadableContainer
                 isLoading={
                   !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
                 }
                 loadComponent={<Spinner loading={true} />}
               >
-                <Box className="flex gap-[20px] items-center justify-center">
-                  <h1 className="font-bold text-sm">
-                    {UserTrait.OriginalBuilder}
-                  </h1>
-                  <ProgressBar
-                    percentage={originalBuilderOrMultichainCitizen.score}
-                  />
-                  <h1 className="font-bold text-sm">
-                    {UserTrait.MultichainCitizen}
-                  </h1>
+                <Box className=" gap-[20px] items-center justify-center grid grid-cols-12">
+                  <div className="col-span-2">
+                    <h1 className="font-bold text-sm">
+                      {UserTrait.OriginalBuilder}
+                    </h1>
+                  </div>
+                  <div className="col-span-8">
+                    <ProgressBar
+                      percentage={originalBuilderOrMultichainCitizen.score}
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <h1 className="font-bold text-sm">
+                      {UserTrait.MultichainCitizen}
+                    </h1>
+                  </div>
                 </Box>
               </LoadableContainer>
             </div>
@@ -185,9 +210,9 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                           ]
                         }
                         alt={`Logo of ${mostActiveDappInteraction.name}`}
-                        width={40}
-                        height={40}
-                        className="mr-2 ml-1 inline-block"
+                        width={20}
+                        height={20}
+                        className="mr-2 ml-1 inline-flex"
                       />
                     )}
                     {mostActiveDappInteraction.name}{' '}
@@ -219,7 +244,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="w-full mt-5"
                 content={
                   <div>
-                    You are acitve for{' '}
+                    You are active for{' '}
                     <span className="font-bold">
                       {selectState(activityStats).longestStreakDays}
                     </span>{' '}

@@ -1,4 +1,4 @@
-import { UseState } from '@/app/contexts/MagicContext';
+import type { UseState } from '@/app/contexts/MagicContext';
 
 export const mustBeBoolean = (v: any) => !!v;
 

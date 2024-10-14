@@ -60,11 +60,12 @@ const aggregateTokensByBalance = (
       !aggregatedBalanceBySymbol[symbol].chains.some(
         (c) => c.chainName === chain,
       )
-    )
+    ) {
       aggregatedBalanceBySymbol[symbol].chains.push({
         chainName: chain,
         value: tokenUSDValue,
       });
+    }
     aggregatedBalanceBySymbol[symbol].price = tokenPrice;
     aggregatedBalanceBySymbol[symbol].totalBalance += tokenBalance;
     aggregatedBalanceBySymbol[symbol].totalUSDValue += tokenUSDValue;

@@ -1,5 +1,5 @@
 import { Separator } from '@radix-ui/themes';
-import React from 'react';
+import type React from 'react';
 
 type Props = {
   title: string;

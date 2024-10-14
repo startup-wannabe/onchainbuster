@@ -53,7 +53,9 @@ export const listAllTransactionsByChain = async (
         txs: [],
       },
     };
-  if (address === '') return value;
+  if (address === '') {
+    return value;
+  }
 
   const chains = ['ETH', 'BASE', 'OP', 'ARB'];
   const results = await Promise.all([

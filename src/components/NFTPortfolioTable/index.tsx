@@ -1,8 +1,7 @@
-import { Avatar, Table } from '@radix-ui/themes';
-import React from 'react';
-import ChainIcon from '../ChainIcon';
 import { formatNumberUSD } from '@/helpers/portfolio.helper';
 import { Address } from '@coinbase/onchainkit/identity';
+import { Avatar, Table } from '@radix-ui/themes';
+import ChainIcon from '../ChainIcon';
 
 type NFTPortfolioProps = {
   nftPortfolio: TNFTBalance[];
@@ -10,7 +9,7 @@ type NFTPortfolioProps = {
 
 const NFTPortfolioTable = ({ nftPortfolio }: NFTPortfolioProps) => {
   return (
-    <React.Fragment>
+    <>
       <Table.Root className="shadow-xl rounded-xl border border-palette-line/20 h-full">
         <Table.Header>
           <Table.Row>
@@ -52,7 +51,7 @@ const NFTPortfolioTable = ({ nftPortfolio }: NFTPortfolioProps) => {
             ))}
         </Table.Body>
       </Table.Root>
-    </React.Fragment>
+    </>
   );
 };
 
