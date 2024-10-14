@@ -25,7 +25,7 @@ const MultiAssetsPortfolio = ({
   return (
     <React.Fragment>
       <div className="flex justify-center flex-col items-center">
-        <AnimatedComponent.OpacityFadeInDiv delay={200}>
+        {/* <AnimatedComponent.OpacityFadeInDiv delay={200}>
           <React.Fragment>
             <div className="relative">
               <TotalBalancePieChart
@@ -54,7 +54,7 @@ const MultiAssetsPortfolio = ({
               )}
             </h1>
           </React.Fragment>
-        </AnimatedComponent.OpacityFadeInDiv>
+        </AnimatedComponent.OpacityFadeInDiv> */}
         <AnimatedComponent.OpacityFadeInDiv delay={300}>
           <div className="flex gap-4 justify-between items-center w-full">
             <TokenPortfolioTable

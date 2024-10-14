@@ -2,7 +2,7 @@ import { useMagic } from '@/app/hooks/useMagic';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
 import { ThreeStageState } from '@/app/state.type';
 import { supportedDappMetadata } from '@/constants/dapps';
-import { Separator } from '@radix-ui/themes';
+import { Box, Separator, Spinner } from '@radix-ui/themes';
 import Image from 'next/image';
 import React, { useMemo } from 'react';
 import ActivityStats from '../ActivityStats';
@@ -13,6 +13,11 @@ import { selectState } from '@/helpers';
 import MultiAssetsPortfolio from '../MultiAssetsPortfolio';
 import { formatNumberUSD } from '@/helpers/portfolio.helper';
 import { formatDuration } from '@/helpers/activity.helper';
+import ProfileCard from '../ProfileCard';
+import LoadableContainer from '../LoadableContainer';
+import { UserTrait } from '@/helpers/trait.helper';
+import { useMagicTraits } from '@/app/hooks/useMagicTraits';
+import ProgressBar from '../ProgressBar';
 
 type Props = {
   addressInput: string;
@@ -34,6 +39,11 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     nftPortfolioStats,
     nftPortfolio,
   } = useMagicContext();
+  const {
+    defitOrArtTraitResult,
+    degenOrDiamondHandResult,
+    originalBuilderOrMultichainCitizen,
+  } = useMagicTraits();
 
   const { mostValuableToken } = useMemo(
     () => selectState(tokenPortfolioStats),
@@ -93,6 +103,61 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           />
         </>
       )}
+      {addressInput &&
+        stateCheck('ActivityStats', ThreeStageState.Finished) && (
+          <div className="flex mb-[50px] justify-center gap-[50px] items-center">
+            <AnimatedComponent.OpacityFadeInDiv delay={300}>
+              <div className="w-fit">
+                <ProfileCard address={addressInput as any} />
+              </div>
+            </AnimatedComponent.OpacityFadeInDiv>
+            <div className="flex flex-col gap-6">
+              <LoadableContainer
+                isLoading={
+                  !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
+                }
+                loadComponent={<Spinner loading={true} />}
+              >
+                <Box className="flex gap-[20px] items-center justify-center">
+                  <h1 className="font-bold text-sm">{UserTrait.DeFi}</h1>
+                  <ProgressBar percentage={defitOrArtTraitResult.score} />
+                  <h1 className="font-bold text-sm">{UserTrait.Art}</h1>
+                </Box>
+              </LoadableContainer>
+              <LoadableContainer
+                isLoading={
+                  !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
+                }
+                loadComponent={<Spinner loading={true} />}
+              >
+                <Box className="flex gap-[20px] items-center justify-center">
+                  <h1 className="font-bold text-sm">{UserTrait.Degen}</h1>
+                  <ProgressBar percentage={degenOrDiamondHandResult.score} />
+                  <h1 className="font-bold text-sm">{UserTrait.DiamondHand}</h1>
+                </Box>
+              </LoadableContainer>
+              <LoadableContainer
+                isLoading={
+                  !stateCheck('HowBasedAreYou', ThreeStageState.Finished)
+                }
+                loadComponent={<Spinner loading={true} />}
+              >
+                <Box className="flex gap-[20px] items-center justify-center">
+                  <h1 className="font-bold text-sm">
+                    {UserTrait.OriginalBuilder}
+                  </h1>
+                  <ProgressBar
+                    percentage={originalBuilderOrMultichainCitizen.score}
+                  />
+                  <h1 className="font-bold text-sm">
+                    {UserTrait.MultichainCitizen}
+                  </h1>
+                </Box>
+              </LoadableContainer>
+            </div>
+          </div>
+        )}
+      <Separator className="mb-[30px]" size={'4'} />
       {stateCheck('ActivityStats', ThreeStageState.Finished) && (
         <AnimatedComponent.OpacityFadeInDiv delay={300}>
           <div className="max-w-[1200px]">

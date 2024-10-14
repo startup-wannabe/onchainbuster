@@ -372,7 +372,7 @@ export const useMagic = () => {
 
         // TODO: set tokenActivityStats
         setState(tokenActivityStats)(_tokenActivityStats);
-        console.log('tokenActivityStats:', tokenActivityStats);
+        console.log('tokenActivityStats:', _tokenActivityStats);
       },
     );
   };
@@ -457,8 +457,7 @@ export const useMagic = () => {
           await fetchMultichainTokenPortfolio(addressInput);
           await fetchMultichainTokenActivity(addressInput);
           await fetchMultichainNftPortfolio(addressInput);
-          // TODO: Fix this please Minh
-          // await fetchMultichainNftActivity(addressInput);
+          await fetchMultichainNftActivity(addressInput);
 
           await delayMs(1000);
         },

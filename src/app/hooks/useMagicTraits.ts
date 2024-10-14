@@ -48,9 +48,9 @@ export const useMagicTraits = () => {
       ),
     [
       defiActivityStats,
-      tokenPortfolioStats,
-      nftActivityStats,
-      nftPortfolioStats,
+      tokenActivityStats,
+      defiActivityStats,
+      longestHoldingToken,
     ],
   );
 
