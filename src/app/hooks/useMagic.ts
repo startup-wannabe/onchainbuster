@@ -211,7 +211,7 @@ export const useMagic = () => {
           0,
         );
 
-        console.log('totalGasInETH:', totalGasInETH);
+        console.log('totalGasInETH:', _totalGasInETH);
         setState(totalGasInETH)(_totalGasInETH);
 
         const mostActiveChainID = Object.keys(data).reduce((a, b) =>

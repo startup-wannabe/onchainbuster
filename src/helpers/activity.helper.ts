@@ -34,9 +34,8 @@ export const calculateEVMStreaksAndMetrics = (
   address: string,
 ): TActivityStats => {
   console.log(transactions, address);
-  const countTxs = transactions.length;
   const filteredTransactions = transactions.filter(
-    (tx) => tx.from.toLowerCase() === address.toLowerCase(),
+    (tx) => tx.from.toLowerCase() === address.toLowerCase(), // Filter from Txs only
   );
   if (filteredTransactions.length === 0) {
     return {
@@ -83,7 +82,7 @@ export const calculateEVMStreaksAndMetrics = (
   longestStreakDays = Math.max(longestStreakDays, streak);
 
   return {
-    totalTxs: countTxs,
+    totalTxs: filteredTransactions.length,
     firstActiveDay: firstTransactionDate,
     uniqueActiveDays: uniqueActiveDaysSet.size,
     longestStreakDays,

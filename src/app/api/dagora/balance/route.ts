@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
       },
     },
   );
-  console.log('=== res ', res);
   const data = await res.json();
   // console.log('=== res ', data);
   return Response.json({ data });

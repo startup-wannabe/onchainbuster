@@ -1,23 +1,23 @@
 import { useMagic } from '@/app/hooks/useMagic';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
+import { useMagicTraits } from '@/app/hooks/useMagicTraits';
 import { ThreeStageState } from '@/app/state.type';
 import { supportedDappMetadata } from '@/constants/dapps';
+import { selectState } from '@/helpers';
+import { formatDuration } from '@/helpers/activity.helper';
+import { formatNumberUSD } from '@/helpers/portfolio.helper';
+import { UserTrait } from '@/helpers/trait.helper';
 import { Box, Separator, Spinner } from '@radix-ui/themes';
 import Image from 'next/image';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import ActivityStats from '../ActivityStats';
 import AnimatedComponent from '../AnimatedComponent';
 import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
-import StatisticsCard from '../StatisticsCard';
-import { selectState } from '@/helpers';
-import MultiAssetsPortfolio from '../MultiAssetsPortfolio';
-import { formatNumberUSD } from '@/helpers/portfolio.helper';
-import { formatDuration } from '@/helpers/activity.helper';
-import ProfileCard from '../ProfileCard';
 import LoadableContainer from '../LoadableContainer';
-import { UserTrait } from '@/helpers/trait.helper';
-import { useMagicTraits } from '@/app/hooks/useMagicTraits';
+import MultiAssetsPortfolio from '../MultiAssetsPortfolio';
+import ProfileCard from '../ProfileCard';
 import ProgressBar from '../ProgressBar';
+import StatisticsCard from '../StatisticsCard';
 
 type Props = {
   addressInput: string;
@@ -57,7 +57,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
 
   const windowToMonths = (
     window: [TNumberInMillisecond, TNumberInMillisecond],
-  ) => formatDuration((window[1] - window[0]) / (1000 * 60 * 24 * 12));
+  ) => formatDuration(window[1] - window[0]);
 
   const mostActiveDappInteraction = useMemo<TDappInteraction>(() => {
     let currentDappInteraction: TDappInteraction = {
@@ -66,7 +66,6 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
       window: [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER],
     };
     for (const dappGenre of Object.keys(selectState(dappInteractionStats))) {
-      console.log('dappGenre: ', dappGenre);
       for (const dappName of Object.keys(
         (selectState(dappInteractionStats) as any)[dappGenre],
       )) {
@@ -254,9 +253,9 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
       {stateCheck('ActivityStats', ThreeStageState.Finished) &&
         stateCheck('GetTokenActivity', ThreeStageState.Finished) &&
         stateCheck('GetTokenPortfolio', ThreeStageState.Finished) &&
-        stateCheck('GetNftActivity', ThreeStageState.Finished) &&
+        // stateCheck('GetNftActivity', ThreeStageState.Finished) &&
         stateCheck('GetNftPortfolio', ThreeStageState.Finished) && (
-          <React.Fragment>
+          <>
             <Separator className="mt-[80px]" size={'4'} />
             <div className="mt-8">
               <div className="flex items-center justify-center">
@@ -355,7 +354,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 </section>
               )}
             </div>
-          </React.Fragment>
+          </>
         )}
     </section>
   );
