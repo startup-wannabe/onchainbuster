@@ -1,5 +1,11 @@
+import MultiAssetsPortfolio from '@/components/MultiAssetsPortfolio';
+import {
+  calculateMultichainNFTPortfolio,
+  calculateMultichainTokenPortfolio,
+} from '@/helpers/portfolio.helper';
 import { useWagmiConfig } from '@/wagmi';
 import { getEnsAddress } from '@wagmi/core';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { normalize } from 'viem/ens';
 import { delayMs, setState } from '../../helpers';
@@ -31,12 +37,6 @@ import {
   type Toastable,
 } from '../state.type';
 import { useMagicContext } from './useMagicContext';
-import { useEffect } from 'react';
-import {
-  calculateMultichainNFTPortfolio,
-  calculateMultichainTokenPortfolio,
-} from '@/helpers/portfolio.helper';
-import MultiAssetsPortfolio from '@/components/MultiAssetsPortfolio';
 
 export const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
@@ -188,9 +188,7 @@ export const useMagic = () => {
       },
       async () => {
         const data = await listAllTransactionsByChain(address);
-        const _allTransactions = Object.values(data)
-          .map((d) => d.txs)
-          .flat();
+        const _allTransactions = Object.values(data).flatMap((d) => d.txs);
         setState(allTransactions)(_allTransactions);
 
         const ethNativeTransactions: TEVMScanTransaction[] = Object.entries(
@@ -452,12 +450,14 @@ export const useMagic = () => {
           onResetEvent: StateSubEvents.HowBasedAreYou.Idle,
         },
         async () => {
-          await fetchTalentPassportScore(addressInput);
+          // TODO: Enable after running prod
+          // await fetchTalentPassportScore(addressInput);
           await fetchActivityStats(addressInput);
           await fetchMultichainTokenPortfolio(addressInput);
           await fetchMultichainTokenActivity(addressInput);
           await fetchMultichainNftPortfolio(addressInput);
-          await fetchMultichainNftActivity(addressInput);
+          // TODO: Enable after fix
+          // await fetchMultichainNftActivity(addressInput);
 
           await delayMs(1000);
         },
