@@ -1,13 +1,9 @@
 'use client';
 import OnchainBuster from '@/assets/svg/OnchainBusterSvg';
-import AnimatedComponent from '@/components/AnimatedComponent';
-import LoadableContainer from '@/components/LoadableContainer';
 import MagicButton from '@/components/MagicButton';
-import ProfileCard from '@/components/ProfileCard';
 import ShowcaseBaseProfile from '@/components/ShowcaseBaseProfile';
-import { UserTrait } from '@/helpers/trait.helper';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Box, Spinner, TextField } from '@radix-ui/themes';
+import { TextField } from '@radix-ui/themes';
 import React from 'react';
 import { useAccount } from 'wagmi';
 import HowBasedAreYouHeader from '../components/HowBasedAreYouHeader';
@@ -15,9 +11,7 @@ import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
 import { useMagic } from './hooks/useMagic';
 import { useMagicContext } from './hooks/useMagicContext';
-import { useMagicTraits } from './hooks/useMagicTraits';
 import { ThreeStageState } from './state.type';
-import ProgressBar from '@/components/ProgressBar';
 
 export default function Page() {
   const { address } = useAccount();
@@ -28,11 +22,6 @@ export default function Page() {
     query: { stateCheck },
     mutate: { letsDoSomeMagic },
   } = useMagic();
-  const {
-    defitOrArtTraitResult,
-    degenOrDiamondHandResult,
-    originalBuilderOrMultichainCitizen,
-  } = useMagicTraits();
 
   return (
     <div className="flex w-100 max-w-full flex-col px-1 md:w-[1200px]">
