@@ -1,6 +1,5 @@
 import { chainIDMap } from '@/constants/chains';
 import { Avatar } from '@radix-ui/themes';
-import React from 'react';
 
 type Props = { chainId: string };
 

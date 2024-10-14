@@ -3,13 +3,12 @@
 import ArrowSvg from '@assets/svg/ArrowSvg';
 import { GITHUB_LINK, ONCHAINKIT_LINK } from '@constants/links';
 import { Separator } from '@radix-ui/themes';
-import React from 'react';
 
 const docLinks = [{ href: GITHUB_LINK, title: 'Github' }];
 
 export default function Footer() {
   return (
-    <React.Fragment>
+    <>
       <footer>
         <Separator size={'4'} className="mt-[40px]" />
         <div className="mt-auto mb-2 flex w-full flex-col-reverse justify-between gap-2 md:mt-8 md:mb-6 md:flex-row">
@@ -45,6 +44,6 @@ export default function Footer() {
           </ul>
         </div>
       </footer>
-    </React.Fragment>
+    </>
   );
 }

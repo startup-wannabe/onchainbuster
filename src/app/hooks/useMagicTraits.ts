@@ -21,6 +21,7 @@ export const useMagicTraits = () => {
     talentPassportScore,
   } = useMagicContext();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const defitOrArtTraitResult = useMemo(
     () =>
       isDeFiOrArt(
@@ -38,6 +39,7 @@ export const useMagicTraits = () => {
     ],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const degenOrDiamondHandResult = useMemo(
     () =>
       isDegenOrDiamondHand(
@@ -54,6 +56,7 @@ export const useMagicTraits = () => {
     ],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const originalBuilderOrMultichainCitizen = useMemo(
     () =>
       isOriginalBuilderOrMultichainCitizen(

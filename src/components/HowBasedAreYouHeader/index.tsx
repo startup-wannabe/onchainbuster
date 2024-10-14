@@ -12,7 +12,7 @@ const HowBasedAreYouHeader = (props: Props) => {
     <h1 className={`inline-flex items-center text-4xl mb-6 ${props.className}`}>
       How
       <span className="flex mx-2 items-center font-bold">
-        <div className={`w-[40px]`} style={{ scale: props.scale || 1 }}>
+        <div className={'w-[40px]'} style={{ scale: props.scale || 1 }}>
           <RotatingCircle theme={1} />
         </div>
         <span style={{ marginLeft: 5 }}>Based</span>

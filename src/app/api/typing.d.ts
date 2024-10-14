@@ -47,3 +47,16 @@ type TNFTActivity = {
   amount: string;
   price?: string; // Value in USD
 };
+
+type TNFTActivityV2 = {
+  // Remove collectionName and action (since we're reading directly from explorer)
+  blockHash: string;
+  chain: string;
+  from: string;
+  to: string;
+  timestamp: string;
+
+  tokenId: string;
+  tokenName: string;
+  tokenSymbol: string;
+};

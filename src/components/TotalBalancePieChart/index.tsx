@@ -1,8 +1,8 @@
-import React from 'react';
+import type React from 'react';
 
+import { formatNumberUSD } from '@/helpers/portfolio.helper';
 import { ResponsivePie } from '@nivo/pie';
 import { Box } from '@radix-ui/themes';
-import { formatNumberUSD } from '@/helpers/portfolio.helper';
 
 type Props = {
   data: TPieChartData[];
@@ -56,15 +56,15 @@ const TotalBalancePieChart = ({
         colors={data.map((item) => item.color)}
         cornerRadius={3}
         tooltip={({ datum }) =>
-          !tooltipHidden ? (
+          tooltipHidden ? (
+            <></>
+          ) : (
             <Box className="bg-white shadow-xl px-3 py-3 rounded-full">
               {datum.label} :{' '}
               <span className="font-bold">
                 {formatNumberUSD(datum.data.value)}
               </span>
             </Box>
-          ) : (
-            <></>
           )
         }
         activeOuterRadiusOffset={8}

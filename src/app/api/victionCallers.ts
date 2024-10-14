@@ -27,22 +27,6 @@ export const listVicTransactions = async (account: string, limit = 100) => {
   return allTransactions;
 };
 
-export const listVicAllActivity = async (account: string) => {
-  if (account === '') {
-    return { token: [], nft: [] };
-  }
-
-  const [tokenActivities, nftActivities] = await Promise.all([
-    listVicTokenActivity(account),
-    listVicNFTActivity(account),
-  ]);
-
-  return {
-    token: tokenActivities,
-    nft: nftActivities,
-  };
-};
-
 export const listVicTokenActivity = async (account: string, limit = 100) => {
   if (account === '') {
     return [];
@@ -103,7 +87,18 @@ export const listVicNFTActivity = async (account: string, limit = 100) => {
     offset += limit; // Increment offset by limit for the next fetch
   } while (offset < total); // Continue until all data is fetched
 
-  return nftActivities;
+  return nftActivities.map((t) => {
+    return {
+      chain: 'vic',
+      blockHash: t.blockHash,
+      from: t.from,
+      to: t.to,
+      tokenId: t.tokenId,
+      tokenName: t.tokenName,
+      tokenSymbol: t.tokenSymbol,
+      timestamp: t.timestamp.toString(),
+    } as TNFTActivityV2;
+  });
 };
 
 export const listVicTokenBalance = async (account: string, limit = 100) => {

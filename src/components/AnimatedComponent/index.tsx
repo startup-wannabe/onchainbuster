@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { Spring, animated } from 'react-spring';
 
 const AnimatedComponent = {
