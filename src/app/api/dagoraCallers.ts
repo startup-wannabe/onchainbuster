@@ -71,7 +71,6 @@ export const listDagoraAddressBalance = async (address: string, size = 100) => {
     );
 
     const res = await data.json();
-    console.log('Dagora response:', res);
     const dagoraResp: TDagoraAccountBalanceResponse = res.data.data;
 
     accountCollections = accountCollections.concat(dagoraResp.data);
