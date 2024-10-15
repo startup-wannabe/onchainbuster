@@ -392,6 +392,7 @@ export const findLongestHoldingToken = (
 
   return {
     chain: chainIDMap[chain].name,
+    chainLogoURI: chainIDMap[chain].logoURI,
     symbol: longestAsset,
     duration: longestDuration,
   };

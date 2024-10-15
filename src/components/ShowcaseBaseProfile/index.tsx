@@ -329,7 +329,18 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                               {formatDuration(
                                 selectState(longestHoldingToken).duration,
                               )}
+                            </span>{' '}
+                            on
+                            <span className="inline-block align-middle">
+                              <img
+                                src={
+                                  selectState(longestHoldingToken).chainLogoURI
+                                }
+                                alt={`${selectState(longestHoldingToken).chain} logo`}
+                                className="mr-1 ml-1 h-6 w-6 rounded-full"
+                              />
                             </span>
+                            {selectState(longestHoldingToken).chain}
                           </div>
                         }
                       />

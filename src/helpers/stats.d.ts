@@ -82,7 +82,12 @@ type TDappInteraction = {
   count: number;
   window: [number, number];
 };
-type TLongestHoldingToken = { chain: string; symbol: string; duration: number };
+type TLongestHoldingToken = {
+  chain: string;
+  chainLogoURI: string;
+  symbol: string;
+  duration: number;
+};
 type TDAppInteractionRecord = Record<string, TDappInteraction>;
 
 type TDAppInteractionMap = {

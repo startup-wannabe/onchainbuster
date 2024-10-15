@@ -13,6 +13,7 @@ const defaultActivityStats: TActivityStats = {
 
 const defaultLongestHoldingToken: TLongestHoldingToken = {
   chain: '',
+  chainLogoURI: '',
   symbol: '',
   duration: 0,
 };

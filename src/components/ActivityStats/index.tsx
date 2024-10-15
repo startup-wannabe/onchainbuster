@@ -84,7 +84,7 @@ const ActivityStats = ({
               <img
                 src={chainIDMap[mostActiveChain].logoURI}
                 alt={`${chainIDMap[mostActiveChain].name} logo`}
-                className="mr-2 ml-1 h-6 w-6 rounded-full"
+                className="mr-1 ml-1 h-6 w-6 rounded-full"
               />
             </span>
             <span>{chainIDMap[mostActiveChain].name}</span>
