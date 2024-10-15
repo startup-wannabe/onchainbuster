@@ -72,7 +72,17 @@ export const listReservoirAddressBalance = async (
     offset += limit;
   }
 
-  return allCollections.map((collection) => {
+  const filteredCollections = allCollections.filter(
+    // Try cleaning spam/minor NFT collection
+    (item) =>
+      item.collection.image &&
+      item.collection.openseaVerificationStatus &&
+      item.collection.volume['30day'] !== 0 &&
+      item.collection.floorSale['30day'] !== 0 &&
+      item.collection.volumeChange['30day'] !== 0,
+  );
+
+  return filteredCollections.map((collection) => {
     const count = Number.parseInt(collection.ownership.tokenCount);
     const usdPrice = collection.collection.floorAskPrice?.amount.usd || 0;
     return {
@@ -82,7 +92,7 @@ export const listReservoirAddressBalance = async (
       collectionImage: collection.collection.image,
       floorPrice: usdPrice,
       totalCount: count,
-      totalValue: usdPrice,
+      totalValue: usdPrice * count,
     } as TNFTBalance;
   });
 };

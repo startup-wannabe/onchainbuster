@@ -112,7 +112,7 @@ export const listDagoraAddressBalance = async (
   );
 
   const addressCountRecord: Record<string, number> = {};
-  for (const collection of collectionsDetails) {
+  for (const collection of accountCollections) {
     const count = addressCountRecord[collection.address] || 0;
     addressCountRecord[collection.address] = count + 1;
   }

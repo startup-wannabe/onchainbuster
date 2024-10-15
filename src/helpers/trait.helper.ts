@@ -223,10 +223,10 @@ export const isOriginalBuilderOrMultichainCitizen = (
     `0.25 * (${bridgeCount < 3 ? 1 : 0}): Bridge count: ${bridgeCount}`,
   );
   console.log(
-    `0.1 * (${skillsScore !== 0 ? 1 : 0}: Skills score: ${skillsScore}`,
+    `0.1 * (${skillsScore !== 0 ? 1 : 0}): Skills score: ${skillsScore}`,
   );
 
-  console.log('------ End: DeGen or Diamond --------');
+  console.log('------ End: Builder or Citizen --------');
 
   const score =
     // 35% * (noActivityChains / totalChains)

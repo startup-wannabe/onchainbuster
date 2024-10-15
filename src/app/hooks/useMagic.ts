@@ -394,7 +394,7 @@ export const useMagic = () => {
       async () => {
         const data = await listAllNFTBalanceByChain(address);
         const allNFTBalance = Object.values(data).flat();
-        // console.log(allNFTBalance);
+        console.log('NFTPortfolio:', allNFTBalance);
         setState(nftPortfolio)(allNFTBalance);
 
         const _nftPortfolio = calculateMultichainNFTPortfolio(allNFTBalance);
