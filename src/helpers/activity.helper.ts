@@ -163,46 +163,60 @@ export const calculateNFTActivityStats = (
   // All NFT actions
   const sumCount = nftActivities.length;
 
-  // 1 buy/sale action with have additional transfer transaction
-  // -> Dedup on records with the same blockHash, tokenId, tokenName, tokenSymbol, from, to
-  const seen = new Set();
+  // Filter out VIC Scan - since it's didn't have duplicated data
+  const vicNFTActivities = nftActivities.filter((item) => item.chain === 'vic');
+  const evmNFTActivities = nftActivities.filter((item) => item.chain !== 'vic');
+
   const dedupKeys = [
     'chain',
     'blockHash',
+    'from',
+    'to',
+    'timestamp',
     'tokenId',
     'tokenName',
     'tokenSymbol',
-    'from',
-    'to',
   ];
-  const uniqueNFTActivities = nftActivities.filter((item) => {
+  // 1 buy/sale action with have additional transfer transaction
+  // -> First filter all the duplicated records (~= trading activity)
+  // having the same blockHash, tokenId, tokenName, tokenSymbol, from, to
+  // -> Dedup on records with the same blockHash, tokenId, tokenName, tokenSymbol, from, to
+  const seen = new Set();
+  const evmDedupNFTActivities = evmNFTActivities.filter((item) => {
     // Create a unique key based on the specified fields
     const key = dedupKeys
       .map((field) => item[field as keyof TNFTActivityV2])
       .join('|');
     if (seen.has(key)) {
-      return false; // Duplicate found
+      return true; // Duplicate found
     }
     seen.add(key); // Mark this combination as seen
-    return true; // Keep this item
+    return false; // Do not keep this item yet
   });
+
+  // Concat all
+  const cleanedNFTActivity = evmDedupNFTActivities.concat(vicNFTActivities);
 
   // Activity type:
   // Mint: from === 0x00000...
-  // Sale: from !== 0x00000... && to === address
-  // Buy: from === address
-  const mintCount = uniqueNFTActivities.filter((act) =>
-    act.from.toLowerCase().includes('0x0000000'),
+  // Sale: from !== 0x00000... && to === address: Ignore mint
+  // Buy: from === address && to !== 0x00000... : Ignore burn
+  const mintCount = cleanedNFTActivity.filter((act) =>
+    act.from.toLowerCase().includes('0x00000000000'),
   ).length;
 
-  const saleCount = uniqueNFTActivities.filter(
+  const buyCount = cleanedNFTActivity.filter(
     (act) =>
-      act.from.toLowerCase() !== '0x0000000000000000000000000000000000000000' &&
+      !act.from.toLowerCase().includes('0x00000000000') &&
       act.to.toLowerCase() === address.toLowerCase(),
+    // TODO: It still contains transferActivities -.-
   ).length;
 
-  const buyCount = uniqueNFTActivities.filter(
-    (act) => act.from.toLowerCase() === address.toLowerCase(),
+  const saleCount = cleanedNFTActivity.filter(
+    (act) =>
+      act.from.toLowerCase() === address.toLowerCase() &&
+      !act.to.toLowerCase().includes('0x00000000000'),
+    // TODO: It still contains transferActivities -.-
   ).length;
 
   const tradeCount = buyCount + saleCount;

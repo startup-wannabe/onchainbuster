@@ -1,3 +1,5 @@
+import { formatDuration } from './activity.helper';
+
 export enum UserTrait {
   DeFi = 'DeFi Enthusiast',
   Art = 'Art Collector',
@@ -91,6 +93,23 @@ export const isDeFiOrArt = (
 
   const allTradingCount = defiSwapCount + nftActionCount;
 
+  // Debug
+  console.log('------ Start: DeFi or Art Score --------');
+  console.log(
+    `0.45 * (${tokenPortfolioValue} / ${totalPortfolioValue}): TokenPort ${tokenPortfolioValue} / FullPort ${totalPortfolioValue}  `,
+  );
+  console.log(
+    `0.1 * (${mostTokenValue > mostNftValue ? 1 : 0}): Token: ${mostTokenValue} vs NFT: ${mostNftValue}`,
+  );
+  console.log(
+    `0.35 * (${defiLendCount} / ${allTradingCount}): DeFi Lend Count: ${defiLendCount} / All Trading Count ${allTradingCount}`,
+  );
+  console.log(
+    `0.1 * (${firstTransactionDate.getFullYear() < 2020 ? 1 : 0}): First txYear: ${firstTransactionDate.getFullYear()}`,
+  );
+
+  console.log('------ End: DeFi or Art Score --------');
+
   const score =
     // 45% * (sum of $Token / sum of ($Token + $NFT))
     0.45 *
@@ -127,6 +146,27 @@ export const isDegenOrDiamondHand = (
 
   const newTokenCount = tokenActivityStats.newCount;
   const sumTokenCount = tokenActivityStats.sumCount;
+
+  // Debug
+  console.log('------ Start: DeGen or Diamond --------');
+  console.log(
+    `0.15 * (${memePortfolioValue} / ${tokenPortfolioValue}): Meme port: ${memePortfolioValue} / Token port: ${tokenPortfolioValue}`,
+  );
+  console.log(
+    `0.25 * (${defiSwapCount} / ${defiDexCount}):  DeFi Swap: ${defiSwapCount} / DeFi DEX ${defiDexCount}`,
+  );
+  console.log(
+    `0.35 * (${newTokenCount} / ${sumTokenCount}):  New token Count: ${newTokenCount} / All token Count ${sumTokenCount}`,
+  );
+  console.log(
+    `0.25 * (${
+      Math.floor(longestHoldingToken.duration / (3600 * 24 * 365)) > 1 // 1 year
+        ? 0
+        : 1
+    }): Longest holding duration (${formatDuration(longestHoldingToken.duration)})`,
+  );
+
+  console.log('------ End: DeGen or Diamond --------');
 
   const score =
     // 15% * (sum of $MemeToken / sum of $Token)
@@ -172,10 +212,21 @@ export const isOriginalBuilderOrMultichainCitizen = (
 
   const skillsScore = talentPassportScore.skills_score;
 
-  // 35% * (noActivityChains / totalChains)
-  // 30% * (swapCount DeFi / swapCount + lpCount is NFT then 1 else 0)
-  // 25% * (lendCount Token / (sumCount NFT + swapCount Token) )
-  // 10% * (if 1st_transaction < 2020 then 1 else 0)
+  console.log('------ Start: Builder or Citizen --------');
+  console.log(
+    `0.35 * (${noActivityChains} / ${totalChains}): No Activity Chains: ${noActivityChains} / All Chain: ${totalChains})`,
+  );
+  console.log(
+    `0.3 * (${countUniqueDaysActiveChain} / ${uniqueActiveDaysAll}): ActiveDayActiveChain: ${countUniqueDaysActiveChain} / ActiveDayAll ${uniqueActiveDaysAll})`,
+  );
+  console.log(
+    `0.25 * (${bridgeCount < 3 ? 1 : 0}): Bridge count: ${bridgeCount}`,
+  );
+  console.log(
+    `0.1 * (${skillsScore !== 0 ? 1 : 0}: Skills score: ${skillsScore}`,
+  );
+
+  console.log('------ End: DeGen or Diamond --------');
 
   const score =
     // 35% * (noActivityChains / totalChains)
