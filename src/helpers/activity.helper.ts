@@ -261,13 +261,17 @@ export const calculateDappInteraction = (
       op: { name: 'OP Native Bridge', window: defaultWindow, count: 0 },
       base: {
         name: 'Base Native Bridge (Deprecated)',
-        window: [0, 0],
+        window: defaultWindow,
         count: 0,
       },
     },
     nameService: {
-      ens: { name: 'Ethereum Name Service (ENS)', window: [0, 0], count: 0 },
-      oneid: { name: 'OneID', window: [0, 0], count: 0 },
+      ens: {
+        name: 'Ethereum Name Service (ENS)',
+        window: defaultWindow,
+        count: 0,
+      },
+      oneid: { name: 'OneID', window: defaultWindow, count: 0 },
     },
   };
 
