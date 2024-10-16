@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { useMemo } from 'react';
 import ActivityStats from '../ActivityStats';
 import AnimatedComponent from '../AnimatedComponent';
+import Content from '../Ecosystem/Content';
 import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
 import LoadableContainer from '../LoadableContainer';
 import MultiAssetsPortfolio from '../MultiAssetsPortfolio';
@@ -276,7 +277,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
       {stateCheck('ActivityStats', ThreeStageState.Finished) &&
         stateCheck('GetTokenActivity', ThreeStageState.Finished) &&
         stateCheck('GetTokenPortfolio', ThreeStageState.Finished) &&
-        // stateCheck('GetNftActivity', ThreeStageState.Finished) &&
+        stateCheck('GetNftActivity', ThreeStageState.Finished) &&
         stateCheck('GetNftPortfolio', ThreeStageState.Finished) && (
           <>
             <Separator className="mt-[80px]" size={'4'} />
@@ -387,6 +388,29 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                   </div>
                 </section>
               )}
+            </div>
+          </>
+        )}
+
+      {stateCheck('ActivityStats', ThreeStageState.Finished) &&
+        stateCheck('GetTokenActivity', ThreeStageState.Finished) &&
+        stateCheck('GetTokenPortfolio', ThreeStageState.Finished) &&
+        stateCheck('GetNftActivity', ThreeStageState.Finished) &&
+        stateCheck('GetNftPortfolio', ThreeStageState.Finished) && (
+          <>
+            <Separator className="mt-[80px]" size={'4'} />
+            <div className="mt-8">
+              <div className="flex items-center justify-center">
+                <h2 className="mb-4 font-bold text-2xl">Your Based Picks</h2>
+              </div>
+
+              <Content
+                firstTrait={defitOrArtTraitResult.trait as UserTrait}
+                secondTrait={degenOrDiamondHandResult.trait as UserTrait}
+                thirdTrait={
+                  originalBuilderOrMultichainCitizen.trait as UserTrait
+                }
+              />
             </div>
           </>
         )}

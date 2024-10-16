@@ -1,10 +1,8 @@
 'use client';
 
-import { ProductTag } from '@/helpers/trait.helper';
+import { type UserTrait, getBaseTraits } from '@/helpers/trait.helper';
 import ecosystemApps from '@data/ecosystem.json';
-import { useState } from 'react';
 import { List } from './List';
-import { TagChip } from './TagChip';
 
 export type EcosystemApp = {
   searchName: string;
@@ -15,11 +13,11 @@ export type EcosystemApp = {
   imageUrl: string;
 };
 
-const tags = ecosystemApps
-  .flatMap((app) => app.tags)
-  .filter((value, index, array) => {
-    return array.indexOf(value.toLocaleLowerCase()) === index;
-  });
+// const tags = ecosystemApps
+//   .flatMap((app) => app.tags)
+//   .filter((value, index, array) => {
+//     return array.indexOf(value.toLocaleLowerCase()) === index;
+//   });
 
 function orderedEcosystemAppsAsc() {
   return ecosystemApps.sort((a, b) => {
@@ -40,31 +38,32 @@ const decoratedEcosystemApps: EcosystemApp[] = orderedEcosystemAppsAsc().map(
   }),
 );
 
-export default function Content() {
-  const [selectedTag, setSelectedTag] = useState<string>(ProductTag.DeFi);
+type EcosystemContentProps = {
+  firstTrait: UserTrait;
+  secondTrait: UserTrait;
+  thirdTrait: UserTrait;
+};
 
-  const selectTag = (tag: string): void => {
-    setSelectedTag(tag);
-  };
-  console.log(decoratedEcosystemApps);
+export default function Content({
+  firstTrait,
+  secondTrait,
+  thirdTrait,
+}: EcosystemContentProps) {
+  const recommendedTag = getBaseTraits([firstTrait, secondTrait, thirdTrait]);
 
   // TODO: Load filter result later
   const filteredEcosystemApps = decoratedEcosystemApps.filter((app) =>
-    app.tags.includes(selectedTag),
+    app.tags.includes(recommendedTag),
   );
 
   return (
     <div className="flex min-h-32 w-full flex-col gap-10 pb-32">
       <div className="flex flex-col justify-between gap-8 lg:flex-row lg:gap-12">
-        <div className="flex flex-row flex-wrap gap-3">
-          {tags.map((tag) => (
-            <TagChip
-              tag={tag}
-              isSelected={selectedTag === tag}
-              key={tag}
-              selectTag={selectTag}
-            />
-          ))}
+        <div className="flex items-center justify-center">
+          <h3 className="mb-4 font-bold text-xl">
+            Since you are {firstTrait}, {secondTrait}, and {thirdTrait}, let's
+            discover {recommendedTag} products
+          </h3>
         </div>
       </div>
       <List apps={filteredEcosystemApps} />
