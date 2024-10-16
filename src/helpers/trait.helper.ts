@@ -210,7 +210,9 @@ export const isOriginalBuilderOrMultichainCitizen = (
     0,
   );
 
-  const skillsScore = talentPassportScore.skills_score;
+  const skillsScore = talentPassportScore?.skills_score
+    ? talentPassportScore.skills_score
+    : 0;
 
   console.log('------ Start: Builder or Citizen --------');
   console.log(

@@ -10,8 +10,13 @@ export const getTalentPassportByWallet = async (address: string) => {
   const res = await data.json();
   if (data.status === 404) {
     // Passport not found
-    return { activity_score: 0, identity_score: 0, skills_score: 0 };
+    return {
+      activity_score: 0,
+      identity_score: 0,
+      skills_score: 0,
+    } as TTalentPassport;
   }
+
   const passport: TTalentPassport = res.data.passport;
   return passport;
 };

@@ -246,5 +246,15 @@ export const listAllNFTActivityByChain = async (
 export const getTalentScore = async (
   address: string,
 ): Promise<TTalentPassportScore> => {
-  return (await getTalentPassportByWallet(address)) as TTalentPassportScore;
+  const data = await getTalentPassportByWallet(address);
+
+  if (!data) {
+    // Passport not found
+    return {
+      activity_score: 0,
+      identity_score: 0,
+      skills_score: 0,
+    } as TTalentPassport;
+  }
+  return (await getTalentPassportByWallet(address)) as TTalentPassport;
 };
