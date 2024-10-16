@@ -27,8 +27,8 @@ export const useMagicTraits = () => {
       isDeFiOrArt(
         selectState(defiActivityStats),
         selectState(tokenPortfolioStats),
-        selectState(nftActivityStats),
         selectState(nftPortfolioStats),
+        selectState(dappInteractionStats),
         selectState(activityStats).firstActiveDay || new Date(),
       ),
     [
@@ -43,10 +43,10 @@ export const useMagicTraits = () => {
   const degenOrDiamondHandResult = useMemo(
     () =>
       isDegenOrDiamondHand(
-        selectState(tokenPortfolioStats),
         selectState(tokenActivityStats),
         selectState(defiActivityStats),
         selectState(longestHoldingToken),
+        selectState(activityStats).firstActiveDay || new Date(),
       ),
     [
       defiActivityStats,
@@ -62,7 +62,6 @@ export const useMagicTraits = () => {
       isOriginalBuilderOrMultichainCitizen(
         selectState(activityStats),
         selectState(chainStats),
-        selectState(dappInteractionStats),
         selectState(talentPassportScore),
       ),
     [

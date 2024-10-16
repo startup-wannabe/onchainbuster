@@ -67,6 +67,7 @@ const defaultChainStats: TChainStats = {
   mostActiveChainID: '',
   mostActiveChainName: '',
   countUniqueDaysActiveChain: 0,
+  countActiveChainTxs: 0,
 };
 
 const defaultDappInteractionStats: TDAppInteractionMap = {

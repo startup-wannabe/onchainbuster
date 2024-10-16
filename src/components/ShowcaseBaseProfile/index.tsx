@@ -320,11 +320,11 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                         title="💪 Longest holding streak"
                         content={
                           <div>
-                            You've been holding{' '}
+                            Longest token that you held is{' '}
                             <span className="font-bold">
                               {selectState(longestHoldingToken).symbol}
                             </span>{' '}
-                            for over{' '}
+                            with over{' '}
                             <span className="font-bold">
                               {formatDuration(
                                 selectState(longestHoldingToken).duration,

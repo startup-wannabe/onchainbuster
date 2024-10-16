@@ -139,13 +139,13 @@ export const calculateTokenActivityStats = (
 ) => {
   const sumCount = tokenActivities.length;
 
-  // Recent token = date_added on CMC less than recent 3 months
+  // Recent token = date_added on CMC less than recent 12 months
   const recentTokenActivities = tokenActivities.filter((act) => {
     const token = marketData.find((data) => data.symbol === act.symbol);
     if (token) {
       const dateAdded = new Date(token.date_added);
       const threeMonthsAgo = new Date();
-      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 12);
       return dateAdded > threeMonthsAgo;
     }
     return false;
