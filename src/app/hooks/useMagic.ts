@@ -3,10 +3,10 @@ import {
   calculateMultichainNFTPortfolio,
   calculateMultichainTokenPortfolio,
 } from '@/helpers/portfolio.helper';
-import { useWagmiConfig } from '@/wagmi';
-import { getEnsAddress } from '@wagmi/core';
+import { getAddress } from '@coinbase/onchainkit/identity';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 import { delayMs, setState } from '../../helpers';
 import {
@@ -52,7 +52,6 @@ export const StateSubEvents = {
 export const useMagic = () => {
   // biome-ignore lint/correctness/noEmptyPattern: <explanation>
   const {} = useMagic;
-  const wagmiConfig = useWagmiConfig();
   const {
     stateEvents,
     setStateEvents,
@@ -124,7 +123,7 @@ export const useMagic = () => {
     }
   }
 
-  const getAddress = async (text: string) => {
+  const getWalletAddress = async (text: string) => {
     return newAsyncDispatch(
       StateEvent.GetAddress,
       {
@@ -138,9 +137,8 @@ export const useMagic = () => {
         if (text.startsWith('0x')) {
           address = text;
         } else if (text.endsWith('.eth')) {
-          address = (await getEnsAddress(wagmiConfig, {
+          address = (await getAddress({
             name: normalize(text),
-            chainId: 1,
           })) as string;
           console.log('ENS Address:', address);
           setState(inputAddress)(address);
@@ -148,14 +146,17 @@ export const useMagic = () => {
           address = await searchAddressFromOneID(text);
           console.log('OneID Address:', address);
         }
-        setState(inputAddress)(address);
-        return address;
+        if (isAddress(address)) {
+          setState(inputAddress)(address);
+          return address;
+        }
+        throw 'Wallet address is invalid! Please try again.';
       },
     );
   };
 
   const fetchTalentPassportScore = async (text: string) => {
-    const address = await getAddress(text);
+    const address = await getWalletAddress(text);
     return newAsyncDispatch(
       StateEvent.GetTalentScore,
       {
@@ -174,7 +175,7 @@ export const useMagic = () => {
   };
 
   const fetchActivityStats = async (addressInput: string) => {
-    const address = await getAddress(addressInput);
+    const address = await getWalletAddress(addressInput);
     return newAsyncDispatch(
       StateEvent.ActivityStats,
       {
@@ -264,7 +265,7 @@ export const useMagic = () => {
   };
 
   const fetchMultichainTokenPortfolio = async (text: string) => {
-    const address = await getAddress(text);
+    const address = await getWalletAddress(text);
     return newAsyncDispatch(
       StateEvent.GetTokenPortfolio,
       {
@@ -310,7 +311,7 @@ export const useMagic = () => {
   };
 
   const fetchMultichainTokenActivity = async (text: string) => {
-    const address = await getAddress(text);
+    const address = await getWalletAddress(text);
     return newAsyncDispatch(
       StateEvent.GetTokenActivity,
       {
@@ -328,7 +329,7 @@ export const useMagic = () => {
       async () => {
         const tokenActivityData = await listAllTokenActivityByChain(address);
         const allTokenActivities = Object.values(tokenActivityData).flat();
-        // console.log('allTokenActivities:', allTokenActivities);
+        console.log('allTokenActivities:', allTokenActivities);
         setState(tokenActivity)(allTokenActivities);
 
         // Get longest holding assets
@@ -357,6 +358,8 @@ export const useMagic = () => {
         const distinctTokenSymbols = [
           ...new Set(allTokenActivities.map((token) => token.symbol)),
         ];
+        console.log('distinctTokenSymbols', distinctTokenSymbols);
+
         // Get token price
         const marketData = await listCMCTokenDetail(
           distinctTokenSymbols.join(','),
@@ -376,7 +379,7 @@ export const useMagic = () => {
   };
 
   const fetchMultichainNftPortfolio = async (text: string) => {
-    const address = await getAddress(text);
+    const address = await getWalletAddress(text);
     return newAsyncDispatch(
       StateEvent.GetNftPortfolio,
       {
@@ -404,7 +407,7 @@ export const useMagic = () => {
   };
 
   const fetchMultichainNftActivity = async (text: string) => {
-    const address = await getAddress(text);
+    const address = await getWalletAddress(text);
     return newAsyncDispatch(
       StateEvent.GetNftActivity,
       {
@@ -476,7 +479,7 @@ export const useMagic = () => {
       fetchMultichainTokenPortfolio,
       fetchMultichainTokenActivity,
       fetchMultichainNftActivity,
-      getAddress,
+      getWalletAddress,
       stateCheck,
     },
     mutate: {

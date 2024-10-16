@@ -215,9 +215,12 @@ export const listAllNFTBalanceByChain = async (
 
   return {
     ...Object.fromEntries(
-      chains.map((chain, index) => [chain.toLowerCase(), results[index]]),
+      chains.map((chain, index) => [
+        chain.toLowerCase(),
+        results[index].filter((item) => item.totalValue !== 0),
+      ]),
     ),
-    vic: results[results.length - 1],
+    vic: results[results.length - 1].filter((item) => item.totalValue !== 0),
   };
 };
 

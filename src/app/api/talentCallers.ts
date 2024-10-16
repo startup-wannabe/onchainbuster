@@ -8,7 +8,7 @@ export const getTalentPassportByWallet = async (address: string) => {
   });
 
   const res = await data.json();
-  if (data.status === 404) {
+  if (data.status !== 200) {
     // Passport not found
     return {
       activity_score: 0,
