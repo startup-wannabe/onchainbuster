@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
   const tokenSymbolList = tokens?.split(',') || [];
   const tokenIdList = tokenSymbolList.map(
     (symbol) =>
-      cmcIDlist.data.find((token) => token.symbol === symbol)?.id || '',
+      (cmcIDlist as TCMCStaticMap).data.find((token) => token.symbol === symbol)
+        ?.id || '',
   );
 
   const query = `id=${tokenIdList.filter(Boolean).join(',')}&aux=tags,date_added`;
