@@ -147,7 +147,7 @@ export const isDegenOrDiamondHand = (
   // Debug
   console.log('------ Start: DeGen or Diamond --------');
   console.log(
-    `0.25 * (${defiDexCount} / ${defiSumCount}): DEX Count / DeFi Count`,
+    `0.25 * (sqrt(${defiDexCount} / ${defiSumCount})): DEX Count / DeFi Count`,
   );
   console.log(
     `0.25 * (${longestHoldingDuration} / ${walletAgeDuration}):  LongestHolding: ${formatDuration(longestHoldingDuration)} / WalletAge ${formatDuration(walletAgeDuration)}`,
