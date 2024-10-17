@@ -157,7 +157,7 @@ export const isDegenOrDiamondHand = (
   );
   console.log(
     `0.15 * (${
-      Math.floor(longestHoldingToken.duration / (3600 * 24 * 365)) > 1 // 1 year
+      longestHoldingToken.duration / (3600 * 24 * 365) > 1 // 1 year
         ? 0
         : 1
     }): Longest holding duration (${formatDuration(longestHoldingToken.duration)})`,
@@ -178,7 +178,7 @@ export const isDegenOrDiamondHand = (
       (sumTokenCount === 0 ? sumTokenCount : newTokenCount / sumTokenCount) +
     // 15% * (longest holding token is > 12 months)
     0.15 *
-      (Math.floor(longestHoldingDuration / (3600 * 24 * 365)) > 1 // 1 year
+      (longestHoldingDuration / (3600 * 24 * 365) > 1 // 1 year
         ? 0
         : 1);
 

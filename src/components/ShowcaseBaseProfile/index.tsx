@@ -218,11 +218,11 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                     {mostActiveDappInteraction.name}{' '}
                     <span className="font-bold">
                       {mostActiveDappInteraction.count} times
-                    </span>{' '}
-                    in the last{' '}
+                    </span>
+                    {/* in the last{' '}
                     <span className="font-bold">
                       {windowToMonths(mostActiveDappInteraction.window)}
-                    </span>
+                    </span> */}
                   </div>
                 }
               />
