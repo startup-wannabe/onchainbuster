@@ -119,7 +119,7 @@ export const useMagic = () => {
           type: 'error',
         });
       }
-      throw new Error(error);
+      throw new Error(`${eventName} : ${error.message}`);
     }
   }
 
