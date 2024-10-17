@@ -220,6 +220,7 @@ export const useMagic = () => {
         );
 
         const mostActiveChainName = data[mostActiveChainID].chainName;
+        const _countActiveChainTxs = data[mostActiveChainID].txs.length;
 
         // Get Activity Stats
         const stats = calculateEVMStreaksAndMetrics(_allTransactions, address);
@@ -243,6 +244,7 @@ export const useMagic = () => {
           mostActiveChainID,
           noActivityChains,
           countUniqueDaysActiveChain: uniqueActiveDays,
+          countActiveChainTxs: _countActiveChainTxs,
         };
         console.log('Chain stats:', _chainStats);
         setState(chainStats)(_chainStats);

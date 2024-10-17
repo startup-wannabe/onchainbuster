@@ -7,7 +7,6 @@ export const getTalentPassportByWallet = async (address: string) => {
     method: 'GET',
   });
 
-  const res = await data.json();
   if (data.status !== 200) {
     // Passport not found
     return {
@@ -16,6 +15,8 @@ export const getTalentPassportByWallet = async (address: string) => {
       skills_score: 0,
     } as TTalentPassport;
   }
+
+  const res = await data.json();
 
   const passport: TTalentPassport = res.data.passport;
   return passport;

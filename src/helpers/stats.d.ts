@@ -22,6 +22,7 @@ type TChainStats = {
   mostActiveChainName: string;
   mostActiveChainID: string;
   countUniqueDaysActiveChain: number;
+  countActiveChainTxs: number;
 };
 
 type TActivityStats = {

@@ -219,11 +219,11 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                     {mostActiveDappInteraction.name}{' '}
                     <span className="font-bold">
                       {mostActiveDappInteraction.count} times
-                    </span>{' '}
-                    in the last{' '}
+                    </span>
+                    {/* in the last{' '}
                     <span className="font-bold">
                       {windowToMonths(mostActiveDappInteraction.window)}
-                    </span>
+                    </span> */}
                   </div>
                 }
               />
@@ -321,11 +321,11 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                         title="💪 Longest holding streak"
                         content={
                           <div>
-                            You've been holding{' '}
+                            Longest token that you held is{' '}
                             <span className="font-bold">
                               {selectState(longestHoldingToken).symbol}
                             </span>{' '}
-                            for over{' '}
+                            with over{' '}
                             <span className="font-bold">
                               {formatDuration(
                                 selectState(longestHoldingToken).duration,

@@ -61,7 +61,9 @@ export const getIpfsGatewayUrl = (ipfsUrl?: IpfsUrl): string | undefined => {
 
     const isValidCid = cid(ipfsCid);
     const isValidIpfsUrl = url.protocol === 'ipfs:' && isValidCid;
-    if (!isValidIpfsUrl) return;
+    if (!isValidIpfsUrl) {
+      return;
+    }
 
     return `${CLOUDFARE_IPFS_PROXY}/ipfs/${ipfsCid}`;
   } catch (error) {

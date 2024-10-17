@@ -37,6 +37,7 @@ export const calculateEVMStreaksAndMetrics = (
   const filteredTransactions = transactions.filter(
     (tx) => tx.from.toLowerCase() === address.toLowerCase(), // Filter from Txs only
   );
+  // TODO: Enhance filter logic to distinguish between from and to txs for activeDay
   if (filteredTransactions.length === 0) {
     return {
       totalTxs: 0,
@@ -82,7 +83,7 @@ export const calculateEVMStreaksAndMetrics = (
   longestStreakDays = Math.max(longestStreakDays, streak);
 
   return {
-    totalTxs: filteredTransactions.length,
+    totalTxs: transactions.length, // Revert to get all transaction
     firstActiveDay: firstTransactionDate,
     uniqueActiveDays: uniqueActiveDaysSet.size,
     longestStreakDays,
@@ -139,13 +140,13 @@ export const calculateTokenActivityStats = (
 ) => {
   const sumCount = tokenActivities.length;
 
-  // Recent token = date_added on CMC less than recent 3 months
+  // Recent token = date_added on CMC less than recent 12 months
   const recentTokenActivities = tokenActivities.filter((act) => {
     const token = marketData.find((data) => data.symbol === act.symbol);
     if (token) {
       const dateAdded = new Date(token.date_added);
       const threeMonthsAgo = new Date();
-      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 12);
       return dateAdded > threeMonthsAgo;
     }
     return false;
