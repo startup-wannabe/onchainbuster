@@ -144,13 +144,15 @@ export const isDegenOrDiamondHand = (
     (Date.now() - firstTransactionDate.getTime()) / 1000;
   const longestHoldingDuration = longestHoldingToken.duration;
 
+  const holdingRatio = longestHoldingDuration / walletAgeDuration;
+
   // Debug
   console.log('------ Start: DeGen or Diamond --------');
   console.log(
     `0.25 * (sqrt(${defiDexCount} / ${defiSumCount})): DEX Count / DeFi Count`,
   );
   console.log(
-    `0.25 * (${longestHoldingDuration} / ${walletAgeDuration}):  LongestHolding: ${formatDuration(longestHoldingDuration)} / WalletAge ${formatDuration(walletAgeDuration)}`,
+    `0.25 * (1 - (${longestHoldingDuration} / ${walletAgeDuration})):  LongestHolding: ${formatDuration(longestHoldingDuration)} / WalletAge ${formatDuration(walletAgeDuration)}`,
   );
   console.log(
     `0.35 * (${newTokenCount} / ${sumTokenCount}):  New token (12m) Count / All token Count`,
@@ -167,7 +169,7 @@ export const isDegenOrDiamondHand = (
 
   const score =
     // 25% * (longestTokenHolding / walletAge)
-    0.25 * (longestHoldingDuration / walletAgeDuration) +
+    0.25 * (1 - holdingRatio) +
     // 25% * (sqrt(dexCount / defiCount))
     0.25 *
       (defiSumCount === 0
