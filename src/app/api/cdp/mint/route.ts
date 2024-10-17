@@ -1,6 +1,7 @@
-import { importWallet } from '@/lib/coinbase';
+import { mintABI, mintContractAddress } from '@/constants';
+import {} from '@/lib/pinata';
 import '@/lib/coinbase';
-import { deployContract } from '@/scripts/deployContract';
+import { importWallet } from '@/lib/coinbase';
 import { NextResponse } from 'next/server';
 export type MintResponse = {
   contractAddress: string;
@@ -11,20 +12,16 @@ export type MintResponse = {
 export async function POST(request: Request) {
   console.log('Starting mint process');
   const body = await request.json();
-  const { networkId, tokenId } = body;
+  const { networkId, to, uri } = body;
   if (networkId === undefined) {
     return NextResponse.json(
       { error: 'Network ID is required' },
       { status: 400 },
     );
   }
-  let contractAddress: string;
-  if (process.env.NFT_CONTRACT_ADDRESS) {
-    contractAddress = process.env.NFT_CONTRACT_ADDRESS;
-  } else {
-    const multiToken = await deployContract();
-    contractAddress = multiToken.getContractAddress();
-  }
+
+  const contractAddress = mintContractAddress;
+
   let mintResponse: MintResponse;
   try {
     const wallet = await importWallet(0.01);
@@ -32,15 +29,15 @@ export async function POST(request: Request) {
     if (balance.lessThan(0.01)) {
       await wallet.faucet();
     }
-    const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL || `${request.headers.get('x-forwarded-proto') || 'http'}://${request.headers.get('host')}`}`;
-    const defaultAddress = await wallet.getDefaultAddress();
+
+    // const defaultAddress = await wallet.getDefaultAddress();
     const mintTx = await wallet.invokeContract({
       contractAddress: contractAddress,
-      method: 'mint',
+      abi: mintABI,
+      method: 'safeMint',
       args: {
-        to: defaultAddress.getId(),
-        id: tokenId,
-        value: '1',
+        to,
+        uri: `ipfs://${uri}`,
       },
     });
     await mintTx.wait();
