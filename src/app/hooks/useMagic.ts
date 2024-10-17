@@ -155,8 +155,7 @@ export const useMagic = () => {
     );
   };
 
-  const fetchTalentPassportScore = async (text: string) => {
-    const address = await getWalletAddress(text);
+  const fetchTalentPassportScore = async (addressInput: string) => {
     return newAsyncDispatch(
       StateEvent.GetTalentScore,
       {
@@ -166,7 +165,7 @@ export const useMagic = () => {
         onResetEvent: StateSubEvents.GetTalentScore.False,
       },
       async () => {
-        const data = await getTalentScore(address);
+        const data = await getTalentScore(addressInput);
         console.log('Talent score:', data);
         setState(talentPassportScore)(data);
         return data;
@@ -175,7 +174,6 @@ export const useMagic = () => {
   };
 
   const fetchActivityStats = async (addressInput: string) => {
-    const address = await getWalletAddress(addressInput);
     return newAsyncDispatch(
       StateEvent.ActivityStats,
       {
@@ -188,7 +186,7 @@ export const useMagic = () => {
         onResetEvent: StateSubEvents.ActivityStats.Idle,
       },
       async () => {
-        const data = await listAllTransactionsByChain(address);
+        const data = await listAllTransactionsByChain(addressInput);
         const _allTransactions = Object.values(data).flatMap((d) => d.txs);
         setState(allTransactions)(_allTransactions);
 
@@ -199,7 +197,7 @@ export const useMagic = () => {
           .flatMap(([_, value]) => value.txs);
 
         const filteredTransactions = ethNativeTransactions.filter(
-          (tx) => tx.from.toLowerCase() === address.toLowerCase(),
+          (tx) => tx.from.toLowerCase() === addressInput.toLowerCase(),
         );
 
         const _totalGasInETH = filteredTransactions.reduce(
@@ -223,7 +221,10 @@ export const useMagic = () => {
         const _countActiveChainTxs = data[mostActiveChainID].txs.length;
 
         // Get Activity Stats
-        const stats = calculateEVMStreaksAndMetrics(_allTransactions, address);
+        const stats = calculateEVMStreaksAndMetrics(
+          _allTransactions,
+          addressInput,
+        );
         console.log('Activity Stats:', stats);
         setState(activityStats)(stats);
 
@@ -235,7 +236,7 @@ export const useMagic = () => {
         // Get unique active day, on most active chain 🫠
         const { uniqueActiveDays } = calculateEVMStreaksAndMetrics(
           data[mostActiveChainID].txs,
-          address,
+          addressInput,
         );
 
         const _chainStats: TChainStats = {
@@ -266,8 +267,7 @@ export const useMagic = () => {
     );
   };
 
-  const fetchMultichainTokenPortfolio = async (text: string) => {
-    const address = await getWalletAddress(text);
+  const fetchMultichainTokenPortfolio = async (addressInput: string) => {
     return newAsyncDispatch(
       StateEvent.GetTokenPortfolio,
       {
@@ -283,7 +283,7 @@ export const useMagic = () => {
         onResetEvent: StateSubEvents.GetTokenPortfolio.Idle,
       },
       async () => {
-        const tokenBalanceData = await getMultichainPortfolio(address);
+        const tokenBalanceData = await getMultichainPortfolio(addressInput);
         console.log('Token balance:', tokenBalanceData);
 
         // Get distinct token symbol with non-zero balance
@@ -312,8 +312,7 @@ export const useMagic = () => {
     );
   };
 
-  const fetchMultichainTokenActivity = async (text: string) => {
-    const address = await getWalletAddress(text);
+  const fetchMultichainTokenActivity = async (addressInput: string) => {
     return newAsyncDispatch(
       StateEvent.GetTokenActivity,
       {
@@ -329,7 +328,8 @@ export const useMagic = () => {
         onResetEvent: StateSubEvents.GetTokenActivity.Idle,
       },
       async () => {
-        const tokenActivityData = await listAllTokenActivityByChain(address);
+        const tokenActivityData =
+          await listAllTokenActivityByChain(addressInput);
         const allTokenActivities = Object.values(tokenActivityData).flat();
         console.log('allTokenActivities:', allTokenActivities);
         setState(tokenActivity)(allTokenActivities);
@@ -338,7 +338,7 @@ export const useMagic = () => {
         const longestHoldingTokenByChain = Object.entries(
           tokenActivityData,
         ).map(([chain, activities]) => {
-          return findLongestHoldingToken(chain, activities, address);
+          return findLongestHoldingToken(chain, activities, addressInput);
         });
 
         const _longestHoldingToken = longestHoldingTokenByChain.reduce(
@@ -380,8 +380,7 @@ export const useMagic = () => {
     );
   };
 
-  const fetchMultichainNftPortfolio = async (text: string) => {
-    const address = await getWalletAddress(text);
+  const fetchMultichainNftPortfolio = async (addressInput: string) => {
     return newAsyncDispatch(
       StateEvent.GetNftPortfolio,
       {
@@ -397,7 +396,7 @@ export const useMagic = () => {
         onResetEvent: StateSubEvents.GetNftPortfolio.Idle,
       },
       async () => {
-        const data = await listAllNFTBalanceByChain(address);
+        const data = await listAllNFTBalanceByChain(addressInput);
         const allNFTBalance = Object.values(data).flat();
         console.log('NFTPortfolio:', allNFTBalance);
         setState(nftPortfolio)(allNFTBalance);
@@ -408,8 +407,7 @@ export const useMagic = () => {
     );
   };
 
-  const fetchMultichainNftActivity = async (text: string) => {
-    const address = await getWalletAddress(text);
+  const fetchMultichainNftActivity = async (addressInput: string) => {
     return newAsyncDispatch(
       StateEvent.GetNftActivity,
       {
@@ -425,13 +423,13 @@ export const useMagic = () => {
         onResetEvent: StateSubEvents.GetNftActivity.Idle,
       },
       async () => {
-        const nftActivityData = await listAllNFTActivityV2ByChain(address);
+        const nftActivityData = await listAllNFTActivityV2ByChain(addressInput);
         const allNftActivities = Object.values(nftActivityData).flat();
         setState(nftActivity)(allNftActivities);
 
         const _nftActivityStats = calculateNFTActivityStats(
           allNftActivities,
-          address,
+          addressInput,
         );
         // TODO: set nftActivityStats
         console.log('nftActivityStats:', _nftActivityStats);
@@ -457,12 +455,13 @@ export const useMagic = () => {
           onResetEvent: StateSubEvents.HowBasedAreYou.Idle,
         },
         async () => {
-          await fetchTalentPassportScore(addressInput);
-          await fetchActivityStats(addressInput);
-          await fetchMultichainTokenPortfolio(addressInput);
-          await fetchMultichainTokenActivity(addressInput);
-          await fetchMultichainNftPortfolio(addressInput);
-          await fetchMultichainNftActivity(addressInput);
+          const address = await getWalletAddress(addressInput);
+          await fetchTalentPassportScore(address);
+          await fetchActivityStats(address);
+          await fetchMultichainTokenPortfolio(address);
+          await fetchMultichainTokenActivity(address);
+          await fetchMultichainNftPortfolio(address);
+          await fetchMultichainNftActivity(address);
           await delayMs(1000);
         },
       );
