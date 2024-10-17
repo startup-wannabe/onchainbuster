@@ -109,11 +109,17 @@ export default function Instamint() {
           </div>
         </h1>
 
-        <button onClick={onMint} className={'bg-blue-500 hover:bg-blue-600'}>
+        <button
+          type="button"
+          onClick={onMint}
+          className={'bg-blue-500 hover:bg-blue-600'}
+        >
           Mint it!
         </button>
 
-        <button onClick={onViewMintTransaction}>View mint transaction</button>
+        <button type="button" onClick={onViewMintTransaction}>
+          View mint transaction
+        </button>
       </div>
     </>
   );
