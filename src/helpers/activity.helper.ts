@@ -37,6 +37,7 @@ export const calculateEVMStreaksAndMetrics = (
   const filteredTransactions = transactions.filter(
     (tx) => tx.from.toLowerCase() === address.toLowerCase(), // Filter from Txs only
   );
+  // TODO: Enhance filter logic to distinguish between from and to txs for activeDay
   if (filteredTransactions.length === 0) {
     return {
       totalTxs: 0,
@@ -82,7 +83,7 @@ export const calculateEVMStreaksAndMetrics = (
   longestStreakDays = Math.max(longestStreakDays, streak);
 
   return {
-    totalTxs: filteredTransactions.length,
+    totalTxs: transactions.length, // Revert to get all transaction
     firstActiveDay: firstTransactionDate,
     uniqueActiveDays: uniqueActiveDaysSet.size,
     longestStreakDays,
