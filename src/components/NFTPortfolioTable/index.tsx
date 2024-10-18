@@ -1,5 +1,4 @@
 import { formatNumberUSD } from '@/helpers/portfolio.helper';
-import { Address } from '@coinbase/onchainkit/identity';
 import { Avatar, Table } from '@radix-ui/themes';
 import ChainIcon from '../ChainIcon';
 
@@ -17,7 +16,7 @@ const NFTPortfolioTable = ({ nftPortfolio }: NFTPortfolioProps) => {
             <Table.ColumnHeaderCell>Items</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Chain</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Total Valuation</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Address</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Floor Price</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -44,9 +43,7 @@ const NFTPortfolioTable = ({ nftPortfolio }: NFTPortfolioProps) => {
                   <ChainIcon chainId={nft.chain} />
                 </Table.Cell>
                 <Table.Cell>{formatNumberUSD(nft.totalValue)}</Table.Cell>
-                <Table.Cell>
-                  <Address address={nft.collectionAddress as any} />
-                </Table.Cell>
+                <Table.Cell>{formatNumberUSD(nft.floorPrice)}</Table.Cell>
               </Table.Row>
             ))}
         </Table.Body>

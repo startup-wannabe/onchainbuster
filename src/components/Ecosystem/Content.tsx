@@ -58,14 +58,6 @@ export default function Content({
 
   return (
     <div className="flex min-h-32 w-full flex-col gap-10 pb-32">
-      <div className="flex flex-col justify-between gap-8 lg:flex-row lg:gap-12">
-        <div className="flex items-center justify-center">
-          <h3 className="mb-4 font-bold text-xl">
-            Since you are {firstTrait}, {secondTrait}, and {thirdTrait}, let's
-            discover {recommendedTag} products
-          </h3>
-        </div>
-      </div>
       <List apps={filteredEcosystemApps} />
     </div>
   );

@@ -5,7 +5,7 @@ type Props = ButtonProps & {
   textColor?: string;
   className?: string;
   loading?: boolean;
-  text: string;
+  text: string | React.ReactNode;
 };
 
 const MagicButton = (props: Props) => {

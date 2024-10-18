@@ -4,12 +4,10 @@ import ErrorImg from '/public/images/error.png';
 import ImageAdaptive from '../ImageAdaptive';
 import EcosystemCard from './Card';
 import type { EcosystemApp } from './Content';
+import AnimatedComponent from '../AnimatedComponent';
+import React from 'react';
 
-export function List({
-  apps,
-}: {
-  apps: EcosystemApp[];
-}) {
+export function List({ apps }: { apps: EcosystemApp[] }) {
   const showEmptyState = apps.length === 0;
   const truncatedApps = apps.slice(0, 3);
 

@@ -1,6 +1,5 @@
 import { useOnchainKit } from '@coinbase/onchainkit';
 import {
-  Address,
   Identity,
   Name,
   useAvatar,
@@ -9,12 +8,14 @@ import {
 import { createAvatar } from '@dicebear/core';
 import { thumbs } from '@dicebear/collection';
 import { useMemo } from 'react';
+import Address from '../Address';
 
 type Props = {
   address: `0x${string}`;
 };
 
 const ProfileCard = ({ address }: Props) => {
+  console.log(address);
   const { chain: contextChain } = useOnchainKit();
   const { data: name } = useName({
     address: address,
@@ -70,9 +71,14 @@ const ProfileCard = ({ address }: Props) => {
         className="px-4 pt-3 pb-2 flex justify-center items-center hover:bg-blue-300 bg-white"
         hasCopyAddressOnClick={true}
       >
-        <Name className="text-black text-3xl" />
+        {/* <Name className="text-black text-3xl" /> */}
       </Identity>
-      <Address address={address} className="text-black text-md" />
+      <Address
+        className="font-normal"
+        value={address}
+        truncated
+        truncatedLength={10}
+      />
     </div>
   );
 };

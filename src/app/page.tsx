@@ -37,7 +37,7 @@ export default function Page() {
           </div>
         </div>
       </section>
-      <section className="templateSection relative flex w-full h-[300px] mb-[20px] flex-col items-center justify-center gap-4 rounded-xl px-2 py-10 md:grow">
+      <section className="templateSection relative flex w-full h-[300px] mb-[0px] flex-col items-center justify-center gap-4 rounded-xl px-2 py-10 md:grow">
         <HowBasedAreYouHeader />
         <TextField.Root
           className="mr-2 w-full rounded-md p-2 shadow-xl"

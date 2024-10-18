@@ -27,7 +27,7 @@ export default function EcosystemCard({
   tags,
 }: Props) {
   return (
-    <Card innerClassName="p-4 group/ecosystem-card">
+    <Card innerClassName="p-4 shadow-xl bg-white group/ecosystem-card">
       <a
         href={url}
         rel="noreferrer noopener"

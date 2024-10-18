@@ -77,3 +77,16 @@ a {
 .templateSection > div {
   max-width: 100%;
 }
+
+.ant-modal.snap-action-modal .ant-modal-content {
+  border-radius: 0 !important;
+  border: none !important;
+  background-color: transparent !important;
+  position: absolute;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-shadow: none;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+}

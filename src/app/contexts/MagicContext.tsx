@@ -92,10 +92,17 @@ const defaultTalentPassportScore: TTalentPassportScore = {
   skills_score: 0,
 };
 
+export enum AppStage {
+  DisplayProfile = 0,
+  GetBased = 1,
+  MintNft = 2,
+}
+
 export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 export type UseState<T> = [T, SetState<T>];
 
 interface IMagicContext {
+  appStage: UseState<AppStage>;
   stateEvents: StateEventRegistry;
   setStateEvents: SetState<StateEventRegistry>;
   // Data analytics states
@@ -140,6 +147,7 @@ export const MagicProvider = ({ children }: Props) => {
   const MOCK_WALLET_ADDRESS = '0x294d404b2d2A46DAb65d0256c5ADC34C901A6842';
   const text = useState(MOCK_WALLET_ADDRESS);
 
+  const appStage = useState<AppStage>(AppStage.DisplayProfile);
   // All transactions and activity stats
   const allTransactions = useState<TEVMScanTransaction[]>([]);
   const activityStats = useState<TActivityStats>(defaultActivityStats);
@@ -182,6 +190,7 @@ export const MagicProvider = ({ children }: Props) => {
   return (
     <MagicContext.Provider
       value={{
+        appStage,
         stateEvents,
         setStateEvents,
 
