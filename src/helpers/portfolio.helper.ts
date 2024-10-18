@@ -1,3 +1,4 @@
+import { chainIDMap } from '@/constants/chains';
 import { TreeBuilder } from './tree.helper';
 
 const POPULAR_MEMES = [
@@ -159,20 +160,20 @@ export const buildTotalBalancePieChart = (
   tokenPortfolioStats: TTokenPortfolioStats,
   nftPortfolioStats: TNFTPortfolioStats,
 ): TPieChartData[] => {
-  return [
-    {
-      color: '#266EFF',
-      id: 'token',
-      label: 'ERC20 Tokens',
-      value: tokenPortfolioStats.sumPortfolioUSDValue,
-    },
-    {
-      color: '#92B6FF',
-      id: 'nft',
-      label: 'ERC721 Tokens',
-      value: nftPortfolioStats.sumPortfolioUSDValue,
-    },
-  ];
+  const data: TPieChartData[] = [];
+  for (const chain of Object.keys(tokenPortfolioStats.chainRecordsWithTokens)) {
+    data.push({
+      color: chainIDMap[chain].color,
+      id: chain,
+      label: chainIDMap[chain].name,
+      value: {
+        token: tokenPortfolioStats.chainRecordsWithTokens[chain]?.totalUSDValue,
+        nft:
+          nftPortfolioStats.chainRecordsWithTokens?.[chain]?.totalUSDValue || 0,
+      },
+    });
+  }
+  return data;
 };
 
 export const buildCircularPackingChart = (
@@ -200,6 +201,28 @@ export const formatNumberUSD = (num: number) => {
   });
 };
 
+export function formatNumberCompact(num: number, digits: number) {
+  const lookup = [
+    { value: 1, symbol: '' },
+    { value: 1e3, symbol: 'k' },
+    { value: 1e6, symbol: 'M' },
+    { value: 1e9, symbol: 'G' },
+    { value: 1e12, symbol: 'T' },
+    { value: 1e15, symbol: 'P' },
+    { value: 1e18, symbol: 'E' },
+  ];
+  const regexp = /\.0+$|(?<=\.[0-9]*[1-9])0+$/;
+  const item = lookup.findLast((item) => num >= item.value);
+  return `${
+    item
+      ? (num / item.value)
+          .toFixed(digits)
+          .replace(regexp, '')
+          .concat(item.symbol)
+      : '0'
+  }`;
+}
+
 export const calculateMultichainNFTPortfolio = (
   nftBalanceList: TNFTBalance[],
 ): TNFTPortfolioStats => {
@@ -217,8 +240,22 @@ export const calculateMultichainNFTPortfolio = (
         )
       : undefined;
 
+  const chainRecordsWithTokens: TChainRecordWithNfts = {};
+
+  for (const nft of nftBalanceList) {
+    chainRecordsWithTokens[nft.chain] = {
+      tokens: (chainRecordsWithTokens[nft.chain]?.tokens || []).concat(nft),
+      totalUSDValue:
+        (chainRecordsWithTokens[nft.chain]?.totalUSDValue || 0) +
+        nft.totalValue,
+    };
+  }
+
+  console.log('Here: ', chainRecordsWithTokens);
+
   return {
     sumPortfolioUSDValue,
     mostValuableNFTCollection,
+    chainRecordsWithTokens,
   };
 };

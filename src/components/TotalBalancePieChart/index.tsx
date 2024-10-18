@@ -2,7 +2,8 @@ import type React from 'react';
 
 import { formatNumberUSD } from '@/helpers/portfolio.helper';
 import { ResponsivePie } from '@nivo/pie';
-import { Box } from '@radix-ui/themes';
+import { Box, Separator } from '@radix-ui/themes';
+import ChainIcon from '../ChainIcon';
 
 type Props = {
   data: TPieChartData[];
@@ -12,15 +13,15 @@ type Props = {
   innerHidden?: boolean;
 };
 
-const margin = { top: 40, right: 40, bottom: 40, left: 40 };
+const margin = { top: 20, right: 20, bottom: 20, left: 20 };
 
 const styles: Record<string, React.CSSProperties> = {
   root: {
     fontFamily: 'consolas, sans-serif',
     textAlign: 'center',
     position: 'relative',
-    width: 300,
-    height: 280,
+    width: 250,
+    height: 250,
   },
   overlay: {
     position: 'absolute',
@@ -49,9 +50,13 @@ const TotalBalancePieChart = ({
       <ResponsivePie
         enableArcLabels={false}
         enableArcLinkLabels={false}
-        data={data}
+        data={data.map((d) => ({
+          ...d,
+          value: d.value.nft + d.value.token,
+          raw: d.value,
+        }))}
         margin={margin}
-        innerRadius={0.9}
+        innerRadius={0.7}
         padAngle={1}
         colors={data.map((item) => item.color)}
         cornerRadius={3}
@@ -59,11 +64,25 @@ const TotalBalancePieChart = ({
           tooltipHidden ? (
             <></>
           ) : (
-            <Box className="bg-white shadow-xl px-3 py-3 rounded-full">
-              {datum.label} :{' '}
-              <span className="font-bold">
-                {formatNumberUSD(datum.data.value)}
-              </span>
+            <Box className="bg-white shadow-xl px-3 py-3 rounded-xl">
+              <h1 className="text-md font-bold">
+                <ChainIcon chainId={datum.id as any} /> {datum.label}
+              </h1>
+              <Separator size={'4'} className="my-3" />
+              <div className="flex flex-col justify-start">
+                <div>
+                  Token:
+                  <span className="font-bold">
+                    {formatNumberUSD(datum.data.raw.token)}
+                  </span>
+                </div>
+                <div>
+                  NFT:
+                  <span className="font-bold">
+                    {formatNumberUSD(datum.data.raw.nft)}
+                  </span>
+                </div>
+              </div>
             </Box>
           )
         }

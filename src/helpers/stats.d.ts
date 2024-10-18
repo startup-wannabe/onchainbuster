@@ -42,6 +42,14 @@ type TChainRecordWithTokens = Record<
   }
 >;
 
+type TChainRecordWithNfts = Record<
+  string,
+  {
+    totalUSDValue: number;
+    tokens: TNFTBalance[];
+  }
+>;
+
 type TSymbolAggregationBalance = Record<string, TTokenDetails>;
 
 type TTokenPortfolioStats = {
@@ -61,6 +69,7 @@ type TTokenPortfolioStats = {
 type TNFTPortfolioStats = {
   sumPortfolioUSDValue: number;
   mostValuableNFTCollection: TNFTBalance | undefined;
+  chainRecordsWithTokens: TChainRecordWithNfts;
 };
 
 type TCircularTreeNode = {
@@ -130,6 +139,9 @@ type TNumberInMillisecond = number;
 type TPieChartData = {
   id: string;
   label: string;
-  value: number;
+  value: {
+    nft: number;
+    token: number;
+  };
   color: string;
 };

@@ -1,28 +1,78 @@
+import { useOnchainKit } from '@coinbase/onchainkit';
 import {
   Address,
-  Avatar,
-  EthBalance,
   Identity,
   Name,
+  useAvatar,
+  useName,
 } from '@coinbase/onchainkit/identity';
+import { createAvatar } from '@dicebear/core';
+import { thumbs } from '@dicebear/collection';
+import { useMemo } from 'react';
 
 type Props = {
   address: `0x${string}`;
 };
 
 const ProfileCard = ({ address }: Props) => {
+  const { chain: contextChain } = useOnchainKit();
+  const { data: name } = useName({
+    address: address,
+    chain: contextChain,
+  });
+  const { data: avatar, isLoading: isLoadingAvatar } = useAvatar(
+    { ensName: name ?? '', chain: contextChain },
+    { enabled: !!name },
+  );
+  const randomAvatar = useMemo(() => {
+    return createAvatar(thumbs, {
+      size: 128,
+      seed: address,
+      rotate: 60,
+      backgroundColor: [
+        '0a5b83',
+        '1c799f',
+        '69d2e7',
+        'b6e3f4',
+        'c0aede',
+        'd1d4f9',
+        'f1f4dc',
+        'ffd5dc',
+        'ffdfbf',
+      ],
+      backgroundType: ['solid', 'gradientLinear'],
+      eyesColor: ['ffffff'],
+      mouthColor: ['ffffff'],
+      shapeColor: ['0a5b83', '1c799f', '69d2e7'],
+    }).toDataUri();
+  }, [address]);
   return (
-    <div className="h-full w-[fit] rounded-3xl py-3 px-4 text-black">
+    <div className="h-full w-[fit] items-center flex justify-center flex-col text-black">
+      <div className="mb-3">
+        {avatar && isLoadingAvatar ? (
+          <img
+            src={avatar}
+            alt="avatar"
+            className="shadow-md"
+            style={{ width: 200, height: 200, borderRadius: '20px' }}
+          />
+        ) : (
+          <img
+            src={randomAvatar}
+            alt="avatar"
+            className="shadow-md"
+            style={{ width: 200, height: 200, borderRadius: '20px' }}
+          />
+        )}
+      </div>
       <Identity
         address={address}
-        className="px-4 pt-3 pb-2 hover:bg-blue-300 bg-white"
+        className="px-4 pt-3 pb-2 flex justify-center items-center hover:bg-blue-300 bg-white"
         hasCopyAddressOnClick={true}
       >
-        <Avatar className="h-[200px] w-[200px] mr-5" />
-        <Name className="text-black text-4xl" />
-        <Address className="text-black text-2xl" />
-        <EthBalance className="text-black text-2xl font-bold" />
+        <Name className="text-black text-3xl" />
       </Identity>
+      <Address address={address} className="text-black text-md" />
     </div>
   );
 };

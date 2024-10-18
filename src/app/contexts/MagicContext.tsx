@@ -59,6 +59,7 @@ const defaultNftPortfolioStats: TNFTPortfolioStats = {
     totalValue: 0,
   },
   sumPortfolioUSDValue: 0,
+  chainRecordsWithTokens: {},
 };
 
 const defaultChainStats: TChainStats = {
