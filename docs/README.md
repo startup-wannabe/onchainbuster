@@ -1,6 +1,6 @@
 ## Overview
 
-_Touch on theory, concept about personal references, trait been built on a specrum ==> Speculate as such on a Web3 wallet to indicate the behaviors_
+_Touch on theory, concept about personal references, trait been built on a spectrum ==> Speculate as such on a Web3 wallet to indicate the behaviors_
 
 According to [Statista](https://www.statista.com/topics/9088/cryptocurrencies-in-vietnam/#topicOverview), Vietnam has consistently ranked among the top three globally for crypto adoption since 2021, highlighting the growing presence of cryptocurrency within local communities. Despite this, the understanding and on-chain usage among Vietnamese users are often limited to local protocols or well-known global projects.
 For most on-chain users in Vietnam, primarily retail and non-tech investors, the overwhelming amount of technical documentation and overload information across ecosystem platforms makes it difficult to explore new blockchain networks independently. This creates a barrier to entry, limiting broader adoption and understanding within the community.
@@ -8,7 +8,7 @@ Thus OnchainBuster is born with a mission: **_‘How can users from other blockc
 
 ## Findings
 
-In the academic field, there has been a growing number of studies on individual interests and their relationship to learning and exploring new concepts ([Shannon & Richard 1997](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=9b479da552270759001211c073aedb9d193475f2), [Tai-wa et.al 2018](https://link.springer.com/article/10.1007/s40692-018-0122-0)). Research on young adults and Asian students has indicated that well-focused individual interests can serve as significant positive determinants of attention, recognition, and recall ([Krapp 1999](https://www.researchgate.net/profile/Andreas-Krapp-2/publication/233896476_Interest_learning_and_development/links/57d90dc508ae601b39b0a8df/Interest-learning-and-development.pdf), [Hidi 2001]()).
+In the academic field, there has been a growing number of studies on individual interests and their relationship to learning and exploring new concepts ([Shannon & Richard 1997](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=9b479da552270759001211c073aedb9d193475f2), [Tai-wa et.al 2018](https://link.springer.com/article/10.1007/s40692-018-0122-0)). Research on young adults and Asian students has indicated that well-focused individual interests can serve as significant positive determinants of attention, recognition, and recall ([Krapp 1999](https://www.researchgate.net/profile/Andreas-Krapp-2/publication/233896476_Interest_learning_and_development/links/57d90dc508ae601b39b0a8df/Interest-learning-and-development.pdf), [Arikpo & Grace 2015](https://files.eric.ed.gov/fulltext/EJ1079106.pdf)).
 While customer surveys are a widely used tool in marketing and customer insights, there are concerns that they only reflect the subjective opinions of an individual's conscious thoughts. Therefore, utilizing a user's on-chain data footprint can capture both conscious and subconscious behaviors, providing more accurate recommendations.
 
 Therefore, we have theorized that **_tailored guidance and recommendations based on a user's previous onchain footprints can significantly support their process of exploring a new ecosystem, particularly Base in this case_**.
@@ -42,7 +42,7 @@ A specific description of each category is provided below:
 
 ### Recommendation Computation
 
-1. Drawing from base.org/names, we apply weighted computation to on-chain metrics that likely reflect specific traits. For example, a "degen" user would have a high percentage of memecoins in their token balance or is more likely to interact with newly created token contracts within the last 12 months.
+1. Drawing from [Basename](https://www.base.org/names) [ENS](https://ens.domains/), [OneID](https://www.oneid.xyz/), or any wallet address, we apply weighted computation to on-chain metrics that likely reflect specific traits. For example, a "degen" user would have a high percentage of memecoins in their token balance or is more likely to interact with newly created token contracts within the last 12 months.
 2. After calculating the weights for each metric, we tested the formulas with a sample of 15 wallets within our network and adjusted the weights to improve the logic and accuracy of the predictions.
 3. Once the wallet traits are determined, the system matches category recommendations to the most prominent trait pillar of the wallet owner. For instance, a DeFi-oriented user exhibiting "degen" behavior might be recommended to explore SocialFi on Base, which has access to the latest memecoin news and market sentiment.
 

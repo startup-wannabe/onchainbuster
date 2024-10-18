@@ -1,5 +1,7 @@
 # Buildathon DEVLOG
 
+This DEVLOG includes the initial development process of this project during [Based SEA Buildathon ](https://based-sea.devfolio.co/) participation.
+
 ---
 
 ## 2024-10-07
