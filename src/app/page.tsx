@@ -76,19 +76,15 @@ export default function Page() {
             />
           </TextField.Slot>
         </TextField.Root>
-        <h3 className="mt-4 font-bold text-md">View Profile Samples</h3>
-        <ToggleGroup.Root
-          className="ToggleGroup mt-2"
-          type="single"
-          defaultValue={selectState(exampleProfile)}
-          onValueChange={(value) => setExampleProfile(value)}
-          aria-label="Text alignment"
-        >
-          {MOCK_PROFILES.map((profile) => (
-            <ToggleGroup.Item
-              key={profile.name}
-              className="ToggleGroupItem"
-              value={profile.name}
+        {!stateCheck('HowBasedAreYou', ThreeStageState.Finished) && (
+          <React.Fragment>
+            <h3 className="mt-4 font-bold text-md">View Profile Samples</h3>
+            <ToggleGroup.Root
+              className="ToggleGroup mt-2"
+              type="single"
+              defaultValue={selectState(exampleProfile)}
+              onValueChange={(value) => setExampleProfile(value)}
+              aria-label="Text alignment"
             >
               <div className="px-5">{profile.name}</div>
             </ToggleGroup.Item>

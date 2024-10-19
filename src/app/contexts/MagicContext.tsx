@@ -160,9 +160,7 @@ export const MagicProvider = ({ children }: Props) => {
   });
 
   const inputAddress = useState("");
-  // TODO: REMOVE when we're done.
-  const MOCK_WALLET_ADDRESS = "0x6A62d8402ABf362569Ed8eC3b2E78D8b74c9E15b";
-  const text = useState(MOCK_WALLET_ADDRESS);
+  const text = useState("");
 
   const appStage = useState<AppStage>(AppStage.DisplayProfile);
   // All transactions and activity stats
