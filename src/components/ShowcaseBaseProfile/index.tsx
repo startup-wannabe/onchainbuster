@@ -61,7 +61,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 <MagicButton
                   text={
                     <span className="flex justify-center gap-2 items-center">
-                      <ArrowLeftIcon /> View Profle Stats
+                      <ArrowLeftIcon /> View Profile Stats
                     </span>
                   }
                   onClick={() => setState(appStage)(AppStage.DisplayProfile)}

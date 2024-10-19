@@ -1,24 +1,25 @@
+import { BackgroundVariant } from '@/app/contexts/MagicContext';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
 import { useMagicTraits } from '@/app/hooks/useMagicTraits';
+import { supportedDappMetadata } from '@/constants/dapps';
 import { selectState, setState } from '@/helpers';
+import { formatDuration } from '@/helpers/activity.helper';
 import {
   buildTotalBalancePieChart,
   formatNumberCompact,
   formatNumberUSD,
 } from '@/helpers/portfolio.helper';
-import { Box, Grid } from '@radix-ui/themes';
-import React, { useEffect, useMemo } from 'react';
-import DecorativeCard from '../DecorativeCard';
-import ChainIcon from '../ChainIcon';
-import ProfileCard from '../ProfileCard';
 import { UserTrait } from '@/helpers/trait.helper';
+import { Box, Grid } from '@radix-ui/themes';
+import Image from 'next/image';
+import React, { useEffect, useMemo } from 'react';
+import ChainIcon from '../ChainIcon';
+import DecorativeCard from '../DecorativeCard';
+import FetchingStatusOverlay from '../FetchingStatusOverlay';
+import ImageAdaptive from '../ImageAdaptive';
+import ProfileCard from '../ProfileCard';
 import ProgressBar from '../ProgressBar';
 import TotalBalancePieChart from '../TotalBalancePieChart';
-import { supportedDappMetadata } from '@/constants/dapps';
-import Image from 'next/image';
-import { formatDuration } from '@/helpers/activity.helper';
-import FetchingStatusOverlay from '../FetchingStatusOverlay';
-import { BackgroundVariant } from '@/app/contexts/MagicContext';
 
 type Props = {
   style?: React.CSSProperties;
@@ -58,6 +59,11 @@ const MagicBaseGridCard = ({ style }: Props) => {
     [selectState(tokenPortfolioStats)],
   );
 
+  const { mostValuableNFTCollection } = useMemo(
+    () => selectState(nftPortfolioStats),
+    [selectState(nftPortfolioStats)],
+  );
+
   const mostActiveDappInteraction = useMemo<TDappInteraction>(() => {
     let currentDappInteraction: TDappInteraction = {
       name: 'Unknown',
@@ -86,7 +92,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
     });
   }, [innerRef]);
   return (
-    <React.Fragment>
+    <>
       <div
         id="MagicBaseGridCard"
         ref={innerRef}
@@ -135,7 +141,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
                   {selectState(chainStats).countUniqueDaysActiveChain} unique
                   days
                 </span>{' '}
-                on Ethereum.
+                on {selectState(chainStats).mostActiveChainName}.
               </h2>
             </DecorativeCard>
           </Grid>
@@ -203,7 +209,10 @@ const MagicBaseGridCard = ({ style }: Props) => {
             </TotalBalancePieChart>
             <div className="flex flex-wrap justify-center gap-2 px-3">
               {totalBalancePieChart.map((data) => (
-                <div className="border border-palette-line/20 flex gap-2 shadow-xl rounded-xl py-1 px-2 justify-center items-center">
+                <div
+                  key={data.id}
+                  className="border border-palette-line/20 flex gap-2 shadow-xl rounded-xl py-1 px-2 justify-center items-center"
+                >
                   <div
                     className="rounded-xl"
                     style={{
@@ -242,7 +251,9 @@ const MagicBaseGridCard = ({ style }: Props) => {
               <div className="text-center text-lg">
                 You interacted with {mostActiveDappInteraction.name}{' '}
                 <span className="font-bold">
-                  {mostActiveDappInteraction.count} this year.
+                  {mostActiveDappInteraction.count}{' '}
+                  {mostActiveDappInteraction.count === 1 ? 'time' : 'times'}{' '}
+                  since onchain.
                 </span>
               </div>
             </DecorativeCard>
@@ -287,11 +298,11 @@ const MagicBaseGridCard = ({ style }: Props) => {
           </Grid>
           <Grid gridRow={'3 / span 2'} gridColumn={'4'} width="auto">
             <DecorativeCard className="px-5 py-5 flex flex-col items-center justify-center">
-              {mostValuableToken && (
+              {/* {mostValuableToken && (
                 <div className="flex flex-col gap-3 items-center justify-center">
                   <h2>Most valuable onchain asset</h2>
                   <div className="flex">
-                    <img
+                    <ImageAdaptive
                       style={{
                         width: 30,
                         height: 30,
@@ -301,7 +312,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
                       className="mr-1 inline-block h-6 w-6 rounded-full"
                     />
                     <h1 className="font-bold text-2xl">
-                      {mostValuableToken.name.toUpperCase()} (
+                      {toCapitalize(mostValuableToken.name)} (
                       {mostValuableToken.symbol})
                     </h1>
                   </div>
@@ -313,13 +324,39 @@ const MagicBaseGridCard = ({ style }: Props) => {
                     in total
                   </span>
                 </div>
+              )} */}
+              {mostValuableNFTCollection && (
+                <div className="flex flex-col gap-3 items-center justify-center">
+                  <h2>Most valuable onchain asset</h2>
+                  <ImageAdaptive
+                    style={{
+                      width: 100,
+                      height: 100,
+                    }}
+                    src={mostValuableNFTCollection.collectionImage}
+                    alt={`${mostValuableNFTCollection.collectionImage} logo`}
+                    className="mr-1 inline-block h-6 w-6 "
+                  />
+
+                  <h1 className="font-bold text-2xl text-center">
+                    {mostValuableNFTCollection.collectionName}
+                  </h1>
+
+                  <span>
+                    Worth&nbsp;
+                    <span className="font-bold">
+                      {formatNumberUSD(mostValuableNFTCollection.totalValue)}
+                    </span>{' '}
+                    in total
+                  </span>
+                </div>
               )}
             </DecorativeCard>
           </Grid>
         </Grid>
         <FetchingStatusOverlay container={false} />
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

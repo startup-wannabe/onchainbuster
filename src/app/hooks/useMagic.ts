@@ -341,11 +341,16 @@ export const useMagic = () => {
           return findLongestHoldingToken(chain, activities, addressInput);
         });
 
+        console.log('longestHoldingTokenByChain', longestHoldingTokenByChain);
+
         const _longestHoldingToken = longestHoldingTokenByChain.reduce(
           (prev, current) => {
             return prev.duration > current.duration ? prev : current;
           },
         );
+
+        console.log('_longestHoldingToken', _longestHoldingToken);
+
         if (_longestHoldingToken.duration === 0) {
           console.log("You don't have any asset yet!");
         } else {
@@ -353,6 +358,8 @@ export const useMagic = () => {
             `You've been loyal in holding ${_longestHoldingToken.symbol} at ${_longestHoldingToken.chain} for over ${formatDuration(_longestHoldingToken.duration)}`,
           );
         }
+
+        // TODO: Handle no token hold?
         setState(longestHoldingToken)(_longestHoldingToken);
 
         // TODO ---- Can we reuse the market data previously fetched?
@@ -456,12 +463,12 @@ export const useMagic = () => {
         },
         async () => {
           const address = await getWalletAddress(addressInput);
-          await fetchTalentPassportScore(address);
+          // await fetchTalentPassportScore(address);
           await fetchActivityStats(address);
-          await fetchMultichainTokenPortfolio(address);
+          // await fetchMultichainTokenPortfolio(address);
           await fetchMultichainTokenActivity(address);
-          await fetchMultichainNftPortfolio(address);
-          await fetchMultichainNftActivity(address);
+          // await fetchMultichainNftPortfolio(address);
+          // await fetchMultichainNftActivity(address);
           await delayMs(1000);
         },
       );

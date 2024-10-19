@@ -1,7 +1,7 @@
-import React from 'react';
-import Content from '../Ecosystem/Content';
 import { useMagicTraits } from '@/app/hooks/useMagicTraits';
-import { UserTrait, getBaseTraits } from '@/helpers/trait.helper';
+import { type UserTrait, getBaseTraits } from '@/helpers/trait.helper';
+import { toCapitalize } from '@/utils/strings';
+import Content from '../Ecosystem/Content';
 
 type Props = {};
 
@@ -27,11 +27,13 @@ const BaseProfilePicks = (props: Props) => {
           Since you are {defitOrArtTraitResult.trait},{' '}
           {degenOrDiamondHandResult.trait}, and{' '}
           {originalBuilderOrMultichainCitizen.trait}, let's discover{' '}
-          {getBaseTraits([
-            defitOrArtTraitResult.trait,
-            degenOrDiamondHandResult.trait,
-            originalBuilderOrMultichainCitizen.trait,
-          ] as UserTrait[])}{' '}
+          {toCapitalize(
+            getBaseTraits([
+              defitOrArtTraitResult.trait,
+              degenOrDiamondHandResult.trait,
+              originalBuilderOrMultichainCitizen.trait,
+            ] as UserTrait[]),
+          )}{' '}
           products
         </h3>
       </div>

@@ -2,6 +2,7 @@
 
 import type React from 'react';
 import { type CSSProperties, useEffect, useId, useRef } from 'react';
+import DecorativeCard from '../DecorativeCard';
 import { useCards } from './context';
 
 type HoverShimmerProps = {
@@ -17,7 +18,6 @@ export default function Card({
   innerClassName,
   radius = 16,
 }: HoverShimmerProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
   const blobRef = useRef<HTMLDivElement>(null);
   const fakeBlobRef = useRef<HTMLDivElement>(null);
 
@@ -36,10 +36,6 @@ export default function Card({
   */
   const cardClasses = `card overflow-hidden p-[1px] m-0 bg-white/20 relative ${wrapperClassName} w-full`;
 
-  const cardStyles: CSSProperties = {
-    borderRadius: `${radius}px`,
-  };
-
   const blobClasses =
     'blob blur-[40px] z-10 absolute opacity-0 w-[30rem] h-[30rem] rounded-full bg-[rgb(255,255,255,0.2)]';
 
@@ -52,12 +48,12 @@ export default function Card({
   };
 
   return (
-    <div className={cardClasses} ref={cardRef} style={cardStyles}>
+    <DecorativeCard className={cardClasses}>
       <div className={innerClasses} style={innerStyles}>
         {children}
       </div>
       <div className={blobClasses} ref={blobRef} />
       <div className={fakeBlobClasses} ref={fakeBlobRef} />
-    </div>
+    </DecorativeCard>
   );
 }
