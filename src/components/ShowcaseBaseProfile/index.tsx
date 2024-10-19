@@ -5,6 +5,7 @@ import { ThreeStageState } from "@/app/state.type";
 import { makeid, selectState, setState } from "@/helpers";
 import { ArrowLeftIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { Spinner } from "@radix-ui/themes";
+import { ConnectButton as ConnectButtonRainbowKit } from "@rainbow-me/rainbowkit";
 import { Alert } from "antd";
 import React, { useRef, useState } from "react";
 import { useAccount } from "wagmi";
@@ -95,10 +96,10 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 }}
                 type="button"
                 style={{ borderRadius: 30 }}
-                className="shadow-xl py-2 px-5 hover:bg-blue-500 hover:text-white"
+                className="shadow-xl py-2 px-5 hover:bg-blue-500 hover:text-white cursor-pointer"
               >
                 {address ? (
-                  <React.Fragment>
+                  <>
                     {stateCheck(
                       "MintProfileNft",
                       ThreeStageState.InProgress
@@ -111,11 +112,22 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                         Collect your profile 🤗
                       </span>
                     )}
-                  </React.Fragment>
+                  </>
                 ) : (
-                  <span className="flex justify-center gap-2 items-center">
-                    No wallet connected 😢
-                  </span>
+                  <ConnectButtonRainbowKit.Custom>
+                    {({ openConnectModal }) => (
+                      // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+                      <div
+                        className="flex"
+                        data-testid="ockConnectWallet_Container"
+                        onClick={() => openConnectModal()}
+                      >
+                        <span className="flex justify-center gap-2 items-center">
+                          No wallet connected 😢
+                        </span>
+                      </div>
+                    )}
+                  </ConnectButtonRainbowKit.Custom>
                 )}
               </button>
             )}
@@ -125,7 +137,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 onClick={() => setState(appStage)(AppStage.GetBased)}
                 type="button"
                 style={{ width: 250, borderRadius: 30 }}
-                className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-400 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                className="cursor-pointer text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-400 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
               >
                 <span className="flex justify-center gap-2 items-center text-xl ">
                   🚀 Get Based
@@ -138,7 +150,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 onClick={() => viewDetails()}
                 type="button"
                 style={{ borderRadius: 30 }}
-                className="shadow-xl py-2 px-5 hover:bg-blue-500 hover:text-white"
+                className="shadow-xl py-2 px-5 hover:bg-blue-500 hover:text-white cursor-pointer"
               >
                 <span className="flex justify-center gap-2 items-center">
                   <EyeOpenIcon /> View Details
