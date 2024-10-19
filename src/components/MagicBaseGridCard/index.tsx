@@ -10,7 +10,9 @@ import {
   formatNumberUSD,
 } from '@/helpers/portfolio.helper';
 import { UserTrait } from '@/helpers/trait.helper';
+import { toCapitalize } from '@/utils/strings';
 import { Box, Grid } from '@radix-ui/themes';
+import moment from 'moment';
 import Image from 'next/image';
 import React, { useEffect, useMemo } from 'react';
 import ChainIcon from '../ChainIcon';
@@ -20,8 +22,6 @@ import ImageAdaptive from '../ImageAdaptive';
 import ProfileCard from '../ProfileCard';
 import ProgressBar from '../ProgressBar';
 import TotalBalancePieChart from '../TotalBalancePieChart';
-import moment from 'moment';
-import { toCapitalize } from '@/utils/strings';
 
 type Props = {
   style?: React.CSSProperties;
@@ -253,18 +253,35 @@ const MagicBaseGridCard = ({ style }: Props) => {
                   className="shadow-xl"
                 />
               )}
-              <h1 className="font-bold text-3xl">
-                {mostActiveDappInteraction.name}
-              </h1>
-              <h2 className="text-xl">Most active protocol</h2>
-              <div className="text-center text-lg">
-                You interacted with {mostActiveDappInteraction.name}{' '}
-                <span className="font-bold">
-                  {mostActiveDappInteraction.count}{' '}
-                  {mostActiveDappInteraction.count === 1 ? 'time' : 'times'}{' '}
-                  since onchain.
-                </span>
-              </div>
+              {mostActiveDappInteraction.count === 0 ? (
+                <>
+                  <Image
+                    src={'/images/error.png'}
+                    alt={'not-found'}
+                    width={80}
+                    height={80}
+                    className="shadow-xl"
+                  />
+                  <div className="text-center text-lg">
+                    You have not interacted with any protocol yet!
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h1 className="font-bold text-3xl text-center">
+                    {mostActiveDappInteraction.name}
+                  </h1>
+                  <h2 className="text-xl">Most active protocol</h2>
+                  <div className="text-center text-lg">
+                    You interacted with {mostActiveDappInteraction.name}{' '}
+                    <span className="font-bold">
+                      {mostActiveDappInteraction.count}{' '}
+                      {mostActiveDappInteraction.count === 1 ? 'time' : 'times'}{' '}
+                      since onchain.
+                    </span>
+                  </div>
+                </>
+              )}
             </DecorativeCard>
           </Grid>
           <DecorativeCard className="text-center flex flex-col justify-center px-5 py-5">

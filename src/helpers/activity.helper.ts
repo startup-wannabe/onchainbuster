@@ -49,22 +49,23 @@ export const calculateEVMStreaksAndMetrics = (
   const filteredTransactions = transactions.filter(
     (tx) => tx.from.toLowerCase() === address.toLowerCase(), // Filter from Txs only
   );
+
+  const timestamps = transactions.map((tx) =>
+    Number.parseInt(tx.timeStamp, 10),
+  );
+  const firstTransactionDate = new Date(Math.min(...timestamps) * 1000);
+
   // TODO: Enhance filter logic to distinguish between from and to txs for activeDay
   if (filteredTransactions.length === 0) {
     return {
       totalTxs: 0,
-      firstActiveDay: null,
+      firstActiveDay: firstTransactionDate,
       uniqueActiveDays: 0,
       longestStreakDays: 0,
       currentStreakDays: 0,
       activityPeriod: 0,
     };
   }
-
-  const timestamps = filteredTransactions.map((tx) =>
-    Number.parseInt(tx.timeStamp, 10),
-  );
-  const firstTransactionDate = new Date(Math.min(...timestamps) * 1000);
   const lastTransactionDate = new Date(Math.max(...timestamps) * 1000);
 
   const uniqueActiveDaysSet = new Set(
