@@ -1,5 +1,7 @@
 export const BASE_SEPOLIA_CHAIN_ID = 84532;
-export const mintContractAddress = '0xA3e40bBe8E8579Cd2619Ef9C6fEA362b760dac9f';
+
+// TODO: Change to official NFT contract later
+export const mintContractAddress = '0x0e3193772aef408843a68cd17F9bb70E9dab7cc5';
 export const mintABI = [
   {
     inputs: [
@@ -8,10 +10,15 @@ export const mintABI = [
         name: 'to',
         type: 'address',
       },
+      {
+        internalType: 'string',
+        name: 'uri',
+        type: 'string',
+      },
     ],
-    name: 'mint',
+    name: 'safeMint',
     outputs: [],
-    stateMutability: 'public',
+    stateMutability: 'nonpayable',
     type: 'function',
   },
 ] as const;
