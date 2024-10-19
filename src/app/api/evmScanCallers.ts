@@ -1,19 +1,19 @@
-import { BNB_METADATA, ETH_METADATA } from "@/constants/token";
+import { BNB_METADATA, ETH_METADATA } from '@/constants/token';
 
 export const listEVMScanTransactions = async (
   address: string,
   chain: string,
-  action = "txlist"
+  action = 'txlist',
 ) => {
-  if (address === "") {
+  if (address === '') {
     return [];
   }
 
   const data = await fetch(
     `/api/evmscan/activity?address=${address}&chain=${chain}&action=${action}`,
     {
-      method: "GET",
-    }
+      method: 'GET',
+    },
   );
 
   const res = await data.json();
@@ -22,15 +22,15 @@ export const listEVMScanTransactions = async (
 };
 
 export const getEVMScanBalance = async (address: string, chain: string) => {
-  if (address === "") {
+  if (address === '') {
     return [];
   }
 
   const data = await fetch(
     `/api/evmscan/account?address=${address}&chain=${chain}`,
     {
-      method: "GET",
-    }
+      method: 'GET',
+    },
   );
 
   const res = await data.json();
@@ -41,17 +41,17 @@ export const getEVMScanBalance = async (address: string, chain: string) => {
     {
       chain: chain.toLowerCase(),
       name:
-        chain.toUpperCase() === "BSC" ? BNB_METADATA.name : ETH_METADATA.name,
+        chain.toUpperCase() === 'BSC' ? BNB_METADATA.name : ETH_METADATA.name,
       symbol:
-        chain.toUpperCase() === "BSC"
+        chain.toUpperCase() === 'BSC'
           ? BNB_METADATA.symbol
           : ETH_METADATA.symbol,
       decimals:
-        chain.toUpperCase() === "BSC"
+        chain.toUpperCase() === 'BSC'
           ? BNB_METADATA.decimals
           : ETH_METADATA.decimals,
       logoURI:
-        chain.toUpperCase() === "BSC"
+        chain.toUpperCase() === 'BSC'
           ? BNB_METADATA.logoURI
           : ETH_METADATA.logoURI,
       tokenBalance: (evmResp.result as any as number) / 10 ** 18,
@@ -62,13 +62,13 @@ export const getEVMScanBalance = async (address: string, chain: string) => {
 export const listEVMScanTokenActivity = async (
   address: string,
   chain: string,
-  limit = 100
+  limit = 100,
 ) => {
-  if (address === "") {
+  if (address === '') {
     return [];
   }
 
-  const action = "tokentx";
+  const action = 'tokentx';
   let token: TEVMScanTokenActivity[] = [];
 
   let offset = 0;
@@ -78,8 +78,8 @@ export const listEVMScanTokenActivity = async (
     const data = await fetch(
       `/api/evmscan/token?address=${address}&chain=${chain}&action=${action}&limit=${limit}&offset=${offset}`,
       {
-        method: "GET",
-      }
+        method: 'GET',
+      },
     );
 
     const res = await data.json();
@@ -89,7 +89,8 @@ export const listEVMScanTokenActivity = async (
 
     // Ensure no duplicates are added to the nft array
     const uniqueResults = evmScanResp.result.filter(
-      (item) => !token.some((existingItem) => existingItem.hash === item.hash)
+      (item: any) =>
+        !token.some((existingItem) => existingItem.hash === item.hash),
     );
     token = token.concat(uniqueResults as TEVMScanTokenActivity[]);
 
@@ -119,13 +120,13 @@ export const listEVMScanTokenActivity = async (
 export const listEVMScanNFTActivity = async (
   address: string,
   chain: string,
-  limit = 100
+  limit = 100,
 ) => {
-  if (address === "") {
+  if (address === '') {
     return [];
   }
 
-  const action = "tokennfttx";
+  const action = 'tokennfttx';
   let nft: TEVMScanTokenActivity[] = [];
 
   let offset = 0;
@@ -135,8 +136,8 @@ export const listEVMScanNFTActivity = async (
     const data = await fetch(
       `/api/evmscan/token?address=${address}&chain=${chain}&action=${action}&limit=${limit}&offset=${offset}`,
       {
-        method: "GET",
-      }
+        method: 'GET',
+      },
     );
 
     const res = await data.json();
@@ -146,7 +147,8 @@ export const listEVMScanNFTActivity = async (
 
     // Ensure no duplicates are added to the nft array
     const uniqueResults = evmScanResp.result.filter(
-      (item) => !nft.some((existingItem) => existingItem.hash === item.hash)
+      (item: any) =>
+        !nft.some((existingItem) => existingItem.hash === item.hash),
     );
     nft = nft.concat(uniqueResults as TEVMScanTokenActivity[]);
 

@@ -12,7 +12,7 @@ import BaseProfileDetailView from '../BaseProfileDetailView';
 import BaseProfilePicks from '../BaseProfilePicks';
 import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
 import MagicButton from '../MagicButton';
-import FetchingStatusOverlay from '../FetchingStatusOverlay';
+import { Alert } from 'antd';
 
 type Props = {
   addressInput: string;
@@ -25,6 +25,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     query: { stateCheck },
     mutate: { mintNft },
   } = useMagic();
+  const [tokenId, setTokenId] = useState<string | undefined>(undefined);
   const [detailShown, setDetailShown] = useState(false);
   const { appStage, nftTemplateSetting } = useMagicContext();
 
@@ -45,7 +46,23 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
               className="text-xl"
             />
           )}
-        <div className="flex gap-4 justify-center items-center">
+        {stateCheck('MintProfileNft', ThreeStageState.Finished) && tokenId && (
+          <Alert
+            showIcon
+            type="success"
+            className="rounded-3xl"
+            message={
+              <a
+                className="font-bold cursor-pointer flex justify-center items-center gap-4"
+                href={`https://testnets.opensea.io/assets/base-sepolia/0x0e3193772aef408843a68cd17f9bb70e9dab7cc5/${tokenId}`}
+              >
+                Profile is collected and live on Opensea. See it now!{' '}
+                <EyeOpenIcon />
+              </a>
+            }
+          />
+        )}
+        <div className="flex gap-4 justify-center items-center mt-3">
           {selectState(appStage) === AppStage.GetBased &&
             !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
               <MagicButton
@@ -62,7 +79,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
               <button
                 onClick={async () => {
                   if (!address) return;
-                  await mintNft(
+                  const data = await mintNft(
                     selectState(nftTemplateSetting).ref,
                     `${address}-${makeid(3)}.png`,
                     address,
@@ -70,6 +87,9 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                       console.log(data);
                     },
                   );
+                  if (!data) return;
+                  console.log(data);
+                  setTokenId(data.tokenId);
                 }}
                 type="button"
                 style={{ borderRadius: 30 }}
@@ -135,7 +155,6 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           {bottomAnchor && <div ref={bottomAnchor as any}></div>}
         </React.Fragment>
       )}
-      <FetchingStatusOverlay container={false} />
     </section>
   );
 };

@@ -2,7 +2,7 @@
 import { MIDDLE_STYLE, useBreakpoint } from '@/app/hooks/useBreakpoint';
 import { useMagic } from '@/app/hooks/useMagic';
 import { ThreeStageState } from '@/app/state.type';
-import * as animationData from '@/assets/animation/pink-loading.json';
+import * as animationData from '@/assets/animation/loading.json';
 import { Modal } from 'antd';
 import Lottie from 'react-lottie';
 

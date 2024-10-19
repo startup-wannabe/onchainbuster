@@ -16,7 +16,6 @@ type Props = {
 };
 
 const ProfileCard = ({ address }: Props) => {
-  console.log(address);
   const { chain: contextChain } = useOnchainKit();
   const { data: name } = useName({
     address: address,

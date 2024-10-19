@@ -47,6 +47,7 @@ import { useMagicContext } from './useMagicContext';
 import { AppStage, IMagicContext } from '../contexts/MagicContext';
 import moment from 'moment';
 import { MOCK_PROFILES } from '@/data/mocks';
+import { listEVMScanNFTActivity } from '../api/evmScanCallers';
 
 export const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
@@ -505,61 +506,73 @@ export const useMagic = () => {
     toAddress: string,
     onMinted: (response: MintResponse) => void,
   ) => {
-    try {
-      setState(exampleProfile)(undefined);
-      await newAsyncDispatch(
-        StateEvent.MintProfileNft,
-        {
-          onStartEvent: StateSubEvents.MintProfileNft.InProgress,
-          onErrorEvent: {
-            value: StateSubEvents.MintProfileNft.Idle,
-            toast: 'Failed to mint your profile NFT!',
-          },
-          onFinishEvent: {
-            value: StateSubEvents.MintProfileNft.Finished,
-            toast: 'NFT Minted!',
-          },
-          onResetEvent: StateSubEvents.MintProfileNft.Idle,
+    return newAsyncDispatch(
+      StateEvent.MintProfileNft,
+      {
+        onStartEvent: StateSubEvents.MintProfileNft.InProgress,
+        onErrorEvent: {
+          value: StateSubEvents.MintProfileNft.Idle,
+          toast: 'Failed to mint your profile NFT!',
         },
-        async () => {
-          const element = ref?.current;
-          if (!element || !toAddress) return;
-
-          const dataUrl = await toJpeg(ref.current, { cacheBust: true });
-          const blob = dataURLtoBlob(dataUrl);
-          const keyData = await generatePinataKey();
-          const fileCID = await uploadFile(fileName, blob, keyData.JWT);
-
-          const metadata = {
-            name: `Onchain Buster Profile | ${toAddress.slice(0, 5)}`,
-            description: 'Onchain Buster ',
-            image: fileCID,
-            external_url: 'https://onchainbuster.vercel.app',
-          };
-
-          const uriCID = await uploadJson(metadata, keyData.JWT);
-
-          const response = await fetch('/api/cdp/mint', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              networkId: BASE_SEPOLIA_CHAIN_ID,
-              to: toAddress,
-              uri: uriCID,
-            }),
-          });
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data: MintResponse = await response.json();
-          onMinted(data);
+        onFinishEvent: {
+          value: StateSubEvents.MintProfileNft.Finished,
+          toast: 'NFT Minted!',
         },
-      );
-    } catch (error) {
-      console.log(error);
-    }
+        onResetEvent: StateSubEvents.MintProfileNft.Idle,
+      },
+      async () => {
+        setState(exampleProfile)(undefined);
+        const element = ref?.current;
+        if (!element || !toAddress) return;
+
+        const dataUrl = await toJpeg(ref.current, { cacheBust: true });
+        const blob = dataURLtoBlob(dataUrl);
+        const keyData = await generatePinataKey();
+        const fileCID = await uploadFile(fileName, blob, keyData.JWT);
+
+        const metadata = {
+          name: `Onchain Buster Profile | ${toAddress.slice(0, 5)}`,
+          description: 'Onchain Buster ',
+          image: fileCID,
+          external_url: 'https://onchainbuster.vercel.app',
+        };
+
+        const uriCID = await uploadJson(metadata, keyData.JWT);
+
+        const response = await fetch('/api/cdp/mint', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            networkId: BASE_SEPOLIA_CHAIN_ID,
+            to: toAddress,
+            uri: uriCID,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data: MintResponse = await response.json();
+        onMinted(data);
+
+        const activity = await listEVMScanNFTActivity(
+          toAddress,
+          'BASE-SEPOLIA',
+          3, // Get 3 latest transaction
+        );
+        const matchingTransaction = activity.find(
+          (transaction) =>
+            transaction.blockHash.toLowerCase() ===
+            data.mintTxHash.toLowerCase(),
+        );
+        return {
+          mintResponse: data,
+          tokenId: matchingTransaction?.tokenId,
+        };
+      },
+    );
   };
 
   const setExampleProfile = (_exampleProfile: string) => {

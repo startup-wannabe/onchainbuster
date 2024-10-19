@@ -1,8 +1,8 @@
-"use client";
-import {} from "@/lib/pinata";
-import Image from "next/image";
-import { useEffect } from "react";
-import { listEVMScanNFTActivity } from "../api/evmScanCallers";
+'use client';
+import {} from '@/lib/pinata';
+import Image from 'next/image';
+import { useEffect } from 'react';
+import { listEVMScanNFTActivity } from '../api/evmScanCallers';
 
 type Props = {
   toAddress: string;
@@ -11,19 +11,19 @@ type Props = {
 export default function Instamint({ toAddress, blockHash }: Props) {
   const getTransactionDetail = async () => {
     const data = await listEVMScanNFTActivity(
-      "0xC94Fe41573d28e9D9dc4d46593B78c764a4BfE29", // TODO: Replace with toAddress
-      "BASE-SEPOLIA",
-      3 // Get 3 latest transaction
+      '0xC94Fe41573d28e9D9dc4d46593B78c764a4BfE29', // TODO: Replace with toAddress
+      'BASE-SEPOLIA',
+      3, // Get 3 latest transaction
     );
 
     const matchingTransaction = data.find(
       (transaction) =>
         transaction.blockHash.toLowerCase() ===
-        "0x80c9831dffc600e7466b8adc62f14513708431564bc6724b628e5a7dc468749f".toLowerCase()
+        '0x80c9831dffc600e7466b8adc62f14513708431564bc6724b628e5a7dc468749f'.toLowerCase(),
     );
 
-    console.log("matchingTransaction", matchingTransaction);
-    console.log("tokenID", matchingTransaction?.tokenId);
+    console.log('matchingTransaction', matchingTransaction);
+    console.log('tokenID', matchingTransaction?.tokenId);
   };
 
   useEffect(() => {
@@ -115,7 +115,7 @@ export default function Instamint({ toAddress, blockHash }: Props) {
           Test Mint Dialog
           <div>
             <Image
-              src={"/logo.png"}
+              src={'/logo.png'}
               alt="Modal image"
               width={300}
               height={300}

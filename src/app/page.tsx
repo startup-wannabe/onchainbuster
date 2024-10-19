@@ -16,6 +16,8 @@ import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { MOCK_PROFILES } from '@/data/mocks';
 import '../data/toggle-group.css';
 import { selectState, setState } from '@/helpers';
+import FetchingStatusOverlay from '@/components/FetchingStatusOverlay';
+import MintingStatusOverlay from '@/components/MintingStatusOverlay';
 
 export default function Page() {
   const { address } = useAccount();
@@ -77,26 +79,35 @@ export default function Page() {
             />
           </TextField.Slot>
         </TextField.Root>
-        <h3 className="mt-4 font-bold text-md">View Profile Samples</h3>
-        <ToggleGroup.Root
-          className="ToggleGroup mt-2"
-          type="single"
-          defaultValue={selectState(exampleProfile)}
-          onValueChange={(value) => setExampleProfile(value)}
-          aria-label="Text alignment"
-        >
-          {MOCK_PROFILES.map((profile) => (
-            <ToggleGroup.Item className="ToggleGroupItem" value={profile.name}>
-              <div className="px-5">{profile.name}</div>
-            </ToggleGroup.Item>
-          ))}
-        </ToggleGroup.Root>
+        {stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
+          <React.Fragment>
+            <h3 className="mt-4 font-bold text-md">View Profile Samples</h3>
+            <ToggleGroup.Root
+              className="ToggleGroup mt-2"
+              type="single"
+              defaultValue={selectState(exampleProfile)}
+              onValueChange={(value) => setExampleProfile(value)}
+              aria-label="Text alignment"
+            >
+              {MOCK_PROFILES.map((profile) => (
+                <ToggleGroup.Item
+                  className="ToggleGroupItem"
+                  value={profile.name}
+                >
+                  <div className="px-5">{profile.name}</div>
+                </ToggleGroup.Item>
+              ))}
+            </ToggleGroup.Root>
+          </React.Fragment>
+        )}
       </section>
       {(selectState(exampleProfile) ||
         stateCheck('HowBasedAreYou', ThreeStageState.InProgress) ||
         stateCheck('HowBasedAreYou', ThreeStageState.Finished)) && (
         <ShowcaseBaseProfile addressInput={addressInput} />
       )}
+      <FetchingStatusOverlay container={false} />
+      <MintingStatusOverlay container={false} />
     </div>
   );
 }
