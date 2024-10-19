@@ -250,7 +250,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
                   alt={`Logo of ${mostActiveDappInteraction.name}`}
                   width={80}
                   height={80}
-                  className="shadow-xl rounded-full"
+                  className="shadow-xl"
                 />
               )}
               <h1 className="font-bold text-3xl">

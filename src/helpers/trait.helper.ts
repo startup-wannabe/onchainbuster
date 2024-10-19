@@ -92,21 +92,21 @@ export const isDeFiOrArt = (
   ).reduce((total, { count }) => total + count, 0);
 
   // Debug
-  console.log('------ Start: DeFi or Art Score --------');
-  console.log(
-    `0.3 * (${tokenPortfolioValue} / ${totalPortfolioValue}): TokenPort ${tokenPortfolioValue} / FullPort ${totalPortfolioValue}  `,
-  );
-  console.log(
-    `0.15 * (${mostTokenValue > mostNftValue ? 1 : 0}): Token: ${mostTokenValue} vs NFT: ${mostNftValue}`,
-  );
-  console.log(
-    `0.35 * (${defiSumCount} / (${defiSumCount} + ${nftMarketplaceCount})): DeFi sumCount / (DeFi sumCount + NFTMarketplace sumCount)`,
-  );
-  console.log(
-    `0.2 * (${firstTransactionDate.getFullYear() < 2022 ? 1 : 0}): First txYear: ${firstTransactionDate.getFullYear()}`,
-  );
+  // console.log('------ Start: DeFi or Art Score --------');
+  // console.log(
+  //   `0.3 * (${tokenPortfolioValue} / ${totalPortfolioValue}): TokenPort ${tokenPortfolioValue} / FullPort ${totalPortfolioValue}  `,
+  // );
+  // console.log(
+  //   `0.15 * (${mostTokenValue > mostNftValue ? 1 : 0}): Token: ${mostTokenValue} vs NFT: ${mostNftValue}`,
+  // );
+  // console.log(
+  //   `0.35 * (${defiSumCount} / (${defiSumCount} + ${nftMarketplaceCount})): DeFi sumCount / (DeFi sumCount + NFTMarketplace sumCount)`,
+  // );
+  // console.log(
+  //   `0.2 * (${firstTransactionDate.getFullYear() < 2022 ? 1 : 0}): First txYear: ${firstTransactionDate.getFullYear()}`,
+  // );
 
-  console.log('------ End: DeFi or Art Score --------');
+  // console.log('------ End: DeFi or Art Score --------');
 
   const score =
     // 30% * (sum of $Token / sum of ($Token + $NFT))
@@ -147,25 +147,25 @@ export const isDegenOrDiamondHand = (
   const holdingRatio = longestHoldingDuration / walletAgeDuration;
 
   // Debug
-  console.log('------ Start: DeGen or Diamond --------');
-  console.log(
-    `0.25 * (sqrt(${defiDexCount} / ${defiSumCount})): DEX Count / DeFi Count`,
-  );
-  console.log(
-    `0.25 * (1 - (${longestHoldingDuration} / ${walletAgeDuration})):  LongestHolding: ${formatDuration(longestHoldingDuration)} / WalletAge ${formatDuration(walletAgeDuration)}`,
-  );
-  console.log(
-    `0.35 * (${newTokenCount} / ${sumTokenCount}):  New token (12m) Count / All token Count`,
-  );
-  console.log(
-    `0.15 * (${
-      longestHoldingToken.duration / (3600 * 24 * 365) > 1 // 1 year
-        ? 0
-        : 1
-    }): Longest holding duration (${formatDuration(longestHoldingToken.duration)})`,
-  );
+  // console.log('------ Start: DeGen or Diamond --------');
+  // console.log(
+  //   `0.25 * (sqrt(${defiDexCount} / ${defiSumCount})): DEX Count / DeFi Count`,
+  // );
+  // console.log(
+  //   `0.25 * (1 - (${longestHoldingDuration} / ${walletAgeDuration})):  LongestHolding: ${formatDuration(longestHoldingDuration)} / WalletAge ${formatDuration(walletAgeDuration)}`,
+  // );
+  // console.log(
+  //   `0.35 * (${newTokenCount} / ${sumTokenCount}):  New token (12m) Count / All token Count`,
+  // );
+  // console.log(
+  //   `0.15 * (${
+  //     longestHoldingToken.duration / (3600 * 24 * 365) > 1 // 1 year
+  //       ? 0
+  //       : 1
+  //   }): Longest holding duration (${formatDuration(longestHoldingToken.duration)})`,
+  // );
 
-  console.log('------ End: DeGen or Diamond --------');
+  // console.log('------ End: DeGen or Diamond --------');
 
   const score =
     // 25% * (longestTokenHolding / walletAge)
@@ -210,21 +210,21 @@ export const isOriginalBuilderOrMultichainCitizen = (
     ? talentPassportScore.skills_score
     : 0;
 
-  console.log('------ Start: Builder or Citizen --------');
-  console.log(
-    `0.25 * (${noActivityChains} / ${totalChains}): No Activity Chains: ${noActivityChains} / All Chain: ${totalChains})`,
-  );
-  console.log(
-    `0.3 * (${countUniqueDaysActiveChain} / ${uniqueActiveDaysAll}): ActiveDayActiveChain / ActiveDayAll)`,
-  );
-  console.log(
-    `0.3 * (${countActiveChainTxs} / ${totalTxs}): mostActiveChainTxs / allTxs`,
-  );
-  console.log(
-    `0.15 * (${skillsScore !== 0 ? 1 : 0}): Skills score: ${skillsScore}`,
-  );
+  // console.log('------ Start: Builder or Citizen --------');
+  // console.log(
+  //   `0.25 * (${noActivityChains} / ${totalChains}): No Activity Chains: ${noActivityChains} / All Chain: ${totalChains})`,
+  // );
+  // console.log(
+  //   `0.3 * (${countUniqueDaysActiveChain} / ${uniqueActiveDaysAll}): ActiveDayActiveChain / ActiveDayAll)`,
+  // );
+  // console.log(
+  //   `0.3 * (${countActiveChainTxs} / ${totalTxs}): mostActiveChainTxs / allTxs`,
+  // );
+  // console.log(
+  //   `0.15 * (${skillsScore !== 0 ? 1 : 0}): Skills score: ${skillsScore}`,
+  // );
 
-  console.log('------ End: Builder or Citizen --------');
+  // console.log('------ End: Builder or Citizen --------');
 
   const score =
     // 25% * (noActivityChains / totalChains)

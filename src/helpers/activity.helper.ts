@@ -3,24 +3,36 @@ import {
   AAVE,
   AERODROME,
   ALL_DEFI_INTERACTION,
+  BARYON,
   BASE_BRIDGE,
   BLUR_NFT_MARKETPLACE,
+  COMPOUND,
   COW_SWAP,
   CURVE,
   DAGORA,
   DEX_INTERACTION,
+  EIGENLAYER,
   ENS,
+  GMX,
   LEND_BORROW_STAKE_INTERACTION,
+  LIDO,
   MAGIC_EDEN,
   MOONWELL,
   ONEID,
   ONEINCH,
   OPENSEA_MARKETPLACE,
   OP_BRIDGE,
+  PANCAKE_SWAP,
   PENDLE,
+  PUFFER,
   RELAY,
+  SWELL,
+  SYNTHETIX,
   UNISWAP,
   VELODROME,
+  VENUS,
+  VIC_SPACEGATE,
+  ZORA,
 } from '@/constants/contracts';
 
 export const calculateGasInETH = (gasPrice: number, gasUsed: number) => {
@@ -102,8 +114,23 @@ export const calculateEVMStreaksAndMetrics = (
   };
 };
 
-// Swap Function Names
+// Function Names
 const SWAP_FUNCTION_NAMES = ['swap', 'fillOtcOrderWithEth', 'proxiedSwap'];
+const STAKE_FUNCTION_NAMES = ['wrap', 'unwrap', 'submit', 'deposit'];
+const LEND_FUNCTION_NAMES = [
+  'mint',
+  'borrow',
+  'redeem',
+  'borrow',
+  'redeem',
+  'repay',
+  'liquidate',
+  'seize',
+  'accrue',
+  'allow',
+  'supply',
+  'withdraw',
+];
 
 export const calculateDeFiActivityStats = (
   transactions: TEVMScanTransaction[],
@@ -245,6 +272,7 @@ export const calculateDappInteraction = (
       blur: { name: 'Blur', window: defaultWindow, count: 0 },
       magicEden: { name: 'Magic Eden', window: defaultWindow, count: 0 },
       dagora: { name: 'Dagora', window: defaultWindow, count: 0 },
+      zora: { name: 'Zora', window: defaultWindow, count: 0 },
     },
     defi: {
       uniswap: { name: 'Uniswap', window: defaultWindow, count: 0 },
@@ -256,9 +284,20 @@ export const calculateDappInteraction = (
       aero: { name: 'Aerodrome', window: defaultWindow, count: 0 },
       velo: { name: 'Velodrome', window: defaultWindow, count: 0 },
       moonwell: { name: 'Moonwell', window: defaultWindow, count: 0 },
+      eigenlayer: { name: 'EigenLayer', window: defaultWindow, count: 0 },
+      puffer: { name: 'Puffer', window: defaultWindow, count: 0 },
+      lido: { name: 'Lido', window: defaultWindow, count: 0 },
+      swell: { name: 'Swell', window: defaultWindow, count: 0 },
+      gmx: { name: 'GMX', window: defaultWindow, count: 0 },
+      pancake: { name: 'PancakeSwap', window: defaultWindow, count: 0 },
+      synthetix: { name: 'Synthetix', window: defaultWindow, count: 0 },
+      compound: { name: 'Compound', window: defaultWindow, count: 0 },
+      venus: { name: 'Venus', window: defaultWindow, count: 0 },
+      baryon: { name: 'Baryon', window: defaultWindow, count: 0 },
     },
     bridge: {
       relay: { name: 'Relay Bridge', window: defaultWindow, count: 0 },
+      spacegate: { name: 'SpaceGate', window: defaultWindow, count: 0 },
       op: { name: 'OP Native Bridge', window: defaultWindow, count: 0 },
       base: {
         name: 'Base Native Bridge (Deprecated)',
@@ -282,6 +321,7 @@ export const calculateDappInteraction = (
     [dappInteractionMap.marketplace.blur, BLUR_NFT_MARKETPLACE],
     [dappInteractionMap.marketplace.magicEden, MAGIC_EDEN],
     [dappInteractionMap.marketplace.dagora, DAGORA],
+    [dappInteractionMap.marketplace.zora, ZORA],
     [dappInteractionMap.defi.uniswap, UNISWAP],
     [dappInteractionMap.defi.curve, CURVE],
     [dappInteractionMap.defi.pendle, PENDLE],
@@ -291,9 +331,21 @@ export const calculateDappInteraction = (
     [dappInteractionMap.defi.aero, AERODROME],
     [dappInteractionMap.defi.velo, VELODROME],
     [dappInteractionMap.defi.moonwell, MOONWELL],
+    [dappInteractionMap.defi.gmx, GMX],
+    [dappInteractionMap.defi.pancake, PANCAKE_SWAP],
+    [dappInteractionMap.defi.baryon, BARYON],
+    [dappInteractionMap.defi.eigenlayer, EIGENLAYER],
+    [dappInteractionMap.defi.puffer, PUFFER],
+    [dappInteractionMap.defi.lido, LIDO],
+    [dappInteractionMap.defi.swell, SWELL],
+    [dappInteractionMap.defi.compound, COMPOUND],
+    [dappInteractionMap.defi.venus, VENUS],
+    [dappInteractionMap.defi.synthetix, SYNTHETIX],
+
     [dappInteractionMap.bridge.relay, RELAY],
     [dappInteractionMap.bridge.op, OP_BRIDGE],
     [dappInteractionMap.bridge.base, BASE_BRIDGE],
+    [dappInteractionMap.bridge.spacegate, VIC_SPACEGATE],
     [dappInteractionMap.nameService.ens, ENS],
     [dappInteractionMap.nameService.oneid, ONEID],
   ];
@@ -304,6 +356,7 @@ export const calculateDappInteraction = (
     const txTimestamp = Number.parseInt(tx.timeStamp);
     // Iterate over the dappAndContractList to update counts and windows
     for (const [dapp, contract] of dappAndContractList) {
+      // TODO: More accurate filter on Lido, Swell, Compound
       const contractIncluded =
         typeof contract === 'string'
           ? contract === lowerCaseTo.toLowerCase() ||

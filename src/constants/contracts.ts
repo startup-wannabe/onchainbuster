@@ -325,6 +325,8 @@ export const BARYON_STAKE = new Set([
   // VIC ??
 ]);
 
+export const BARYON = new Set([...BARYON_STAKE, ...BARYON_SWAP]);
+
 export const LIDO = new Set([
   '0xae7ab96520de3a18e5e111b5eaab095312d7fe84', // fn: submit
   '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0', // fn: wrap/unwrap

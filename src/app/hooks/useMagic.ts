@@ -191,6 +191,7 @@ export const useMagic = () => {
         const data = await listAllTransactionsByChain(addressInput);
         const _allTransactions = Object.values(data).flatMap((d) => d.txs);
         setState(allTransactions)(_allTransactions);
+        console.log('_allTransactions', _allTransactions);
 
         const ethNativeTransactions: TEVMScanTransaction[] = Object.entries(
           data,
@@ -212,7 +213,7 @@ export const useMagic = () => {
           0,
         );
 
-        console.log('totalGasInETH:', _totalGasInETH);
+        console.log('_totalGasInETH:', _totalGasInETH);
         setState(totalGasInETH)(_totalGasInETH);
 
         const mostActiveChainID = Object.keys(data).reduce((a, b) =>
@@ -286,7 +287,6 @@ export const useMagic = () => {
       },
       async () => {
         const tokenBalanceData = await getMultichainPortfolio(addressInput);
-        console.log('Token balance:', tokenBalanceData);
 
         // Get distinct token symbol with non-zero balance
         const distinctTokenSymbols = [
@@ -302,12 +302,14 @@ export const useMagic = () => {
         );
         console.log('Price market data:', _marketData);
         setState(marketData)(_marketData);
+        console.log('tokenBalanceData', tokenBalanceData);
         setState(tokenPortfolio)(tokenBalanceData);
 
         const _tokenPortfolioStats = calculateMultichainTokenPortfolio(
           tokenBalanceData,
           _marketData,
         );
+        console.log('_tokenPortfolioStats', _tokenPortfolioStats);
         setState(tokenPortfolioStats)(_tokenPortfolioStats);
         return MultiAssetsPortfolio;
       },
@@ -411,6 +413,7 @@ export const useMagic = () => {
         setState(nftPortfolio)(allNFTBalance);
 
         const _nftPortfolio = calculateMultichainNFTPortfolio(allNFTBalance);
+        console.log('_nftPortfolio', _nftPortfolio);
         setState(nftPortfolioStats)(_nftPortfolio);
       },
     );
@@ -434,6 +437,7 @@ export const useMagic = () => {
       async () => {
         const nftActivityData = await listAllNFTActivityV2ByChain(addressInput);
         const allNftActivities = Object.values(nftActivityData).flat();
+        console.log('allNftActivities', allNftActivities);
         setState(nftActivity)(allNftActivities);
 
         const _nftActivityStats = calculateNFTActivityStats(

@@ -110,6 +110,7 @@ interface IMagicContext {
   stateEvents: StateEventRegistry;
   setStateEvents: SetState<StateEventRegistry>;
   nftTemplateSetting: UseState<TNftTemplateSetting>;
+
   // Data analytics states
   text: UseState<string>;
   inputAddress: UseState<string>;
