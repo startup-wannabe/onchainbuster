@@ -1,24 +1,101 @@
-// NFT Marketplace
+// ------- NFT Marketplace -------
 export const BLUR_NFT_MARKETPLACE = new Set([
-  '0xb2ecfe4e4d61f8790bbb9de2d1259b9e2410cea5',
-  '0x39da41747a83aee658334415666f3ef92dd0d541',
+  // Source: https://docs.blur.foundation/contracts
+  '0x000000000000ad05ccc4f10045630fb830b95127', // Proxy
+  '0xb2ecfe4e4d61f8790bbb9de2d1259b9e2410cea5', // Proxy V2
+  '0x39da41747a83aee658334415666f3ef92dd0d541', // Aggregator
+  '0x0000000000a39bb272e79075ade125fd351887ac', // Big Pool
+  '0x29469395eaf6f95920e59f858042f0e28d98a20b', // Blend
 ]);
 
 export const OPENSEA_MARKETPLACE = new Set([
   // ETH
-  '0x7f268357a8c2552623316e2562d90e642bb538e5',
-  '0x7be8076f4ea4a4ad08075c2508e481d6c946d12b',
-  '0x18c2e87d183c5338a9142f97db176f3832b1d6de',
-  '0xf2458bd228d8a39b64bd3b9f84890e957cac3bbc',
+  '0x7f268357a8c2552623316e2562d90e642bb538e5', // Wyvern Exchange V2
+  '0x7be8076f4ea4a4ad08075c2508e481d6c946d12b', // Wyvern Exchange V1
+  '0x18c2e87d183c5338a9142f97db176f3832b1d6de', // Payments
+  '0xf2458bd228d8a39b64bd3b9f84890e957cac3bbc', // OpenSea Pro: Marketplace
+  '0xa5409ec958C83C3f309868babACA7c86DCB077c1', // Registry
+
+  '0x0000000000000068f116a894984e2db1123eb395', // Seaport 1.6
+  '0x00000000000000adc04c56bf30ac9d3c0aaf14dc', // Seaport 1.5
+  '0x00000000006c3852cbEf3e08E8dF289169EdE581', // Seaport 1.1
+]);
+
+export const ZORA = new Set([
+  '0x777777c338d93e2c7adf08d102d45ca7cc4ed021', // Zora 1155 factory
+
+  // More in
+  // https://docs.zora.co/contracts/deployments
+  // https://docs.zora.co/contracts/factories
 ]);
 
 export const MAGIC_EDEN = new Set([
   '0x5ebc127fae83ed5bdd91fc6a5f5767e259df5642',
-  '0x475aa716337d79b5ea513bfe4cc01787eb2e6004',
-]); // Base
+  '0x475aa716337d79b5ea513bfe4cc01787eb2e6004', // Base
+]);
+
 export const DAGORA = new Set(['0xfc6e99d3c9a2ad7604b8a352beea81f6f5f41a45']);
 
-// DeFi
+//------- DeFi -------
+export const BARYON_SWAP = new Set([
+  // Viction
+  '0x90ff92592ee0bee0caaa3ccca5dd718b32dba96c', // Swap
+]);
+
+export const GMX = new Set([
+  // Arbitrum mainnet https://github.com/gmx-io/protocol-info/blob/master/src/config/contracts.ts
+  '0x489ee077994b6658eafa855c308275ead8097c4a', // Vault
+  '0xabbc5f99639c9b6bcb58544ddf04efa6802f4064', // Router
+  '0xfebb9f4cac4cd523598fe1c5771181440143f24a', // VaultReader
+  '0x2b43c90d1b727cee1df34925bcd5ace52ec37694', // Reader
+  '0x3963ffc9dff443c2a94f21b129d429891e32ec18', // GlpManager
+  '0xa906f338cb21815cbc4bc87ace9e68c87ef8d8f1', // RewardRouter
+  '0xb95db5b167d75e6d04227cfffa61069348d271f5', // GlpRewardRouter
+  '0x8bfb8e82ee4569aee78d03235ff465bd436d40e0', // RewardReader
+  '0x82af49447d8a07e3bd95bd0d56f35241523fbab1', // NATIVE_TOKEN
+  '0x4277f8f2c384827b5273592ff7cebd9f2c1ac258', // GLP
+  '0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a', // GMX
+  '0xf42ae1d54fd613c9bb14810b0588faaa09a426ca', // ES_GMX
+  '0x35247165119b69a40edd5304969560d0ef486921', // BN_GMX
+  '0x45096e7aa921f27590f8f19e457794eb09678141', // USDG
+  '0x6260101218ec4ccfff1b778936c6f2400f95a954', // ES_GMX_IOU
+  '0x908c4d94d34924765f1edc22a1dd098397c59dd4', // StakedGmxTracker
+  '0x4d268a7d4c16ceb5a606c173bd974984343fea13', // BonusGmxTracker
+  '0xd2d1162512f927a7e282ef43a362659e4f2a728f', // FeeGmxTracker
+  '0x1addd80e6039594ee970e5872d247bf0414c8903', // StakedGlpTracker
+  '0x4e971a87900b931ff39d1aad67697f49835400b6', // FeeGlpTracker
+
+  '0x23208b91a98c7c1cd9fe63085bff68311494f193', // StakedGmxDistributor
+  '0x60519b48ec4183a61ca2b8e37869e675fd203b34', // StakedGlpDistributor
+
+  '0x199070ddfd1cfb69173aa2f7e20906f26b363004', // GmxVester
+  '0xa75287d2f8b217273e7fcd7e86ef07d33972042e', // GlpVester
+
+  '0x09f77e8a13de9a35a7231028187e9fd5db8a2acb', // OrderBook
+  '0x7257ac5d0a0aac04aa7ba2ac0a6eb742e332c3fb', // OrderExecutor
+  '0xa27c20a7cf0e1c68c0460706bb674f98f362bc21', // OrderBookReader
+
+  '0xb87a436b93ffe9d75c5cfa7bacfff96430b09868', // PositionRouter
+  '0x75e42e6f01baf1d6022bea862a28774a9f8a4a0c', // PositionManager
+
+  '0x80a9ae39310abf666a87c743d6ebbd0e8c42158e', // UniswapGmxEthPool
+  '0xe6fab3f0c7199b0d34d7fbe83394fc0e0d06e99d', // ReferralStorage
+  '0x8aa382760bcdce8644c33e6c2d52f6304a76f5c8', // ReferralReader
+
+  // Synthetics
+  '0xfd70de6b91282d8017aa4e741e9ae325cab992d8', // DataStore
+  '0xc8ee91a54287db53897056e12d9819156d3822fb', // EventEmitter
+  '0x7c68c7866a64fa2160f78eeae12217ffbf871fa8', // ExchangeRouter
+  '0xf89e77e8dc11691c9e8757e84aafbcd8a67d7a55', // DepositVault
+  '0x0628d46b5d145f183adb6ef1f2c97ed1c4701c55', // WithdrawalVault
+  '0x31ef83a530fde1b38ee9a18093a333d8bbbc40d5', // OrderVault
+  '0xf60becbba223eea9495da3f606753867ec10d139', // SyntheticsReader
+  '0x7452c558d45f8afc8c83dae62c3f8a5be19c71f6', // SyntheticsRouter
+  '0xaa50bd556ce0fe61d4a57718ba43177a3ab6a597', // Timelock
+
+  '0xca11bde05977b3631167028862be2a173976ca11', // Multicall
+]);
+
 export const CURVE = new Set([
   '0x99a58482bd75cbab83b27ec03ca68ff489b5788f', // router
   '0x16c6521dff6bab339122a0fe25a9116693265353',
@@ -83,6 +160,16 @@ export const PENDLE = new Set([
   '0x41fad93f225b5c1c95f2445a5d7fcb85ba46713f',
 ]);
 
+export const PANCAKE_SWAP = new Set([
+  // v2 Router https://developer.pancakeswap.finance/contracts/universal-router/addresses
+  '0x65b382653f7c31bc0af67f188122035461ec9c76', // ETH
+  '0xfe6508f0015c778bdcc1fb5465ba5ebe224c9912', // ARB + Base
+
+  // v3 https://developer.pancakeswap.finance/contracts/v3/addresses
+  '0x0bfbcf9fa4f9c56b0f40a671ad40e0805a091865', // v3 Factory
+  '0x1b81d678ffb9c0263b24a97847620c99d213eb14', // Swap router
+]);
+
 export const VELODROME = new Set([
   '0x4bf3e32de155359d1d75e8b474b66848221142fc', // router
   '0xa062ae8a9c5e11aaa026fc2670b0d65ccc8b2858', // router v2
@@ -106,27 +193,197 @@ export const LP_INTERACTION = new Set([
   '0x9560e827af36c94d2ac33a39bce1fe78631088db', // op lp
 ]);
 
+export const SYNTHETIX = new Set([
+  // See sections under https://docs.synthetix.io/v3/for-developers/deployment-info
+  // CoreProxy V3
+  '0xffffffaeff0b96ea8e4f94b2253f31abdd875847', // Mainnet, ARB, OP
+  '0x32c222a9a159782afd7529c87fa34b96ca72c696', // Base
+  // TODO: Update Spot/Perp contract later
+
+  // FeeProxy V2
+  '0xb440dd674e1243644791a4adfe3a2abb0a92d309', // Mainnet
+  '0x4a16a42407aa491564643e1dfc1fd50af29794ef', // OP
+]);
+
+export const VENUS = new Set([
+  // Docs: https://docs-v4.venus.io/deployed-contracts/isolated-pools
+
+  // ------ Mainnet ------
+  // Core Pool
+  '0x687a01ecf6d3907658f7a7c714749fac32336d1b', // Comptroller
+  '0x044dd75b9e043acfd2d6eb56b6bb814df2a9c809', // NativeTokenGateway
+  '0x672208c10aaaa2f9a6719f449c4c8227bc0bc202', // vcrvUSD_Core
+  '0xd8add9b41d4e1cd64edad8722ab0ba8d35536657', // vDAI_Core
+  '0x4fafbdc4f2a9876bd1764827b26fb8dc4fd1db95', // vFRAX_Core
+  '0x17142a05fe678e9584fa1d88efac1bf181bf7abe', // vsFRAX_Core
+  '0x13eb80fdbe5c5f4a7039728e258a6f05fb3b912b', // vTUSD_Core
+  '0x17c07e0c232f2f80dfdbd7a95b942d893a4c5acb', // vUSDC_Core
+  '0x8c3e3821259b82ffb32b2450a95d2dcbf161c24e', // vUSDT_Core
+  '0x8716554364f20bca783cb2baa744d39361fd1d8d', // vWBTC_Core
+  '0x7c8ff7d2a1372433726f879bd945ffb250b94c65', // vWETH_Core
+  // Curve Pool
+  '0x67aa3ecc5831a65a5ba7be76bed3b5dc7db60796', // Comptroller
+  '0x2d499800239c4cd3012473cb1eae33562f0a6933', // vcrvUSD_Curve
+  '0x30ad10bd5be62cab37863c2bfcc6e8fb4fd85bda', // vCRV_Curve
+  //Liquid Staked ETH
+  '0xf522cd0360ef8c2ff48b648d53ea1717ec0f3ac3', // Comptroller
+  '0xbc1471308eb2287ebe137420eb1664a964895d21', // NativeTokenGateway
+  '0xa854d35664c658280fff27b6edc6c4195c3229b3', // vezETH_LiquidStakedETH
+  '0x76697f8eaea4be01c678376aab97498ee8f80d5c', // vPT-weETH-26DEC2024_LiquidStakedETH
+  '0xdb6c345f864883a8f4cae87852ac342589e76d1b', // vrsETH_LiquidStakedETH
+  '0xf9e9fe17c00a8b96a8ac20c4e344c8688d7b947e', // vsfrxETH_LiquidStakedETH
+  '0xc82780db1257c788f262fbbda960b3706dfdcaf2', // vWETH_LiquidStakedETH
+  '0x4a240f0ee138697726c8a3e43efe6ac3593432cb', // vwstETH_LiquidStakedETH
+  '0xb4933af59868986316ed37fa865c829eba2df0c7', // vweETH_LiquidStakedETH
+  '0xef26c64bc06a8de4ca5d31f119835f9a1d9433b9', // vweETHs_LiquidStakedETH
+
+  // ------ Arbitrum One ------
+  // Core Pool
+  '0x317c1a5739f39046e20b08ac9beea3f10fd43326', // Comptroller
+  '0xc8e51418cadc001157506b306c6d0b878f1ff755', // NativeTokenGateway
+  '0xada57840b372d4c28623e87fc175de8490792811', // vWBTC_Core
+  '0x68a34332983f4bf866768dd6d6e638b02ef5e1f0', // vWETH_Core
+  '0xb9f9117d4200dc296f9acd1e8be1937df834a2fd', // vUSDT_Core
+  '0x7d8609f8da70ff9027e9bc5229af4f6727662707', // vUSDC_Core
+  '0xaeb0fed69354f34831fe1d16475d9a83ddacada6', // vARB_Core
+  // Liquid Staked ETH Pool
+  '0x52bab1af7ff770551bd05b9fc2329a0bf5e23f16', // Comptroller
+  '0xd1e89806bab8cd7680dfc7425d1fa6d7d5f0c3fe', // NativeTokenGateway
+  '0x9df6b5132135f14719696bbae3c54bab272fdb16', // vwstETH_LiquidStakedETH
+  '0x246a35e79a3a0618535a469adaf5091caa9f7e88', // vweETH_LiquidStakedETH
+  '0x39d6d13ea59548637104e40e729e4aabe27fe106', // vWETH_LiquidStakedETH
+
+  // ------ Optimism ------
+  // Core Pool
+  '0x5593ff68be84c966821eef5f0a988c285d5b7cec', // Comptroller
+  '0x5b1b7465cfde450e267b562792b434277434413c', // NativeTokenGateway
+  '0x9efdcfc2373f81d3df24647b1c46e15268884c46', // vWBTC_Core
+  '0x66d5ae25731ce99d46770745385e662c8e0b4025', // vWETH_Core
+  '0x37ac9731b0b02df54975cd0c7240e0977a051721', // vUSDT_Core
+  '0x1c9406ee95b7af55f005996947b19f91b6d55b15', // vUSDC_Core
+  '0x6b846e3418455804c1920fa4cc7a31a51c659a2d', // vOP_Core
+]);
+
+export const COMPOUND = new Set([
+  // fn to identify interaction:
+  // v2 mint, borrow, redeem%, repay%, liquidate%, seize%, accrue%
+  // v3 allow, supply%, withdraw%
+
+  // Mainnet v2: https://docs.compound.finance/v2/
+  '0xe65cdb6479bac1e22340e4e755fae7e509ecd06c', // cAAVE
+  '0x6c8c6b02e7b2be14d4fa6022dfd6d75921d90e4e', // cBAT
+  '0x70e36f6bf80a52b3b46b3af8e106cc0ed743e8e4', // cCOMP
+  '0x5d3a536e4d6dbd6114cc1ead35777bab948e3643', // cDAI
+  '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5', // cETH
+  '0x7713dd9ca933848f6819f38b8352d9a15ea73f67', // cFEI
+  '0xface851a4921ce59e912d19329929ce6da6eb0c7', // cLINK
+  '0x95b4ef2869ebd94beb4eee400a99824bf5dc325b', // cMKR
+  '0x158079ee67fce2f58472a96584a73c7ab9ac95c1', // cREP
+  '0xf5dce57282a584d2746faf1593d3121fcac444dc', // cSAI
+  '0x4b0181102a0112a2ef11abee5563bb4a3176c9d7', // cSUSHI
+  '0x12392f67bdf24fae0af363c24ac620a2f67dad86', // cTUSD
+  '0x35a18000230da775cac24873d00ff85bccded550', // cUNI
+  '0x39aa39c021dfbae8fac545936693ac917d5e7563', // cUSDC
+  '0x041171993284df560249b57358f931d9eb7b925d', // cUSDP
+  '0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9', // cUSDT
+  '0xc11b1268c1a384e55c48c2391d8d480264a3a7f4', // cWBTC
+  '0xccf4429db6322d5c611ee964527d42e5d685dd6a', // cWBTC2
+  '0x80a2ae356fc9ef4305676f7a3e2ed04e12c33946', // cYFI
+  '0xb3319f5d18bc0d84dd1b4825dcde5d5f7266d407', // cZRX
+  // '0xc00e94cb662c3520282e6f5717214004a7f26888', // COMP
+  '0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b', // Comptroller
+  '0xc0da02939e1441f497fd74f78ce7decb17b66529', // Governance
+  '0x6d903f6003cca6255d85cca4d3b5e5146dc33925', // Timelock
+
+  // V3: https://docs.compound.finance/#protocol-contracts
+  // Mainnet
+  '0xc3d688b66703497daa19211eedff47f25384cdc3', // cUSDCv3
+  '0xa17581a9e3356d9a858b789d68b4d866e593ae94', // cWETHv3
+  '0x3afdc9bca9213a35503b077a6072f3d0d5ab0840', // cUSDTv3
+  '0x3d0bb1ccab520a66e607822fc55bc921738fafe3', // cwstETHv3
+  // Arbitrum
+  '0xa5edbdd9646f8dff606d7448e414884c7d905dca', // cUSDCev3
+  '0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf', // cUSDCv3
+  '0x6f7d514bbd4aff3bcd1140b7344b32f063dee486', // cWETHv3
+  '0xd98be00b5d27fc98112bde293e487f8d4ca57d07', // cUSDTv3
+  // Base
+  '0xb125e6687d4313864e53df431d5425969c15eb2f', // cUSDCv3
+  '0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf', // cUSDbCv3
+  '0x46e6b214b524310239732d51387075e0e70970bf', // cWETHv3
+  // OP
+  '0x2e44e174f7d53f0212823acc11c01a11d58c5bcb', // cUSDCv3
+  '0x995e394b8b2437ac8ce61ee0bc610d617962b214', // cUSDTv3
+  '0xe36a30d249f7761327fd973001a32010b521b6fd', // cWETHv3
+]);
+
+export const BARYON_STAKE = new Set([
+  '0xf7eccb66a7c3c55b1edfce634af8c20766f97553', // Saros
+  '0x0afdbe5989cab06e66244cc2583f0caeecb6ea8e', // SVIC
+
+  // Ended
+  '0xce10a442ff68f1ceb6420cbfe450d48880f3acab', // C98
+  // VIC ??
+]);
+
+export const LIDO = new Set([
+  '0xae7ab96520de3a18e5e111b5eaab095312d7fe84', // fn: submit
+  '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0', // fn: wrap/unwrap
+]);
+
+export const SWELL = new Set([
+  '0xf951e335afb289353dc249e82926178eac7ded78', // fn: deposit
+]);
+
+export const PUFFER_STAKING = new Set([
+  // Docs: https://github.com/PufferFinance/pufETH/tree/main
+  '0xd9a442856c234a39a81a089c06451ebaa4306a72', // fn: depositETH
+  '0x4aa799c5dfc01ee7d790e3bf1a7c2257ce1dceff', // Depositor
+]);
+
+export const PUFFER_AIRDROP = new Set([
+  // Claim PUFFER
+  '0x9f7e5a1d0d2d4d61e25e9e5538cec54b98588f7f',
+]);
+
+export const PUFFER = new Set([...PUFFER_STAKING, ...PUFFER_AIRDROP]);
+
+export const EIGENLAYER_STAKING = new Set([
+  '0x39053d51b77dc0d36036fc1fcc8cb819df8ef37a', // Delegator
+  '0x858646372cc42e1a627fce94aa7a7033e7cf075a', // Deposit (old Strategy Manager)
+]);
+
+export const EIGENLAYER_AIRDROP = new Set([
+  // Airdrop Distributor
+  '0xa105c3abedbaf4295ac6149bf24d5311f629934c',
+  '0x2ec90ef34e312a855becf74762d198d8369eece1',
+  '0xc1994a7efddd1a424ff8e7abd0763659119f4fca',
+  '0xc135b516e399c1ed702588d887fbbe6f2d1ba27a',
+  '0x263190d31d1e7c46de703ecedc46fd425afdefd3',
+  '0xecf2bcb2342d8157d4fb4f4bdc1edf74fbf759b3',
+  '0x035bdaeab85e47710c27eda7fd754ba80ad4ad02', // Deprecated
+]);
+
+export const EIGENLAYER = new Set([
+  ...EIGENLAYER_STAKING,
+  ...EIGENLAYER_AIRDROP,
+]);
+
 export const OTHER_DEFI = new Set([
   '0x1e4b7a6b903680eab0c5dabcb8fd429cd2a9598c',
   '0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2',
   '0xcc9a0b7c43dc2a5f023bb9b738e45b0ef6b06e04',
   '0xe65cdb6479bac1e22340e4e755fae7e509ecd06c',
-  '0x70e36f6bf80a52b3b46b3af8e106cc0ed743e8e4',
   '0xface851a4921ce59e912d19329929ce6da6eb0c7',
   '0x95b4ef2869ebd94beb4eee400a99824bf5dc325b',
   '0xf5dce57282a584d2746faf1593d3121fcac444dc',
   '0x4b0181102a0112a2ef11abee5563bb4a3176c9d7',
   '0x12392f67bdf24fae0af363c24ac620a2f67dad86',
   '0xccf4429db6322d5c611ee964527d42e5d685dd6a',
-  '0x80a2ae356fc9ef4305676f7a3e2ed04e12c33946',
-  '0x6d903f6003cca6255d85cca4d3b5e5146dc33925',
   '0x3fda67f7583380e67ef93072294a7fac882fd7e7',
   '0x6c8c6b02e7b2be14d4fa6022dfd6d75921d90e4e',
   '0x5d3a536e4d6dbd6114cc1ead35777bab948e3643',
   '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5',
   '0x1c1853bc7c6bff0d276da53972c0b1a066db1ae7',
-  '0xc00e94cb662c3520282e6f5717214004a7f26888',
-  '0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b',
   '0x316f9708bb98af7da9c68c1c3b5e79039cd336e3',
   '0xcfc1fa6b7ca982176529899d99af6473ad80df4f',
   '0xf859a1ad94bcf445a406b892ef0d3082f4174088',
@@ -137,7 +394,6 @@ export const OTHER_DEFI = new Set([
   '0x42f9505a376761b180e27a01ba0554244ed1de7d',
   '0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9',
   '0xc11b1268c1a384e55c48c2391d8d480264a3a7f4',
-  '0xb3319f5d18bc0d84dd1b4825dcde5d5f7266d407',
   '0xa7ff0d561cd15ed525e31bbe0af3fe34ac2059f6',
   '0x1449e0687810bddd356ae6dd87789244a46d9adb',
   '0xcec237e83a080f3225ab1562605ee6dedf5644cc',
@@ -259,15 +515,12 @@ export const OTHER_DEFI = new Set([
   '0xa2609b2b43ac0f5ebe27deb944d2a399c201e3da',
   '0xa1787206d5b1be0f432c4c4f96dc4d1257a1dd14',
   '0xe65cdb6479bac1e22340e4e755fae7e509ecd06c',
-  '0x70e36f6bf80a52b3b46b3af8e106cc0ed743e8e4',
   '0xface851a4921ce59e912d19329929ce6da6eb0c7',
   '0x95b4ef2869ebd94beb4eee400a99824bf5dc325b',
   '0xf5dce57282a584d2746faf1593d3121fcac444dc',
   '0x4b0181102a0112a2ef11abee5563bb4a3176c9d7',
   '0x12392f67bdf24fae0af363c24ac620a2f67dad86',
   '0xccf4429db6322d5c611ee964527d42e5d685dd6a',
-  '0x80a2ae356fc9ef4305676f7a3e2ed04e12c33946',
-  '0x6d903f6003cca6255d85cca4d3b5e5146dc33925',
   '0x2e088a0a19dda628b4304301d1ea70b114e4accd',
   '0xa1bc2cf69d474b39b91665e24e7f2606ed142991',
   '0x25e12482a25cf36ec70fda2a09c1ed077fc21616',
@@ -315,6 +568,9 @@ export const DEX_INTERACTION = new Set([
   ...COW_SWAP,
   ...VELODROME,
   ...AERODROME,
+  ...BARYON_SWAP,
+  ...PANCAKE_SWAP,
+  ...GMX,
 ]);
 
 export const SWAP_INTERACTION = new Set(
@@ -325,6 +581,14 @@ export const LEND_BORROW_STAKE_INTERACTION = new Set([
   ...MOONWELL,
   ...CURVE,
   ...AAVE,
+  ...BARYON_STAKE,
+  ...VENUS,
+  ...COMPOUND,
+  ...SYNTHETIX,
+  ...LIDO,
+  ...SWELL,
+  ...PUFFER_STAKING,
+  ...EIGENLAYER_STAKING,
 ]);
 
 export const ALL_DEFI_INTERACTION = new Set([
@@ -336,6 +600,8 @@ export const ALL_DEFI_INTERACTION = new Set([
 export const ENS = new Set([
   '0x253553366da8546fc250f225fe3d25d0c782303b', // ethregistrarcontroller
   '0x283af0b28c62c092c9727f1ee09c02ca627eb7f5', // ethregistrarcontroller
+  '0xa58e81fe9b61b5c3fe2afd33cf304c454abfc7cb', // eth reverse registrar
+
   '0x4ccb0bb02fcaba27e82a56646e81d8c5bc4119a5', // basenames registrarcontroller
   '0xd3e6775ed9b7dc12b205c8e608dc3767b9e5efda', // basenames registrarcontroller
 ]);
@@ -349,8 +615,13 @@ export const RELAY = new Set([
   '0xa5f565650890fba1824ee0f21ebbbf660a179934', // eth receiver
 ]);
 
+export const VIC_SPACEGATE = new Set([
+  '0x6f71ac3058ea167ffab93f7c14b5e2aee9276ce1',
+]);
+
 export const BASE_BRIDGE = '0xea2a41c02fa86a4901826615f9796e603c6a4491'; // OG but deprecated
 export const OP_BRIDGE = '0x4200000000000000000000000000000000000010';
+
 // Acknowledgement: https://github.com/base-org/web/blob/master/apps/web/src/components/Basenames/UsernameProfileSectionHeatmap/contracts.ts
 export const OTHER_BRIDGES = new Set([
   '0x8ed95d1746bf1e4dab58d8ed4724f1ef95b20db0',
