@@ -5,9 +5,10 @@ import {
   useAvatar,
   useName,
 } from '@coinbase/onchainkit/identity';
-import { createAvatar } from '@dicebear/core';
 import { thumbs } from '@dicebear/collection';
+import { createAvatar } from '@dicebear/core';
 import { useMemo } from 'react';
+import { isAddress } from 'viem';
 import Address from '../Address';
 
 type Props = {
@@ -66,17 +67,19 @@ const ProfileCard = ({ address }: Props) => {
           />
         )}
       </div>
-      <Identity
-        address={address}
-        className="px-4 pt-3 pb-2 flex justify-center items-center hover:bg-blue-300 bg-white"
-        hasCopyAddressOnClick={true}
-      >
-        {/* <Name className="text-black text-3xl" /> */}
-      </Identity>
+      {isAddress(address) && (
+        <Identity
+          address={address}
+          className="px-4 pt-3 pb-2 flex justify-center items-center hover:bg-blue-300 bg-white"
+          hasCopyAddressOnClick={true}
+        >
+          <Name className="text-black text-3xl" />
+        </Identity>
+      )}
       <Address
         className="font-normal"
         value={address}
-        truncated
+        truncated={true}
         truncatedLength={10}
       />
     </div>

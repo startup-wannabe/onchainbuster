@@ -20,7 +20,9 @@ export const urlWithQueryParams = (url: string, queryParams: QueryParams) => {
 };
 
 export function isValidUrl(string?: string) {
-  if (!string) return false;
+  if (!string) {
+    return false;
+  }
   try {
     new URL(string);
     return true;
@@ -36,7 +38,7 @@ export const IsValidIpfsUrl = (ipfsUrl: IpfsUrl): boolean => {
     const isValidCid = cid(ipfsCid);
     const isValidIpfsUrl = url.protocol === 'ipfs:' && isValidCid;
     return isValidIpfsUrl;
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
@@ -47,13 +49,15 @@ export const IsValidVercelBlobUrl = (source: string): boolean => {
     const isVercelBlobImage =
       url.protocol === 'https:' && url.hostname === VERCEL_BLOB_HOSTNAME;
     return isVercelBlobImage;
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
 
 export const getIpfsGatewayUrl = (ipfsUrl?: IpfsUrl): string | undefined => {
-  if (!ipfsUrl) return;
+  if (!ipfsUrl) {
+    return;
+  }
 
   try {
     const url = new URL(ipfsUrl);
@@ -66,7 +70,7 @@ export const getIpfsGatewayUrl = (ipfsUrl?: IpfsUrl): string | undefined => {
     }
 
     return `${CLOUDFARE_IPFS_PROXY}/ipfs/${ipfsCid}`;
-  } catch (error) {
+  } catch (_error) {
     return;
   }
 };
