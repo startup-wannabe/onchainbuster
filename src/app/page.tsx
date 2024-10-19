@@ -79,7 +79,7 @@ export default function Page() {
             />
           </TextField.Slot>
         </TextField.Root>
-        {stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
+        {!stateCheck('HowBasedAreYou', ThreeStageState.Finished) && (
           <React.Fragment>
             <h3 className="mt-4 font-bold text-md">View Profile Samples</h3>
             <ToggleGroup.Root
