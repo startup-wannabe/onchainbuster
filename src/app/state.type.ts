@@ -7,6 +7,7 @@ export enum StateEvent {
   GetNftActivity = 'GetNftActivity',
   GetTalentScore = 'GetTalentScore',
   HowBasedAreYou = 'HowBasedAreYou',
+  MintProfileNft = 'MintProfileNft',
 }
 
 export enum BinaryState {

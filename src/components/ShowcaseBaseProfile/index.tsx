@@ -1,20 +1,16 @@
 import { useMagic } from '@/app/hooks/useMagic';
 import { ThreeStageState } from '@/app/state.type';
 import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import BaseProfileDetailView from '../BaseProfileDetailView';
 import MagicButton from '../MagicButton';
-import MagicBaseGridCard from '../MagicBaseGridCard';
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  EyeOpenIcon,
-} from '@radix-ui/react-icons';
+import { ArrowLeftIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
 import { selectState, setState } from '@/helpers';
 import { AppStage } from '@/app/contexts/MagicContext';
 import BaseProfilePicks from '../BaseProfilePicks';
-import BaseMinting from '../BaseMinting';
+import MintableBaseProfile from '../BaseMinting';
+import { Spinner } from '@radix-ui/themes';
 
 type Props = {
   addressInput: string;
@@ -24,10 +20,13 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
   const bottomAnchor = useRef<HTMLDivElement | undefined>();
   const {
     query: { stateCheck },
+    mutate: { mintNft },
   } = useMagic();
-  const { appStage } = useMagicContext();
+  const [detailShown, setDetailShown] = useState(false);
+  const { appStage, nftTemplateSetting } = useMagicContext();
 
   const viewDetails = () => {
+    setDetailShown(true);
     bottomAnchor.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -44,18 +43,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 className="text-xl"
               />
             )}
-          <div className="flex gap-4">
-            {selectState(appStage) === AppStage.DisplayProfile &&
-              !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
-                <MagicButton
-                  text={
-                    <span className="flex justify-center gap-2 items-center">
-                      🚀 Get Based
-                    </span>
-                  }
-                  onClick={() => setState(appStage)(AppStage.GetBased)}
-                />
-              )}
+          <div className="flex gap-4 justify-center items-center">
             {selectState(appStage) === AppStage.GetBased &&
               !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
                 <MagicButton
@@ -67,46 +55,73 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                   onClick={() => setState(appStage)(AppStage.DisplayProfile)}
                 />
               )}
-            {selectState(appStage) === AppStage.GetBased &&
+            {selectState(appStage) === AppStage.DisplayProfile &&
               !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
-                <MagicButton
-                  text={
+                <button
+                  onClick={async () => {
+                    await mintNft(
+                      selectState(nftTemplateSetting).ref,
+                      'nft.png',
+                      'png',
+                    );
+                  }}
+                  type="button"
+                  style={{ borderRadius: 30 }}
+                  className="shadow-xl py-2 px-5 hover:bg-blue-500 hover:text-white"
+                >
+                  {stateCheck('MintProfileNft', ThreeStageState.InProgress) ? (
                     <span className="flex justify-center gap-2 items-center">
-                      Mint your profile NFT <ArrowRightIcon />
+                      <Spinner loading /> Collecting your profile...
                     </span>
-                  }
-                  onClick={() => setState(appStage)(AppStage.MintNft)}
-                />
+                  ) : (
+                    <span className="flex justify-center gap-2 items-center">
+                      Collect your profile 🤗
+                    </span>
+                  )}
+                </button>
               )}
             {selectState(appStage) === AppStage.DisplayProfile &&
               !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
-                <MagicButton
-                  text={
-                    <span className="flex justify-center gap-2 items-center">
-                      <EyeOpenIcon /> View Details
-                    </span>
-                  }
+                <button
+                  onClick={() => setState(appStage)(AppStage.GetBased)}
+                  type="button"
+                  style={{ width: 250, borderRadius: 30 }}
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-400 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 "
+                >
+                  <span className="flex justify-center gap-2 items-center text-xl">
+                    🚀 Get Based
+                  </span>
+                </button>
+              )}
+            {selectState(appStage) === AppStage.DisplayProfile &&
+              !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
+                <button
                   onClick={() => viewDetails()}
-                />
+                  type="button"
+                  style={{ borderRadius: 30 }}
+                  className="shadow-xl py-2 px-5 hover:bg-blue-500 hover:text-white"
+                >
+                  <span className="flex justify-center gap-2 items-center">
+                    <EyeOpenIcon /> View Details
+                  </span>
+                </button>
               )}
           </div>
         </div>
       )}
       {selectState(appStage) === AppStage.DisplayProfile &&
         !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
-          <MagicBaseGridCard />
+          <MintableBaseProfile />
         )}
       {selectState(appStage) === AppStage.GetBased &&
         !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
           <BaseProfilePicks />
         )}
-      {selectState(appStage) === AppStage.MintNft &&
-        !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && <BaseMinting />}
       {selectState(appStage) === AppStage.DisplayProfile &&
         !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
           <React.Fragment>
+            {detailShown && <BaseProfileDetailView />}
             {bottomAnchor && <div ref={bottomAnchor as any}></div>}
-            <BaseProfileDetailView />
           </React.Fragment>
         )}
     </section>

@@ -47,11 +47,13 @@ export const StateSubEvents = {
   [StateEvent.GetTokenActivity]: ThreeStageState,
   [StateEvent.GetNftActivity]: ThreeStageState,
   [StateEvent.GetTalentScore]: BinaryState,
+  [StateEvent.MintProfileNft]: ThreeStageState,
 };
 
 export const useMagic = () => {
   // biome-ignore lint/correctness/noEmptyPattern: <explanation>
   const {} = useMagic;
+  const magicContext = useMagicContext();
   const {
     stateEvents,
     setStateEvents,
@@ -76,7 +78,7 @@ export const useMagic = () => {
     nftActivityStats,
     nftPortfolioStats,
     totalGasInETH,
-  } = useMagicContext();
+  } = magicContext;
 
   const dispatchStateEvent = (eventName: StateEvent, status: StateOption) => {
     setStateEvents((stateEvents) => ({ ...stateEvents, [eventName]: status }));
@@ -463,12 +465,12 @@ export const useMagic = () => {
         },
         async () => {
           const address = await getWalletAddress(addressInput);
-          // await fetchTalentPassportScore(address);
+          await fetchTalentPassportScore(address);
           await fetchActivityStats(address);
-          // await fetchMultichainTokenPortfolio(address);
+          await fetchMultichainTokenPortfolio(address);
           await fetchMultichainTokenActivity(address);
-          // await fetchMultichainNftPortfolio(address);
-          // await fetchMultichainNftActivity(address);
+          await fetchMultichainNftPortfolio(address);
+          await fetchMultichainNftActivity(address);
           await delayMs(1000);
         },
       );
@@ -477,32 +479,43 @@ export const useMagic = () => {
     }
   };
 
-  const handleDownloadImage = async (
+  const mintNft = async (
     ref: React.MutableRefObject<any | null> | undefined,
     fileName: string,
     fileExtension: string,
   ) => {
-    const element = ref?.current;
-    if (!element) return;
+    console.log(ref);
+    try {
+      await newAsyncDispatch(
+        StateEvent.MintProfileNft,
+        {
+          onStartEvent: StateSubEvents.MintProfileNft.InProgress,
+          onErrorEvent: {
+            value: StateSubEvents.MintProfileNft.Idle,
+            toast: 'Failed to mint your profile NFT!',
+          },
+          onFinishEvent: {
+            value: StateSubEvents.MintProfileNft.Finished,
+            toast: 'NFT Minted!',
+          },
+          onResetEvent: StateSubEvents.MintProfileNft.Idle,
+        },
+        async () => {
+          const element = ref?.current;
+          if (!element) return;
 
-    let dataUrl = '';
-    switch (fileExtension) {
-      case 'jpeg':
-        dataUrl = await toJpeg(ref.current, { cacheBust: true });
-        break;
-      case 'svg':
-        dataUrl = await toSvg(ref.current, { cacheBust: true });
-        break;
-      case 'png':
-        dataUrl = await toPng(ref.current, { cacheBust: true });
-        break;
-      default:
-        break;
+          console.log(element);
+
+          let dataUrl = await toJpeg(ref.current, { cacheBust: true });
+          const link = document.createElement('a');
+          link.download = `${fileName}.${fileExtension}`;
+          link.href = dataUrl;
+          link.click();
+        },
+      );
+    } catch (error) {
+      console.log(error);
     }
-    const link = document.createElement('a');
-    link.download = `${fileName}.${fileExtension}`;
-    link.href = dataUrl;
-    link.click();
   };
 
   return {
@@ -517,7 +530,7 @@ export const useMagic = () => {
       stateCheck,
     },
     mutate: {
-      handleDownloadImage,
+      mintNft,
       letsDoSomeMagic,
       dispatchStateEvent,
       newAsyncDispatch,

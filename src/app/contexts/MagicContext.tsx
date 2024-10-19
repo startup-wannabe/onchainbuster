@@ -100,7 +100,6 @@ const defaultTalentPassportScore: TTalentPassportScore = {
 export enum AppStage {
   DisplayProfile = 0,
   GetBased = 1,
-  MintNft = 2,
 }
 
 export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;

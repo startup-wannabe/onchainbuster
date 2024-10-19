@@ -20,6 +20,8 @@ import ImageAdaptive from '../ImageAdaptive';
 import ProfileCard from '../ProfileCard';
 import ProgressBar from '../ProgressBar';
 import TotalBalancePieChart from '../TotalBalancePieChart';
+import moment from 'moment';
+import { toCapitalize } from '@/utils/strings';
 
 type Props = {
   style?: React.CSSProperties;
@@ -38,6 +40,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
     dappInteractionStats,
     allTransactions,
     longestHoldingToken,
+    activityStats,
   } = useMagicContext();
   const {
     defitOrArtTraitResult,
@@ -111,8 +114,14 @@ const MagicBaseGridCard = ({ style }: Props) => {
       >
         <Grid columns="repeat(4, 260px)" gap="3" height={'auto'}>
           <DecorativeCard className="text-center flex flex-col justify-center px-5 py-5">
-            <h1 className="text-blue-500 font-bold text-4xl">{2020}</h1>
-            <h2>The year of first on-chain transactions</h2>
+            <h1 className="text-blue-500 font-bold text-3xl">
+              {selectState(activityStats).firstActiveDay
+                ? moment(selectState(activityStats).firstActiveDay).format(
+                    'MMM, YYYY',
+                  )
+                : 'Unknown'}
+            </h1>
+            <h2>The year of first on-chain transaction</h2>
           </DecorativeCard>
           <DecorativeCard className="text-center flex flex-col justify-center px-5 py-5">
             <h1 className="text-blue-500 font-bold text-4xl">
@@ -298,58 +307,68 @@ const MagicBaseGridCard = ({ style }: Props) => {
           </Grid>
           <Grid gridRow={'3 / span 2'} gridColumn={'4'} width="auto">
             <DecorativeCard className="px-5 py-5 flex flex-col items-center justify-center">
-              {/* {mostValuableToken && (
-                <div className="flex flex-col gap-3 items-center justify-center">
-                  <h2>Most valuable onchain asset</h2>
-                  <div className="flex">
-                    <ImageAdaptive
-                      style={{
-                        width: 30,
-                        height: 30,
-                      }}
-                      src={mostValuableToken.logoURI}
-                      alt={`${mostValuableToken.name} logo`}
-                      className="mr-1 inline-block h-6 w-6 rounded-full"
-                    />
-                    <h1 className="font-bold text-2xl">
-                      {toCapitalize(mostValuableToken.name)} (
-                      {mostValuableToken.symbol})
-                    </h1>
-                  </div>
-                  <span>
-                    Worth&nbsp;
-                    <span className="font-bold">
-                      {formatNumberUSD(mostValuableToken.value)}
-                    </span>{' '}
-                    in total
-                  </span>
-                </div>
-              )} */}
-              {mostValuableNFTCollection && (
-                <div className="flex flex-col gap-3 items-center justify-center">
-                  <h2>Most valuable onchain asset</h2>
-                  <ImageAdaptive
-                    style={{
-                      width: 100,
-                      height: 100,
-                    }}
-                    src={mostValuableNFTCollection.collectionImage}
-                    alt={`${mostValuableNFTCollection.collectionImage} logo`}
-                    className="mr-1 inline-block h-6 w-6 "
-                  />
+              {mostValuableToken.value >
+              (mostValuableNFTCollection?.totalValue || 0) ? (
+                <React.Fragment>
+                  {mostValuableToken && (
+                    <div className="flex flex-col gap-3 items-center justify-center">
+                      <h2>Most valuable onchain asset</h2>
+                      <div className="flex">
+                        <ImageAdaptive
+                          style={{
+                            width: 30,
+                            height: 30,
+                          }}
+                          src={mostValuableToken.logoURI}
+                          alt={`${mostValuableToken.name} logo`}
+                          className="mr-1 inline-block h-6 w-6 rounded-full"
+                        />
+                        <h1 className="font-bold text-2xl">
+                          {toCapitalize(mostValuableToken.name)} (
+                          {mostValuableToken.symbol})
+                        </h1>
+                      </div>
+                      <span>
+                        Worth&nbsp;
+                        <span className="font-bold">
+                          {formatNumberUSD(mostValuableToken.value)}
+                        </span>{' '}
+                        in total
+                      </span>
+                    </div>
+                  )}
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  {mostValuableNFTCollection && (
+                    <div className="flex flex-col gap-3 items-center justify-center">
+                      <h2>Most valuable onchain asset</h2>
+                      <ImageAdaptive
+                        style={{
+                          width: 100,
+                          height: 100,
+                        }}
+                        src={mostValuableNFTCollection.collectionImage}
+                        alt={`${mostValuableNFTCollection.collectionImage} logo`}
+                        className="mr-1 inline-block h-6 w-6 "
+                      />
 
-                  <h1 className="font-bold text-2xl text-center">
-                    {mostValuableNFTCollection.collectionName}
-                  </h1>
+                      <h1 className="font-bold text-2xl text-center">
+                        {mostValuableNFTCollection.collectionName}
+                      </h1>
 
-                  <span>
-                    Worth&nbsp;
-                    <span className="font-bold">
-                      {formatNumberUSD(mostValuableNFTCollection.totalValue)}
-                    </span>{' '}
-                    in total
-                  </span>
-                </div>
+                      <span>
+                        Worth&nbsp;
+                        <span className="font-bold">
+                          {formatNumberUSD(
+                            mostValuableNFTCollection.totalValue,
+                          )}
+                        </span>{' '}
+                        in total
+                      </span>
+                    </div>
+                  )}
+                </React.Fragment>
               )}
             </DecorativeCard>
           </Grid>

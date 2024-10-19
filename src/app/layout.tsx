@@ -111,12 +111,6 @@ export default function RootLayout({
   ].join(' ');
   return (
     <html lang="en" className={`${fontClassNames} scroll-smooth`}>
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body className="flex font-sans items-center justify-center">
         <Theme>
           <OnchainProviders>

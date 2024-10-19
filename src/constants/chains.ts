@@ -12,29 +12,28 @@ export const chainIDMap: Record<
     id: 1,
     name: 'Ethereum',
     nativeToken: 'ETH',
-    logoURI:
-      'https://w7.pngwing.com/pngs/715/916/png-transparent-ethereum%EF%BC%8Ceth%EF%BC%8Cicon.png',
+    logoURI: '/chains/chain-eth.png',
     color: '#8198EE',
   },
   base: {
     id: 8453,
     name: 'Base',
     nativeToken: 'ETH',
-    logoURI: 'https://icons.llamao.fi/icons/chains/rsz_base.jpg',
+    logoURI: '/chains/chain-base.webp',
     color: '#0052FF',
   },
   arb: {
     id: 42161,
     name: 'Arbitrum',
     nativeToken: 'ETH',
-    logoURI: 'https://icons.llamao.fi/icons/chains/rsz_arbitrum.jpg',
+    logoURI: '/chains/chain-arbitrum.webp',
     color: '#12AAFF',
   },
   op: {
     id: 10,
     name: 'Optimism',
     nativeToken: 'ETH',
-    logoURI: 'https://icons.llamao.fi/icons/chains/rsz_optimism.jpg',
+    logoURI: '/chains/chain-op.png',
     color: '#FF0420',
   },
   bsc: {
@@ -48,7 +47,7 @@ export const chainIDMap: Record<
     id: 88,
     name: 'Viction',
     nativeToken: 'VIC',
-    logoURI: 'https://icons.llamao.fi/icons/chains/rsz_tomochain.jpg',
+    logoURI: '/chains/chain-vic.webp',
     color: '#E0DFDB',
   },
 };
