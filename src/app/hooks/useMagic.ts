@@ -8,7 +8,7 @@ import { toJpeg, toPng, toSvg } from 'html-to-image';
 import { toast } from 'react-toastify';
 import { isAddress } from 'viem';
 import { normalize } from 'viem/ens';
-import { delayMs, setState } from '../../helpers';
+import { delayMs, selectState, setState } from '../../helpers';
 import {
   calculateDappInteraction,
   calculateDeFiActivityStats,
@@ -37,6 +37,14 @@ import {
   type Toastable,
 } from '../state.type';
 import { useMagicContext } from './useMagicContext';
+import {
+  dataURLtoBlob,
+  generatePinataKey,
+  uploadFile,
+  uploadJson,
+} from '@/lib/pinata';
+import { BASE_SEPOLIA_CHAIN_ID } from '@/constants';
+import { MintResponse } from '../api/cdp/mint/route';
 
 export const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
@@ -486,7 +494,8 @@ export const useMagic = () => {
   const mintNft = async (
     ref: React.MutableRefObject<any | null> | undefined,
     fileName: string,
-    fileExtension: string,
+    toAddress: string,
+    onMinted: (response: MintResponse) => void,
   ) => {
     console.log(ref);
     try {
@@ -506,15 +515,38 @@ export const useMagic = () => {
         },
         async () => {
           const element = ref?.current;
-          if (!element) return;
-
-          console.log(element);
+          if (!element || !toAddress) return;
 
           let dataUrl = await toJpeg(ref.current, { cacheBust: true });
-          const link = document.createElement('a');
-          link.download = `${fileName}.${fileExtension}`;
-          link.href = dataUrl;
-          link.click();
+          const blob = dataURLtoBlob(dataUrl);
+          const keyData = await generatePinataKey();
+          const fileCID = await uploadFile(fileName, blob, keyData.JWT);
+
+          const metadata = {
+            name: `Onchain Buster Profile | ${toAddress.slice(0, 5)}`,
+            description: 'Onchain Buster ',
+            image: fileCID,
+            external_url: 'https://onchainbuster.vercel.app',
+          };
+
+          const uriCID = await uploadJson(metadata, keyData.JWT);
+
+          const response = await fetch('/api/cdp/mint', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              networkId: BASE_SEPOLIA_CHAIN_ID,
+              to: toAddress,
+              uri: uriCID,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data: MintResponse = await response.json();
+          onMinted(data);
         },
       );
     } catch (error) {

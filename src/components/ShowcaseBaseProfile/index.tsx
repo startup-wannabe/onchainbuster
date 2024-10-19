@@ -6,17 +6,19 @@ import BaseProfileDetailView from '../BaseProfileDetailView';
 import MagicButton from '../MagicButton';
 import { ArrowLeftIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
-import { selectState, setState } from '@/helpers';
+import { makeid, selectState, setState } from '@/helpers';
 import { AppStage } from '@/app/contexts/MagicContext';
 import BaseProfilePicks from '../BaseProfilePicks';
 import MintableBaseProfile from '../BaseMinting';
 import { Spinner } from '@radix-ui/themes';
+import { useAccount } from 'wagmi';
 
 type Props = {
   addressInput: string;
 };
 
 const ShowcaseBaseProfile = ({ addressInput }: Props) => {
+  const { address } = useAccount();
   const bottomAnchor = useRef<HTMLDivElement | undefined>();
   const {
     query: { stateCheck },
@@ -59,23 +61,38 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
               !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
                 <button
                   onClick={async () => {
+                    if (!address) return;
                     await mintNft(
                       selectState(nftTemplateSetting).ref,
-                      'nft.png',
-                      'png',
+                      `${address}-${makeid(3)}.png`,
+                      address,
+                      (data) => {
+                        console.log(data);
+                      },
                     );
                   }}
                   type="button"
                   style={{ borderRadius: 30 }}
                   className="shadow-xl py-2 px-5 hover:bg-blue-500 hover:text-white"
                 >
-                  {stateCheck('MintProfileNft', ThreeStageState.InProgress) ? (
-                    <span className="flex justify-center gap-2 items-center">
-                      <Spinner loading /> Collecting your profile...
-                    </span>
+                  {address ? (
+                    <React.Fragment>
+                      {stateCheck(
+                        'MintProfileNft',
+                        ThreeStageState.InProgress,
+                      ) ? (
+                        <span className="flex justify-center gap-2 items-center">
+                          <Spinner loading /> Collecting your profile...
+                        </span>
+                      ) : (
+                        <span className="flex justify-center gap-2 items-center">
+                          Collect your profile 🤗
+                        </span>
+                      )}
+                    </React.Fragment>
                   ) : (
                     <span className="flex justify-center gap-2 items-center">
-                      Collect your profile 🤗
+                      No wallet connected 😢
                     </span>
                   )}
                 </button>

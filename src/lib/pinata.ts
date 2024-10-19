@@ -13,29 +13,23 @@ export const generatePinataKey = async () => {
     throw error;
   }
 };
-
 export async function uploadFile(
-  selectedFile: File | undefined,
+  imageName: string,
+  imageBlob: Blob | undefined,
   keyToUse: string,
 ) {
-  if (!selectedFile) {
+  if (!imageBlob) {
     console.log('no file provided!');
     return;
   }
   try {
     const formData = new FormData();
-    formData.append('file', selectedFile);
-
-    const metadata = JSON.stringify({
-      name: `${selectedFile.name}`,
-    });
-    formData.append('pinataMetadata', metadata);
+    formData.append('file', imageBlob, `${imageName}.png`);
 
     const options = JSON.stringify({
       cidVersion: 1,
     });
     formData.append('pinataOptions', options);
-
     const uploadRes = await fetch(
       'https://api.pinata.cloud/pinning/pinFileToIPFS',
       {
@@ -90,3 +84,14 @@ export async function uploadJson(content: any, keyToUse: string) {
     console.log('Error uploading file:', error);
   }
 }
+
+export const dataURLtoBlob = (dataURL: string) => {
+  const byteString = atob(dataURL.split(',')[1]);
+  const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: mimeString });
+};
