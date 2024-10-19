@@ -558,11 +558,8 @@ export const useMagic = () => {
         const data: MintResponse = await response.json();
         onMinted(data);
 
-        const activity = await getLatestNFTActivity(
-          toAddress,
-          "BASE-SEPOLIA",
-          3 // Get 3 latest transaction
-        );
+        const activity = await getLatestNFTActivity(toAddress, "BASE-SEPOLIA");
+        console.log("activity", activity);
         const matchingTransaction = activity.find(
           (transaction) =>
             transaction.blockHash.toLowerCase() ===

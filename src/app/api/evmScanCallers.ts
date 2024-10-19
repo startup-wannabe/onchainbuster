@@ -180,8 +180,7 @@ export const listEVMScanNFTActivity = async (
 export const getLatestNFTActivity = async (
   address: string,
   chain: string,
-  limit = 10,
-  sort = "desc"
+  limit = 10
 ) => {
   if (address === "") {
     return [];
@@ -189,7 +188,7 @@ export const getLatestNFTActivity = async (
 
   const action = "tokennfttx";
   const data = await fetch(
-    `/api/evmscan/latest?address=${address}&chain=${chain}&action=${action}&limit=${limit}&sort=${sort}`,
+    `/api/evmscan/latest?address=${address}&chain=${chain}&action=${action}&limit=${limit}`,
     {
       method: "GET",
     }
@@ -202,7 +201,7 @@ export const getLatestNFTActivity = async (
   return nft.map((t) => {
     return {
       chain: chain.toLowerCase(),
-      blockHash: t.blockHash,
+      blockHash: t.hash, // Sorry for bad naming
       from: t.from,
       to: t.to,
       tokenId: t.tokenID,
