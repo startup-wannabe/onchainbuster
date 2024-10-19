@@ -12,15 +12,20 @@ import SignupButton from '../components/SignupButton';
 import { useMagic } from './hooks/useMagic';
 import { useMagicContext } from './hooks/useMagicContext';
 import { ThreeStageState } from './state.type';
+import * as ToggleGroup from '@radix-ui/react-toggle-group';
+import { MOCK_PROFILES } from '@/data/mocks';
+import '../data/toggle-group.css';
+import { selectState, setState } from '@/helpers';
 
 export default function Page() {
   const { address } = useAccount();
   const {
     text: [addressInput, setAddressInput],
+    exampleProfile,
   } = useMagicContext();
   const {
     query: { stateCheck },
-    mutate: { letsDoSomeMagic },
+    mutate: { letsDoSomeMagic, setExampleProfile },
   } = useMagic();
 
   return (
@@ -72,8 +77,26 @@ export default function Page() {
             />
           </TextField.Slot>
         </TextField.Root>
+        <h3 className="mt-4 font-bold text-md">View Profile Samples</h3>
+        <ToggleGroup.Root
+          className="ToggleGroup mt-2"
+          type="single"
+          defaultValue={selectState(exampleProfile)}
+          onValueChange={(value) => setExampleProfile(value)}
+          aria-label="Text alignment"
+        >
+          {MOCK_PROFILES.map((profile) => (
+            <ToggleGroup.Item className="ToggleGroupItem" value={profile.name}>
+              <div className="px-5">{profile.name}</div>
+            </ToggleGroup.Item>
+          ))}
+        </ToggleGroup.Root>
       </section>
-      <ShowcaseBaseProfile addressInput={addressInput} />
+      {(selectState(exampleProfile) ||
+        stateCheck('HowBasedAreYou', ThreeStageState.InProgress) ||
+        stateCheck('HowBasedAreYou', ThreeStageState.Finished)) && (
+        <ShowcaseBaseProfile addressInput={addressInput} />
+      )}
     </div>
   );
 }

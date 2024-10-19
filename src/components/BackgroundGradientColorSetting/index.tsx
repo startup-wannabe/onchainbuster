@@ -35,16 +35,6 @@ const BackgroundGradientSetting = ({ onValueChange }: Props) => {
   const angle = 135;
   return (
     <React.Fragment>
-      <MagicButton
-        text={'Generate ✨'}
-        style={{ width: '100%', marginBottom: 10 }}
-        onClick={() => {
-          onValueChange(
-            generateJSXMeshGradient(50, generateRandomRgbaStr())
-              .backgroundColor,
-          );
-        }}
-      />
       <div
         className="mt-5"
         style={{

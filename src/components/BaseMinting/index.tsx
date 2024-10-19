@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import MagicBaseGridCard from '../MagicBaseGridCard';
 import BackgroundImageSetting from '../BackgroundImageSetting';
 import { useMagicContext } from '@/app/hooks/useMagicContext';
@@ -7,19 +7,19 @@ import { Select } from 'antd';
 import { BackgroundVariant } from '@/app/contexts/MagicContext';
 import BackgroundGradientSetting from '../BackgroundGradientColorSetting';
 import { MIDDLE_STYLE } from '@/app/hooks/useBreakpoint';
+import MagicButton from '../MagicButton';
+import {
+  generateJSXMeshGradient,
+  generateRandomRgbaStr,
+} from '@/helpers/gradient.helper';
 
 type Props = {};
 
 const MintableBaseProfile = (props: Props) => {
-  const [settingOpen, setSettingOpen] = useState<boolean>(false);
   const { nftTemplateSetting } = useMagicContext();
 
   return (
-    <section
-      id="MintableBaseProfile"
-      style={{ cursor: 'pointer' }}
-      onClick={() => setSettingOpen(!settingOpen)}
-    >
+    <section id="MintableBaseProfile" style={{ cursor: 'pointer' }}>
       <div className="shadow-xl px-5 mb-5 py-5 justify-center items-center h-fit rounded-full">
         <div className="flex gap-5 justify-center items-center">
           <h3>Select Background: </h3>
@@ -29,13 +29,25 @@ const MintableBaseProfile = (props: Props) => {
                 ...selectState(nftTemplateSetting),
                 backgroundType: value,
               });
-              setSettingOpen(true);
             }}
             value={selectState(nftTemplateSetting).backgroundType}
             options={Object.keys(BackgroundVariant).map((variant) => ({
               label: variant,
               value: (BackgroundVariant as any)[variant],
             }))}
+          />
+          <MagicButton
+            text={'Generate ✨'}
+            style={{ width: '100%', marginBottom: 10 }}
+            onClick={() => {
+              setState(nftTemplateSetting)({
+                ...selectState(nftTemplateSetting),
+                backgroundValue: generateJSXMeshGradient(
+                  50,
+                  generateRandomRgbaStr(),
+                ).backgroundColor,
+              });
+            }}
           />
         </div>
         <div style={{ width: '100%', ...MIDDLE_STYLE }} className="mt-5">
@@ -47,7 +59,6 @@ const MintableBaseProfile = (props: Props) => {
                   ...selectState(nftTemplateSetting),
                   backgroundValue: imageItem.url,
                 });
-                setSettingOpen(true);
               }}
             />
           )}
@@ -59,7 +70,6 @@ const MintableBaseProfile = (props: Props) => {
                   ...selectState(nftTemplateSetting),
                   backgroundValue: color,
                 });
-                setSettingOpen(true);
               }}
             />
           )}

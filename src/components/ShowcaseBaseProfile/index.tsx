@@ -1,17 +1,18 @@
-import { AppStage } from "@/app/contexts/MagicContext";
-import { useMagic } from "@/app/hooks/useMagic";
-import { useMagicContext } from "@/app/hooks/useMagicContext";
-import { ThreeStageState } from "@/app/state.type";
-import { makeid, selectState, setState } from "@/helpers";
-import { ArrowLeftIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { Spinner } from "@radix-ui/themes";
-import React, { useRef, useState } from "react";
-import { useAccount } from "wagmi";
-import MintableBaseProfile from "../BaseMinting";
-import BaseProfileDetailView from "../BaseProfileDetailView";
-import BaseProfilePicks from "../BaseProfilePicks";
-import HowBasedAreYouHeader from "../HowBasedAreYouHeader";
-import MagicButton from "../MagicButton";
+import { AppStage } from '@/app/contexts/MagicContext';
+import { useMagic } from '@/app/hooks/useMagic';
+import { useMagicContext } from '@/app/hooks/useMagicContext';
+import { ThreeStageState } from '@/app/state.type';
+import { makeid, selectState, setState } from '@/helpers';
+import { ArrowLeftIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { Spinner } from '@radix-ui/themes';
+import React, { useRef, useState } from 'react';
+import { useAccount } from 'wagmi';
+import MintableBaseProfile from '../BaseMinting';
+import BaseProfileDetailView from '../BaseProfileDetailView';
+import BaseProfilePicks from '../BaseProfilePicks';
+import HowBasedAreYouHeader from '../HowBasedAreYouHeader';
+import MagicButton from '../MagicButton';
+import FetchingStatusOverlay from '../FetchingStatusOverlay';
 
 type Props = {
   addressInput: string;
@@ -29,15 +30,15 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
 
   const viewDetails = () => {
     setDetailShown(true);
-    bottomAnchor.current?.scrollIntoView({ behavior: "smooth" });
+    bottomAnchor.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <section className="flex items-center justify-center flex-col">
-      <div className="mb-5 flex justify-center flex-col items-center">
+      <div className="flex justify-center flex-col items-center">
         {(selectState(appStage) === AppStage.DisplayProfile ||
           selectState(appStage) === AppStage.GetBased) &&
-          !stateCheck("HowBasedAreYou", ThreeStageState.Idle) && (
+          !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
             <HowBasedAreYouHeader
               scale={0.6}
               name={addressInput}
@@ -46,7 +47,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
           )}
         <div className="flex gap-4 justify-center items-center">
           {selectState(appStage) === AppStage.GetBased &&
-            !stateCheck("HowBasedAreYou", ThreeStageState.Idle) && (
+            !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
               <MagicButton
                 text={
                   <span className="flex justify-center gap-2 items-center">
@@ -57,7 +58,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
               />
             )}
           {selectState(appStage) === AppStage.DisplayProfile &&
-            !stateCheck("HowBasedAreYou", ThreeStageState.Idle) && (
+            !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
               <button
                 onClick={async () => {
                   if (!address) return;
@@ -67,7 +68,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                     address,
                     (data) => {
                       console.log(data);
-                    }
+                    },
                   );
                 }}
                 type="button"
@@ -77,8 +78,8 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                 {address ? (
                   <React.Fragment>
                     {stateCheck(
-                      "MintProfileNft",
-                      ThreeStageState.InProgress
+                      'MintProfileNft',
+                      ThreeStageState.InProgress,
                     ) ? (
                       <span className="flex justify-center gap-2 items-center">
                         <Spinner loading={true} /> Collecting your profile...
@@ -97,7 +98,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
               </button>
             )}
           {selectState(appStage) === AppStage.DisplayProfile &&
-            !stateCheck("HowBasedAreYou", ThreeStageState.Idle) && (
+            !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
               <button
                 onClick={() => setState(appStage)(AppStage.GetBased)}
                 type="button"
@@ -110,7 +111,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
               </button>
             )}
           {selectState(appStage) === AppStage.DisplayProfile &&
-            !stateCheck("HowBasedAreYou", ThreeStageState.Idle) && (
+            !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
               <button
                 onClick={() => viewDetails()}
                 type="button"
@@ -124,21 +125,17 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
             )}
         </div>
       </div>
-      {selectState(appStage) === AppStage.DisplayProfile &&
-        !stateCheck("HowBasedAreYou", ThreeStageState.Idle) && (
-          <MintableBaseProfile />
-        )}
-      {selectState(appStage) === AppStage.GetBased &&
-        !stateCheck("HowBasedAreYou", ThreeStageState.Idle) && (
-          <BaseProfilePicks />
-        )}
-      {selectState(appStage) === AppStage.DisplayProfile &&
-        !stateCheck("HowBasedAreYou", ThreeStageState.Idle) && (
-          <React.Fragment>
-            {detailShown && <BaseProfileDetailView />}
-            {bottomAnchor && <div ref={bottomAnchor as any}></div>}
-          </React.Fragment>
-        )}
+      {selectState(appStage) === AppStage.GetBased && <BaseProfilePicks />}
+      {selectState(appStage) === AppStage.DisplayProfile && (
+        <MintableBaseProfile />
+      )}
+      {selectState(appStage) === AppStage.DisplayProfile && (
+        <React.Fragment>
+          {detailShown && <BaseProfileDetailView />}
+          {bottomAnchor && <div ref={bottomAnchor as any}></div>}
+        </React.Fragment>
+      )}
+      <FetchingStatusOverlay container={false} />
     </section>
   );
 };

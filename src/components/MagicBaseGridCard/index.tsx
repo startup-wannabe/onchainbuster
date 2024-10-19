@@ -1,27 +1,26 @@
-import { BackgroundVariant } from "@/app/contexts/MagicContext";
-import { useMagicContext } from "@/app/hooks/useMagicContext";
-import { useMagicTraits } from "@/app/hooks/useMagicTraits";
-import { supportedDappMetadata } from "@/constants/dapps";
-import { selectState, setState } from "@/helpers";
-import { formatDuration } from "@/helpers/activity.helper";
+import { BackgroundVariant } from '@/app/contexts/MagicContext';
+import { useMagicContext } from '@/app/hooks/useMagicContext';
+import { useMagicTraits } from '@/app/hooks/useMagicTraits';
+import { supportedDappMetadata } from '@/constants/dapps';
+import { selectState, setState } from '@/helpers';
+import { formatDuration } from '@/helpers/activity.helper';
 import {
   buildTotalBalancePieChart,
   formatNumberCompact,
   formatNumberUSD,
-} from "@/helpers/portfolio.helper";
-import { UserTrait } from "@/helpers/trait.helper";
-import { toCapitalize } from "@/utils/strings";
-import { Box, Grid } from "@radix-ui/themes";
-import moment from "moment";
-import Image from "next/image";
-import React, { useEffect, useMemo } from "react";
-import ChainIcon from "../ChainIcon";
-import DecorativeCard from "../DecorativeCard";
-import FetchingStatusOverlay from "../FetchingStatusOverlay";
-import ImageAdaptive from "../ImageAdaptive";
-import ProfileCard from "../ProfileCard";
-import ProgressBar from "../ProgressBar";
-import TotalBalancePieChart from "../TotalBalancePieChart";
+} from '@/helpers/portfolio.helper';
+import { UserTrait } from '@/helpers/trait.helper';
+import { toCapitalize } from '@/utils/strings';
+import { Box, Grid } from '@radix-ui/themes';
+import moment from 'moment';
+import Image from 'next/image';
+import React, { useEffect, useMemo } from 'react';
+import ChainIcon from '../ChainIcon';
+import DecorativeCard from '../DecorativeCard';
+import ImageAdaptive from '../ImageAdaptive';
+import ProfileCard from '../ProfileCard';
+import ProgressBar from '../ProgressBar';
+import TotalBalancePieChart from '../TotalBalancePieChart';
 
 type Props = {
   style?: React.CSSProperties;
@@ -52,30 +51,30 @@ const MagicBaseGridCard = ({ style }: Props) => {
     () =>
       buildTotalBalancePieChart(
         selectState(tokenPortfolioStats),
-        selectState(nftPortfolioStats)
+        selectState(nftPortfolioStats),
       ),
-    [tokenPortfolioStats, nftPortfolioStats]
+    [tokenPortfolioStats, nftPortfolioStats],
   );
 
   const { mostValuableToken } = useMemo(
     () => selectState(tokenPortfolioStats),
-    [selectState(tokenPortfolioStats)]
+    [selectState(tokenPortfolioStats)],
   );
 
   const { mostValuableNFTCollection } = useMemo(
     () => selectState(nftPortfolioStats),
-    [selectState(nftPortfolioStats)]
+    [selectState(nftPortfolioStats)],
   );
 
   const mostActiveDappInteraction = useMemo<TDappInteraction>(() => {
     let currentDappInteraction: TDappInteraction = {
-      name: "Unknown",
+      name: 'Unknown',
       count: 0,
       window: [Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER],
     };
     for (const dappGenre of Object.keys(selectState(dappInteractionStats))) {
       for (const dappName of Object.keys(
-        (selectState(dappInteractionStats) as any)[dappGenre]
+        (selectState(dappInteractionStats) as any)[dappGenre],
       )) {
         const dappInteraction: TDappInteraction = (
           selectState(dappInteractionStats) as any
@@ -101,25 +100,25 @@ const MagicBaseGridCard = ({ style }: Props) => {
         ref={innerRef}
         className="py-[50px] px-[50px] rounded-3xl shadow-xl"
         style={{
-          position: "relative",
+          position: 'relative',
           background:
             selectState(nftTemplateSetting).backgroundType ===
             BackgroundVariant.Color
               ? `${selectState(nftTemplateSetting).backgroundValue}`
               : `url('${selectState(nftTemplateSetting).backgroundValue}')`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
           ...style,
         }}
       >
-        <Grid columns="repeat(4, 260px)" gap="3" height={"auto"}>
+        <Grid columns="repeat(4, 260px)" gap="3" height={'auto'}>
           <DecorativeCard className="text-center flex flex-col justify-center px-5 py-5">
             <h1 className="text-blue-500 font-bold text-3xl">
               {selectState(activityStats).firstActiveDay
                 ? moment(selectState(activityStats).firstActiveDay).format(
-                    "MMM, YYYY"
+                    'MMM, YYYY',
                   )
-                : "Unknown"}
+                : 'Unknown'}
             </h1>
             <h2>The year of first onchain transaction</h2>
           </DecorativeCard>
@@ -129,7 +128,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
             </h1>
             <h2>Total transactions across blockchains</h2>
           </DecorativeCard>
-          <Grid gridRow={"1"} gridColumn={"3 / span 2"} width="auto">
+          <Grid gridRow={'1'} gridColumn={'3 / span 2'} width="auto">
             <DecorativeCard className="px-5 py-5">
               <div className="flex justify-start mb-3 gap-4 items-center">
                 <ChainIcon
@@ -145,16 +144,16 @@ const MagicBaseGridCard = ({ style }: Props) => {
                 </div>
               </div>
               <h2>
-                You have spent{" "}
+                You have spent{' '}
                 <span className="font-bold">
                   {selectState(chainStats).countUniqueDaysActiveChain} unique
                   days
-                </span>{" "}
+                </span>{' '}
                 on {selectState(chainStats).mostActiveChainName}.
               </h2>
             </DecorativeCard>
           </Grid>
-          <Grid gridRow={"2"} gridColumn={"1 / span 3"} width="auto">
+          <Grid gridRow={'2'} gridColumn={'1 / span 3'} width="auto">
             <DecorativeCard className="hover:shadow-3xl cursor-pointer px-5 py-5">
               <div className="flex justify-center h-full items-center">
                 <Box className="grid grid-cols-12 gap-[50px] justify-between items-center py-5 px-5">
@@ -212,7 +211,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
                 {formatNumberCompact(
                   selectState(tokenPortfolioStats).sumPortfolioUSDValue +
                     selectState(nftPortfolioStats).sumPortfolioUSDValue,
-                  2
+                  2,
                 )}
               </div>
             </TotalBalancePieChart>
@@ -226,9 +225,9 @@ const MagicBaseGridCard = ({ style }: Props) => {
                     className="rounded-xl"
                     style={{
                       backgroundColor: data.color,
-                      width: "fit-content",
-                      height: "fit-content",
-                      padding: "5px 5px",
+                      width: 'fit-content',
+                      height: 'fit-content',
+                      padding: '5px 5px',
                     }}
                   />
                   <ChainIcon chainId={data.id} />
@@ -236,7 +235,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
               ))}
             </div>
           </DecorativeCard>
-          <Grid gridRow={"3 / span 2"} gridColumn={"1"} width="auto">
+          <Grid gridRow={'3 / span 2'} gridColumn={'1'} width="auto">
             <DecorativeCard className="px-5 py-6 flex flex-col gap-4 items-center justify-center">
               {supportedDappMetadata[
                 mostActiveDappInteraction.name as keyof typeof supportedDappMetadata
@@ -256,8 +255,8 @@ const MagicBaseGridCard = ({ style }: Props) => {
               {mostActiveDappInteraction.count === 0 ? (
                 <>
                   <Image
-                    src={"/images/error.png"}
-                    alt={"not-found"}
+                    src={'/images/error.png'}
+                    alt={'not-found'}
                     width={80}
                     height={80}
                     className="shadow-xl"
@@ -273,10 +272,10 @@ const MagicBaseGridCard = ({ style }: Props) => {
                   </h1>
                   <h2 className="text-xl">Most active protocol</h2>
                   <div className="text-center text-lg">
-                    You interacted with {mostActiveDappInteraction.name}{" "}
+                    You interacted with {mostActiveDappInteraction.name}{' '}
                     <span className="font-bold">
-                      {mostActiveDappInteraction.count}{" "}
-                      {mostActiveDappInteraction.count === 1 ? "time" : "times"}{" "}
+                      {mostActiveDappInteraction.count}{' '}
+                      {mostActiveDappInteraction.count === 1 ? 'time' : 'times'}{' '}
                       since onchain.
                     </span>
                   </div>
@@ -296,7 +295,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
             </h1>
             <h2>DeFi Interactions</h2>
           </DecorativeCard>
-          <Grid gridRow={"4"} gridColumn={"2 / span 2"} width="auto">
+          <Grid gridRow={'4'} gridColumn={'2 / span 2'} width="auto">
             <DecorativeCard className="px-5 py-5">
               <div className="text-center">
                 <h1 className="font-bold text-2xl text-blue-500">
@@ -304,10 +303,10 @@ const MagicBaseGridCard = ({ style }: Props) => {
                 </h1>
                 <h3 className="text-xl mb-3">Longest holding time</h3>
                 <div>
-                  You've been holding onto{" "}
+                  You've been holding onto{' '}
                   <span className="font-bold">
                     {selectState(longestHoldingToken).symbol}
-                  </span>{" "}
+                  </span>{' '}
                   on
                   <br />
                   <span className="inline-block align-middle">
@@ -322,7 +321,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
               </div>
             </DecorativeCard>
           </Grid>
-          <Grid gridRow={"3 / span 2"} gridColumn={"4"} width="auto">
+          <Grid gridRow={'3 / span 2'} gridColumn={'4'} width="auto">
             <DecorativeCard className="px-5 py-5 flex flex-col items-center justify-center">
               {mostValuableToken.value >
               (mostValuableNFTCollection?.totalValue || 0) ? (
@@ -349,7 +348,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
                         Worth&nbsp;
                         <span className="font-bold">
                           {formatNumberUSD(mostValuableToken.value)}
-                        </span>{" "}
+                        </span>{' '}
                         in total
                       </span>
                     </div>
@@ -378,9 +377,9 @@ const MagicBaseGridCard = ({ style }: Props) => {
                         Worth&nbsp;
                         <span className="font-bold">
                           {formatNumberUSD(
-                            mostValuableNFTCollection.totalValue
+                            mostValuableNFTCollection.totalValue,
                           )}
-                        </span>{" "}
+                        </span>{' '}
                         in total
                       </span>
                     </div>
@@ -390,7 +389,6 @@ const MagicBaseGridCard = ({ style }: Props) => {
             </DecorativeCard>
           </Grid>
         </Grid>
-        <FetchingStatusOverlay container={false} />
       </div>
     </>
   );

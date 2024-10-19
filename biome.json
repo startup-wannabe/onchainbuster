@@ -67,6 +67,7 @@
     "ignore": [
       "src/data/**/*.json",
       "coverage/**",
+      "src/assets/**/*.json",
       ".next/**",
       "src/data/tokenList.json",
       "src/data/cmcIDList.json"

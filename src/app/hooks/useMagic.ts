@@ -43,8 +43,19 @@ import {
   type StateOption,
   ThreeStageState,
   type Toastable,
-} from "../state.type";
-import { useMagicContext } from "./useMagicContext";
+} from '../state.type';
+import { useMagicContext } from './useMagicContext';
+import {
+  dataURLtoBlob,
+  generatePinataKey,
+  uploadFile,
+  uploadJson,
+} from '@/lib/pinata';
+import { BASE_SEPOLIA_CHAIN_ID } from '@/constants';
+import { MintResponse } from '../api/cdp/mint/route';
+import { AppStage, IMagicContext } from '../contexts/MagicContext';
+import moment from 'moment';
+import { MOCK_PROFILES } from '@/data/mocks';
 
 export const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
@@ -63,6 +74,8 @@ export const useMagic = () => {
   const {} = useMagic;
   const magicContext = useMagicContext();
   const {
+    appStage,
+    exampleProfile,
     stateEvents,
     setStateEvents,
     // Raw
@@ -501,8 +514,8 @@ export const useMagic = () => {
     toAddress: string,
     onMinted: (response: MintResponse) => void
   ) => {
-    console.log(ref);
     try {
+      setState(exampleProfile)(undefined);
       await newAsyncDispatch(
         StateEvent.MintProfileNft,
         {
@@ -558,6 +571,43 @@ export const useMagic = () => {
     }
   };
 
+  const setExampleProfile = (_exampleProfile: string) => {
+    const profile = MOCK_PROFILES.find(
+      (profile) => profile.name === _exampleProfile,
+    )?.data as IMagicContext;
+    console.log(profile, _exampleProfile);
+    if (!profile) return;
+    setState(exampleProfile)(_exampleProfile);
+    setState(appStage)(AppStage.DisplayProfile);
+    setStateEvents({
+      ...stateEvents,
+      [StateEvent.HowBasedAreYou]: ThreeStageState.Idle,
+    });
+    setState(inputAddress)(profile.inputAddress as any);
+    setState(allTransactions)(profile.allTransactions as any);
+    setState(activityStats)({
+      ...(profile.activityStats as any),
+      firstActiveDay: moment(
+        (profile.activityStats as any as TActivityStats).firstActiveDay,
+      ).toDate(),
+    });
+    setState(longestHoldingToken)(profile.longestHoldingToken as any);
+    setState(talentPassportScore)(profile.talentPassportScore as any);
+    setState(defiActivityStats)(profile.defiActivityStats as any);
+    setState(tokenActivityStats)(profile.tokenActivityStats as any);
+    setState(nftActivityStats)(profile.nftActivityStats as any);
+    setState(chainStats)(profile.chainStats as any);
+    setState(dappInteractionStats)(profile.dappInteractionStats as any);
+    setState(tokenPortfolio)(profile.tokenPortfolio as any);
+    setState(tokenPortfolioStats)(profile.tokenPortfolioStats as any);
+    setState(marketData)(profile.marketData as any);
+    setState(nftPortfolio)(profile.nftPortfolio as any);
+    setState(nftPortfolioStats)(profile.nftPortfolioStats as any);
+    setState(tokenActivity)(profile.tokenActivity as any);
+    setState(nftActivity)(profile.nftActivity as any);
+    setState(totalGasInETH)(profile.totalGasInETH as any);
+  };
+
   return {
     query: {
       fetchTalentPassportScore,
@@ -574,6 +624,7 @@ export const useMagic = () => {
       letsDoSomeMagic,
       dispatchStateEvent,
       newAsyncDispatch,
+      setExampleProfile,
     },
   };
 };

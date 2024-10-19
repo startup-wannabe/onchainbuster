@@ -1,7 +1,4 @@
 import { useMagic } from '@/app/hooks/useMagic';
-import LoadableContainer from '../LoadableContainer';
-import { ThreeStageState } from '@/app/state.type';
-import { Spinner } from '@radix-ui/themes';
 
 type Props = {
   percentage: number;
@@ -28,12 +25,7 @@ const ProgressBar = ({ percentage }: Props) => {
           }
           style={{ borderWidth: 2 }}
         >
-          <LoadableContainer
-            isLoading={!stateCheck('HowBasedAreYou', ThreeStageState.Finished)}
-            loadComponent={<Spinner loading={true} />}
-          >
-            {(percentage * 100).toFixed(0)}%
-          </LoadableContainer>
+          {(percentage * 100).toFixed(0)}%
         </div>
         {/* Right header */}
         <div
@@ -42,12 +34,7 @@ const ProgressBar = ({ percentage }: Props) => {
           }
           style={{ borderWidth: 2 }}
         >
-          <LoadableContainer
-            isLoading={!stateCheck('HowBasedAreYou', ThreeStageState.Finished)}
-            loadComponent={<Spinner loading={true} />}
-          >
-            {((1 - percentage) * 100).toFixed(0)}%
-          </LoadableContainer>
+          {((1 - percentage) * 100).toFixed(0)}%
         </div>
       </div>
     </div>
