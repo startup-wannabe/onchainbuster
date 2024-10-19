@@ -14,6 +14,7 @@ import { useMagicContext } from '@/app/hooks/useMagicContext';
 import { selectState, setState } from '@/helpers';
 import { AppStage } from '@/app/contexts/MagicContext';
 import BaseProfilePicks from '../BaseProfilePicks';
+import BaseMinting from '../BaseMinting';
 
 type Props = {
   addressInput: string;
@@ -34,11 +35,15 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
     <section className="flex items-center justify-center flex-col">
       {stateCheck('ActivityStats', ThreeStageState.Finished) && (
         <div className="mb-5 flex justify-center flex-col items-center">
-          <HowBasedAreYouHeader
-            scale={0.6}
-            name={addressInput}
-            className="text-xl"
-          />
+          {(selectState(appStage) === AppStage.DisplayProfile ||
+            selectState(appStage) === AppStage.GetBased) &&
+            !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
+              <HowBasedAreYouHeader
+                scale={0.6}
+                name={addressInput}
+                className="text-xl"
+              />
+            )}
           <div className="flex gap-4">
             {selectState(appStage) === AppStage.DisplayProfile &&
               !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
@@ -95,6 +100,8 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
         !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
           <BaseProfilePicks />
         )}
+      {selectState(appStage) === AppStage.MintNft &&
+        !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && <BaseMinting />}
       {selectState(appStage) === AppStage.DisplayProfile &&
         !stateCheck('HowBasedAreYou', ThreeStageState.Idle) && (
           <React.Fragment>

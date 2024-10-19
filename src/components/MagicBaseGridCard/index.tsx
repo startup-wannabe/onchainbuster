@@ -1,16 +1,15 @@
 import { useMagicContext } from '@/app/hooks/useMagicContext';
 import { useMagicTraits } from '@/app/hooks/useMagicTraits';
-import { selectState } from '@/helpers';
+import { selectState, setState } from '@/helpers';
 import {
   buildTotalBalancePieChart,
   formatNumberCompact,
   formatNumberUSD,
 } from '@/helpers/portfolio.helper';
 import { Box, Grid } from '@radix-ui/themes';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import DecorativeCard from '../DecorativeCard';
 import ChainIcon from '../ChainIcon';
-import AnimatedComponent from '../AnimatedComponent';
 import ProfileCard from '../ProfileCard';
 import { UserTrait } from '@/helpers/trait.helper';
 import ProgressBar from '../ProgressBar';
@@ -19,11 +18,16 @@ import { supportedDappMetadata } from '@/constants/dapps';
 import Image from 'next/image';
 import { formatDuration } from '@/helpers/activity.helper';
 import FetchingStatusOverlay from '../FetchingStatusOverlay';
+import { BackgroundVariant } from '@/app/contexts/MagicContext';
 
-type Props = {};
+type Props = {
+  style?: React.CSSProperties;
+};
 
-const MagicBaseGridCard = (props: Props) => {
+const MagicBaseGridCard = ({ style }: Props) => {
+  const innerRef = React.useRef<any | undefined>(undefined);
   const {
+    nftTemplateSetting,
     inputAddress,
     tokenPortfolioStats,
     nftPortfolioStats,
@@ -74,16 +78,29 @@ const MagicBaseGridCard = (props: Props) => {
     }
     return currentDappInteraction;
   }, [dappInteractionStats]);
+
+  useEffect(() => {
+    setState(nftTemplateSetting)({
+      ...selectState(nftTemplateSetting),
+      ref: innerRef,
+    });
+  }, [innerRef]);
   return (
     <React.Fragment>
       <div
         id="MagicBaseGridCard"
+        ref={innerRef}
         className="py-[50px] px-[50px] rounded-3xl shadow-xl"
         style={{
           position: 'relative',
-          background: `url('/background.avif')`,
+          background:
+            selectState(nftTemplateSetting).backgroundType ===
+            BackgroundVariant.Color
+              ? `${selectState(nftTemplateSetting).backgroundValue}`
+              : `url('${selectState(nftTemplateSetting).backgroundValue}')`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
+          ...style,
         }}
       >
         <Grid columns="repeat(4, 260px)" gap="3" height={'auto'}>

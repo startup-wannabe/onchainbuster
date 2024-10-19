@@ -1,6 +1,11 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import type { StateEventRegistry } from '../state.type';
+
+export enum BackgroundVariant {
+  Image = 'Background Image',
+  Color = 'Background Color',
+}
 
 const defaultActivityStats: TActivityStats = {
   totalTxs: 0,
@@ -105,6 +110,7 @@ interface IMagicContext {
   appStage: UseState<AppStage>;
   stateEvents: StateEventRegistry;
   setStateEvents: SetState<StateEventRegistry>;
+  nftTemplateSetting: UseState<TNftTemplateSetting>;
   // Data analytics states
   text: UseState<string>;
   inputAddress: UseState<string>;
@@ -141,10 +147,18 @@ interface Props {
 
 export const MagicProvider = ({ children }: Props) => {
   const [stateEvents, setStateEvents] = useState<StateEventRegistry>({});
+  const ref = useRef<React.MutableRefObject<HTMLDivElement> | undefined>(
+    undefined,
+  );
+  const nftTemplateSetting = useState<TNftTemplateSetting>({
+    ref: ref.current,
+    backgroundValue: '/background.avif',
+    backgroundType: BackgroundVariant.Image,
+  });
 
   const inputAddress = useState('');
   // TODO: REMOVE when we're done.
-  const MOCK_WALLET_ADDRESS = '0x294d404b2d2A46DAb65d0256c5ADC34C901A6842';
+  const MOCK_WALLET_ADDRESS = '0x6A62d8402ABf362569Ed8eC3b2E78D8b74c9E15b';
   const text = useState(MOCK_WALLET_ADDRESS);
 
   const appStage = useState<AppStage>(AppStage.DisplayProfile);
@@ -193,6 +207,7 @@ export const MagicProvider = ({ children }: Props) => {
         appStage,
         stateEvents,
         setStateEvents,
+        nftTemplateSetting,
 
         // Raw
         text,
