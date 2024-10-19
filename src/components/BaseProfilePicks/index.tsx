@@ -29,7 +29,7 @@ const BaseProfilePicks = (props: Props) => {
         backgroundSize: 'cover',
       }}
     >
-      <div className="flex bg-white shadow-xl py-5 rounded-xl items-center flex-col justify-center mb-6">
+      <div className="flex bg-white shadow-xl py-5 px-6 rounded-xl items-center flex-col justify-center mb-6">
         <h2 className="mb-4 font-bold text-2xl">Your Based Picks</h2>
         <h3 className="mb-4 text-xl">
           Since you are {defitOrArtTraitResult.trait},{' '}

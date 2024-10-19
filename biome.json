@@ -65,6 +65,7 @@
   },
   "files": {
     "ignore": [
+      "src/data/**/*.json",
       "coverage/**",
       ".next/**",
       "src/data/tokenList.json",

@@ -1,6 +1,9 @@
 'use client';
-import React, { useRef, useState } from 'react';
-import type { StateEventRegistry } from '../state.type';
+import React, { useEffect, useRef, useState } from 'react';
+import { StateEvent, StateEventRegistry, ThreeStageState } from '../state.type';
+import { MOCK_PROFILE_DATA } from '@/data/mocks';
+import { setState } from '@/helpers';
+import moment from 'moment';
 
 export enum BackgroundVariant {
   Image = 'Background Image',
@@ -105,7 +108,7 @@ export enum AppStage {
 export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 export type UseState<T> = [T, SetState<T>];
 
-interface IMagicContext {
+export interface IMagicContext {
   appStage: UseState<AppStage>;
   stateEvents: StateEventRegistry;
   setStateEvents: SetState<StateEventRegistry>;
@@ -201,6 +204,39 @@ export const MagicProvider = ({ children }: Props) => {
   const nftActivity = useState<TNFTActivityV2[]>([]);
 
   const totalGasInETH = useState(0);
+
+  useEffect(() => {
+    const profile = MOCK_PROFILE_DATA.BaseArmstrongData;
+    setState(appStage)(AppStage.DisplayProfile);
+    setStateEvents({
+      ...stateEvents,
+      [StateEvent.HowBasedAreYou]: ThreeStageState.Finished,
+    });
+    setState(inputAddress)(profile.inputAddress as any);
+    setState(allTransactions)(profile.allTransactions as any);
+    setState(activityStats)({
+      ...(profile.activityStats as any),
+      firstActiveDay: moment(
+        (profile.activityStats as any as TActivityStats).firstActiveDay,
+      ).toDate(),
+    });
+    setState(longestHoldingToken)(profile.longestHoldingToken as any);
+    setState(talentPassportScore)(profile.talentPassportScore as any);
+    setState(defiActivityStats)(profile.defiActivityStats as any);
+    setState(tokenActivityStats)(profile.tokenActivityStats as any);
+    setState(nftActivityStats)(profile.nftActivityStats as any);
+    setState(chainStats)(profile.chainStats as any);
+    setState(dappInteractionStats)(profile.dappInteractionStats as any);
+    setState(tokenPortfolio)(profile.tokenPortfolio as any);
+    setState(tokenPortfolioStats)(profile.tokenPortfolioStats as any);
+    setState(marketData)(profile.marketData as any);
+    setState(nftPortfolio)(profile.nftPortfolio as any);
+    setState(nftPortfolioStats)(profile.nftPortfolioStats as any);
+    setState(tokenActivity)(profile.tokenActivity as any);
+    setState(nftActivity)(profile.nftActivity as any);
+    setState(totalGasInETH)(profile.totalGasInETH as any);
+  }, [MOCK_PROFILE_DATA]);
+
   return (
     <MagicContext.Provider
       value={{
