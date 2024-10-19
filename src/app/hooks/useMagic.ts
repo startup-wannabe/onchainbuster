@@ -166,7 +166,7 @@ export const useMagic = () => {
           setState(inputAddress)(address);
           return address;
         }
-        throw "Wallet address is invalid! Please try again.";
+        throw new Error("Wallet address is invalid! Please try again.");
       }
     );
   };
@@ -559,7 +559,7 @@ export const useMagic = () => {
         onMinted(data);
 
         const activity = await getLatestNFTActivity(toAddress, "BASE-SEPOLIA");
-        console.log("activity", activity);
+
         const matchingTransaction = activity.find(
           (transaction) =>
             transaction.blockHash.toLowerCase() ===
