@@ -14,6 +14,8 @@ import { useMagic } from "./hooks/useMagic";
 import { useMagicContext } from "./hooks/useMagicContext";
 import { ThreeStageState } from "./state.type";
 import "../data/toggle-group.css";
+import FetchingStatusOverlay from "@/components/FetchingStatusOverlay";
+import MintingStatusOverlay from "@/components/MintingStatusOverlay";
 import { selectState } from "@/helpers";
 
 export default function Page() {
@@ -76,8 +78,8 @@ export default function Page() {
             />
           </TextField.Slot>
         </TextField.Root>
-        {!stateCheck('HowBasedAreYou', ThreeStageState.Finished) && (
-          <React.Fragment>
+        {!stateCheck("HowBasedAreYou", ThreeStageState.Finished) && (
+          <>
             <h3 className="mt-4 font-bold text-md">View Profile Samples</h3>
             <ToggleGroup.Root
               className="ToggleGroup mt-2"
@@ -86,10 +88,18 @@ export default function Page() {
               onValueChange={(value) => setExampleProfile(value)}
               aria-label="Text alignment"
             >
-              <div className="px-5">{profile.name}</div>
-            </ToggleGroup.Item>
-          ))}
-        </ToggleGroup.Root>
+              {MOCK_PROFILES.map((profile) => (
+                <ToggleGroup.Item
+                  key={profile.name}
+                  className="ToggleGroupItem"
+                  value={profile.name}
+                >
+                  <div className="px-5">{profile.name}</div>
+                </ToggleGroup.Item>
+              ))}
+            </ToggleGroup.Root>
+          </>
+        )}
       </section>
       {(selectState(exampleProfile) ||
         stateCheck("HowBasedAreYou", ThreeStageState.InProgress) ||
