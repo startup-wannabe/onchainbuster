@@ -1,4 +1,4 @@
-import { chainIDMap } from '@/constants/chains';
+import { chainIDMap } from "@/constants/chains";
 import {
   AAVE,
   AERODROME,
@@ -33,7 +33,7 @@ import {
   VENUS,
   VIC_SPACEGATE,
   ZORA,
-} from '@/constants/contracts';
+} from "@/constants/contracts";
 
 export const calculateGasInETH = (gasPrice: number, gasUsed: number) => {
   const gwei = 10 ** 9;
@@ -43,15 +43,14 @@ export const calculateGasInETH = (gasPrice: number, gasUsed: number) => {
 // Acknowledgement: https://github.com/base-org/web/blob/master/apps/web/src/components/Basenames/UsernameProfileSectionHeatmap/index.tsx#L115
 export const calculateEVMStreaksAndMetrics = (
   transactions: TEVMScanTransaction[],
-  address: string,
+  address: string
 ): TActivityStats => {
-  console.log(transactions, address);
   const filteredTransactions = transactions.filter(
-    (tx) => tx.from.toLowerCase() === address.toLowerCase(), // Filter from Txs only
+    (tx) => tx.from.toLowerCase() === address.toLowerCase() // Filter from Txs only
   );
 
   const timestamps = transactions.map((tx) =>
-    Number.parseInt(tx.timeStamp, 10),
+    Number.parseInt(tx.timeStamp, 10)
   );
   const firstTransactionDate = new Date(Math.min(...timestamps) * 1000);
 
@@ -70,8 +69,8 @@ export const calculateEVMStreaksAndMetrics = (
 
   const uniqueActiveDaysSet = new Set(
     filteredTransactions.map((tx) =>
-      new Date(Number.parseInt(tx.timeStamp, 10) * 1000).toDateString(),
-    ),
+      new Date(Number.parseInt(tx.timeStamp, 10) * 1000).toDateString()
+    )
   );
 
   const sortedDates = Array.from(uniqueActiveDaysSet)
@@ -108,55 +107,55 @@ export const calculateEVMStreaksAndMetrics = (
     activityPeriod: Math.max(
       Math.ceil(
         (lastTransactionDate.getTime() - firstTransactionDate.getTime()) /
-          (1000 * 60 * 60 * 24),
+          (1000 * 60 * 60 * 24)
       ),
-      1,
+      1
     ),
   };
 };
 
 // Function Names
-const SWAP_FUNCTION_NAMES = ['swap', 'fillOtcOrderWithEth', 'proxiedSwap'];
-const STAKE_FUNCTION_NAMES = ['wrap', 'unwrap', 'submit', 'deposit'];
+const SWAP_FUNCTION_NAMES = ["swap", "fillOtcOrderWithEth", "proxiedSwap"];
+const STAKE_FUNCTION_NAMES = ["wrap", "unwrap", "submit", "deposit"];
 const LEND_FUNCTION_NAMES = [
-  'mint',
-  'borrow',
-  'redeem',
-  'borrow',
-  'redeem',
-  'repay',
-  'liquidate',
-  'seize',
-  'accrue',
-  'allow',
-  'supply',
-  'withdraw',
+  "mint",
+  "borrow",
+  "redeem",
+  "borrow",
+  "redeem",
+  "repay",
+  "liquidate",
+  "seize",
+  "accrue",
+  "allow",
+  "supply",
+  "withdraw",
 ];
 
 export const calculateDeFiActivityStats = (
-  transactions: TEVMScanTransaction[],
+  transactions: TEVMScanTransaction[]
 ): TDeFiActivityStats => {
   // All defi transactions (swap, lend, stake, borrow)
   const sumCount = transactions.filter(
     (tx) =>
       ALL_DEFI_INTERACTION.has(tx.to.toLowerCase()) ||
-      ALL_DEFI_INTERACTION.has(tx.from.toLowerCase()),
+      ALL_DEFI_INTERACTION.has(tx.from.toLowerCase())
   ).length;
 
   const swapCount = transactions.filter((tx) =>
-    DEX_INTERACTION.has(tx.to.toLowerCase()),
+    DEX_INTERACTION.has(tx.to.toLowerCase())
   ).length;
 
   const dexCount = transactions.filter(
     (tx) =>
       DEX_INTERACTION.has(tx.to.toLowerCase()) ||
-      DEX_INTERACTION.has(tx.from.toLowerCase()),
+      DEX_INTERACTION.has(tx.from.toLowerCase())
   ).length;
 
   const lendCount = transactions.filter(
     (tx) =>
       LEND_BORROW_STAKE_INTERACTION.has(tx.to.toLowerCase()) ||
-      LEND_BORROW_STAKE_INTERACTION.has(tx.from.toLowerCase()),
+      LEND_BORROW_STAKE_INTERACTION.has(tx.from.toLowerCase())
   ).length;
 
   return { sumCount, swapCount, dexCount, lendCount } as TDeFiActivityStats;
@@ -164,7 +163,7 @@ export const calculateDeFiActivityStats = (
 
 export const calculateTokenActivityStats = (
   tokenActivities: TTokenActivity[],
-  marketData: TTokenSymbolDetail[],
+  marketData: TTokenSymbolDetail[]
 ) => {
   const sumCount = tokenActivities.length;
 
@@ -187,24 +186,24 @@ export const calculateTokenActivityStats = (
 
 export const calculateNFTActivityStats = (
   nftActivities: TNFTActivityV2[],
-  address: string,
+  address: string
 ) => {
   // All NFT actions
   const sumCount = nftActivities.length;
 
   // Filter out VIC Scan - since it's didn't have duplicated data
-  const vicNFTActivities = nftActivities.filter((item) => item.chain === 'vic');
-  const evmNFTActivities = nftActivities.filter((item) => item.chain !== 'vic');
+  const vicNFTActivities = nftActivities.filter((item) => item.chain === "vic");
+  const evmNFTActivities = nftActivities.filter((item) => item.chain !== "vic");
 
   const dedupKeys = [
-    'chain',
-    'blockHash',
-    'from',
-    'to',
-    'timestamp',
-    'tokenId',
-    'tokenName',
-    'tokenSymbol',
+    "chain",
+    "blockHash",
+    "from",
+    "to",
+    "timestamp",
+    "tokenId",
+    "tokenName",
+    "tokenSymbol",
   ];
   // 1 buy/sale action with have additional transfer transaction
   // -> First filter all the duplicated records (~= trading activity)
@@ -215,7 +214,7 @@ export const calculateNFTActivityStats = (
     // Create a unique key based on the specified fields
     const key = dedupKeys
       .map((field) => item[field as keyof TNFTActivityV2])
-      .join('|');
+      .join("|");
     if (seen.has(key)) {
       return true; // Duplicate found
     }
@@ -231,20 +230,20 @@ export const calculateNFTActivityStats = (
   // Sale: from !== 0x00000... && to === address: Ignore mint
   // Buy: from === address && to !== 0x00000... : Ignore burn
   const mintCount = cleanedNFTActivity.filter((act) =>
-    act.from.toLowerCase().includes('0x00000000000'),
+    act.from.toLowerCase().includes("0x00000000000")
   ).length;
 
   const buyCount = cleanedNFTActivity.filter(
     (act) =>
-      !act.from.toLowerCase().includes('0x00000000000') &&
-      act.to.toLowerCase() === address.toLowerCase(),
+      !act.from.toLowerCase().includes("0x00000000000") &&
+      act.to.toLowerCase() === address.toLowerCase()
     // TODO: It still contains transferActivities -.-
   ).length;
 
   const saleCount = cleanedNFTActivity.filter(
     (act) =>
       act.from.toLowerCase() === address.toLowerCase() &&
-      !act.to.toLowerCase().includes('0x00000000000'),
+      !act.to.toLowerCase().includes("0x00000000000")
     // TODO: It still contains transferActivities -.-
   ).length;
 
@@ -260,7 +259,7 @@ export const calculateNFTActivityStats = (
 };
 
 export const calculateDappInteraction = (
-  transactions: TEVMScanTransaction[],
+  transactions: TEVMScanTransaction[]
 ): TDAppInteractionMap => {
   // Initialize all the platform interaction maps with default values
   const defaultWindow: [number, number] = [
@@ -269,50 +268,50 @@ export const calculateDappInteraction = (
   ];
   const dappInteractionMap: TDAppInteractionMap = {
     marketplace: {
-      opensea: { name: 'OpenSea', window: defaultWindow, count: 0 },
-      blur: { name: 'Blur', window: defaultWindow, count: 0 },
-      magicEden: { name: 'Magic Eden', window: defaultWindow, count: 0 },
-      dagora: { name: 'Dagora', window: defaultWindow, count: 0 },
-      zora: { name: 'Zora', window: defaultWindow, count: 0 },
+      opensea: { name: "OpenSea", window: defaultWindow, count: 0 },
+      blur: { name: "Blur", window: defaultWindow, count: 0 },
+      magicEden: { name: "Magic Eden", window: defaultWindow, count: 0 },
+      dagora: { name: "Dagora", window: defaultWindow, count: 0 },
+      zora: { name: "Zora", window: defaultWindow, count: 0 },
     },
     defi: {
-      uniswap: { name: 'Uniswap', window: defaultWindow, count: 0 },
-      curve: { name: 'Curve', window: defaultWindow, count: 0 },
-      pendle: { name: 'Pendle', window: defaultWindow, count: 0 },
-      aave: { name: 'Aave', window: defaultWindow, count: 0 },
-      oneinch: { name: '1INCH', window: defaultWindow, count: 0 },
-      cow: { name: 'CoW Swap', window: defaultWindow, count: 0 },
-      aero: { name: 'Aerodrome', window: defaultWindow, count: 0 },
-      velo: { name: 'Velodrome', window: defaultWindow, count: 0 },
-      moonwell: { name: 'Moonwell', window: defaultWindow, count: 0 },
-      eigenlayer: { name: 'EigenLayer', window: defaultWindow, count: 0 },
-      puffer: { name: 'Puffer', window: defaultWindow, count: 0 },
-      lido: { name: 'Lido', window: defaultWindow, count: 0 },
-      swell: { name: 'Swell', window: defaultWindow, count: 0 },
-      gmx: { name: 'GMX', window: defaultWindow, count: 0 },
-      pancake: { name: 'PancakeSwap', window: defaultWindow, count: 0 },
-      synthetix: { name: 'Synthetix', window: defaultWindow, count: 0 },
-      compound: { name: 'Compound', window: defaultWindow, count: 0 },
-      venus: { name: 'Venus', window: defaultWindow, count: 0 },
-      baryon: { name: 'Baryon', window: defaultWindow, count: 0 },
+      uniswap: { name: "Uniswap", window: defaultWindow, count: 0 },
+      curve: { name: "Curve", window: defaultWindow, count: 0 },
+      pendle: { name: "Pendle", window: defaultWindow, count: 0 },
+      aave: { name: "Aave", window: defaultWindow, count: 0 },
+      oneinch: { name: "1INCH", window: defaultWindow, count: 0 },
+      cow: { name: "CoW Swap", window: defaultWindow, count: 0 },
+      aero: { name: "Aerodrome", window: defaultWindow, count: 0 },
+      velo: { name: "Velodrome", window: defaultWindow, count: 0 },
+      moonwell: { name: "Moonwell", window: defaultWindow, count: 0 },
+      eigenlayer: { name: "EigenLayer", window: defaultWindow, count: 0 },
+      puffer: { name: "Puffer", window: defaultWindow, count: 0 },
+      lido: { name: "Lido", window: defaultWindow, count: 0 },
+      swell: { name: "Swell", window: defaultWindow, count: 0 },
+      gmx: { name: "GMX", window: defaultWindow, count: 0 },
+      pancake: { name: "PancakeSwap", window: defaultWindow, count: 0 },
+      synthetix: { name: "Synthetix", window: defaultWindow, count: 0 },
+      compound: { name: "Compound", window: defaultWindow, count: 0 },
+      venus: { name: "Venus", window: defaultWindow, count: 0 },
+      baryon: { name: "Baryon", window: defaultWindow, count: 0 },
     },
     bridge: {
-      relay: { name: 'Relay Bridge', window: defaultWindow, count: 0 },
-      spacegate: { name: 'SpaceGate', window: defaultWindow, count: 0 },
-      op: { name: 'OP Native Bridge', window: defaultWindow, count: 0 },
+      relay: { name: "Relay Bridge", window: defaultWindow, count: 0 },
+      spacegate: { name: "SpaceGate", window: defaultWindow, count: 0 },
+      op: { name: "OP Native Bridge", window: defaultWindow, count: 0 },
       base: {
-        name: 'Base Native Bridge (Deprecated)',
+        name: "Base Native Bridge (Deprecated)",
         window: defaultWindow,
         count: 0,
       },
     },
     nameService: {
       ens: {
-        name: 'Ethereum Name Service (ENS)',
+        name: "Ethereum Name Service (ENS)",
         window: defaultWindow,
         count: 0,
       },
-      oneid: { name: 'OneID', window: defaultWindow, count: 0 },
+      oneid: { name: "OneID", window: defaultWindow, count: 0 },
     },
   };
 
@@ -359,7 +358,7 @@ export const calculateDappInteraction = (
     for (const [dapp, contract] of dappAndContractList) {
       // TODO: More accurate filter on Lido, Swell, Compound
       const contractIncluded =
-        typeof contract === 'string'
+        typeof contract === "string"
           ? contract === lowerCaseTo.toLowerCase() ||
             contract === lowerCaseFrom.toLowerCase()
           : contract.has(lowerCaseTo) || contract.has(lowerCaseFrom);
@@ -393,15 +392,15 @@ type Holding = {
 export const findLongestHoldingToken = (
   chain: string,
   transactions: TTokenActivity[],
-  address: string,
+  address: string
 ): TLongestHoldingToken => {
   const holdings: Record<string, Holding[]> = {}; // Updated to include chain
   let longestDuration = 0;
-  let longestAsset = '';
+  let longestAsset = "";
 
   // Sort timestamp asc
   const sortedTransactions = transactions.sort((a, b) =>
-    Number.parseInt(a.timestamp) > Number.parseInt(b.timestamp) ? 1 : -1,
+    Number.parseInt(a.timestamp) > Number.parseInt(b.timestamp) ? 1 : -1
   );
 
   // If it's a buy transaction, add to holdings
@@ -412,14 +411,14 @@ export const findLongestHoldingToken = (
       }
 
       holdings[symbol].push({
-        amount: Number.parseInt(value || '0'),
+        amount: Number.parseInt(value || "0"),
         timestamp: Number.parseInt(timestamp),
       });
     }
 
     // If it's a sell transaction, calculate holding duration
     if (from.toLowerCase() === address.toLowerCase()) {
-      let remainingSellAmount = Number.parseInt(value || '0');
+      let remainingSellAmount = Number.parseInt(value || "0");
 
       // Process each holding for this asset
       while (
@@ -472,13 +471,13 @@ export const formatDuration = (seconds: number): string => {
 
   const parts = [];
   if (years > 0) {
-    parts.push(`${years} year${years > 1 ? 's' : ''}`);
+    parts.push(`${years} year${years > 1 ? "s" : ""}`);
   }
   if (months > 0) {
-    parts.push(`${months} month${months > 1 ? 's' : ''}`);
+    parts.push(`${months} month${months > 1 ? "s" : ""}`);
   }
   if (days > 0) {
-    parts.push(`${days} day${days > 1 ? 's' : ''}`);
+    parts.push(`${days} day${days > 1 ? "s" : ""}`);
   }
   // if (hours > 0) {
   //   parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
@@ -490,5 +489,5 @@ export const formatDuration = (seconds: number): string => {
   //   parts.push(`${remainingSeconds} second${remainingSeconds > 1 ? 's' : ''}`);
   // }
 
-  return parts.join(', ');
+  return parts.join(", ");
 };

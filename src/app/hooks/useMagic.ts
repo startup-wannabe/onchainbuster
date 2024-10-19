@@ -150,11 +150,11 @@ export const useMagic = () => {
           address = (await getAddress({
             name: normalize(text),
           })) as string;
-          console.log("ENS Address:", address);
+          // console.log("ENS Address:", address);
           setState(inputAddress)(address);
         } else {
           address = await searchAddressFromOneID(text);
-          console.log("OneID Address:", address);
+          // console.log("OneID Address:", address);
         }
         if (isAddress(address)) {
           setState(inputAddress)(address);
@@ -367,13 +367,13 @@ export const useMagic = () => {
 
         // console.log("_longestHoldingToken", _longestHoldingToken);
 
-        if (_longestHoldingToken.duration === 0) {
-          console.log("You don't have any asset yet!");
-        } else {
-          console.log(
-            `You've been loyal in holding ${_longestHoldingToken.symbol} at ${_longestHoldingToken.chain} for over ${formatDuration(_longestHoldingToken.duration)}`
-          );
-        }
+        // if (_longestHoldingToken.duration === 0) {
+        //   console.log("You don't have any asset yet!");
+        // } else {
+        //   console.log(
+        //     `You've been loyal in holding ${_longestHoldingToken.symbol} at ${_longestHoldingToken.chain} for over ${formatDuration(_longestHoldingToken.duration)}`
+        //   );
+        // }
 
         // TODO: Handle no token hold?
         setState(longestHoldingToken)(_longestHoldingToken);
