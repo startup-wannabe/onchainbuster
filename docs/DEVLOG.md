@@ -1,5 +1,7 @@
 # Buildathon DEVLOG
 
+This DEVLOG includes the initial development process of this project during [Based SEA Buildathon ](https://based-sea.devfolio.co/) participation.
+
 ---
 
 ## 2024-10-07
@@ -77,3 +79,20 @@ Data support summary
 - UI Polishment
 - You are ready to get Based!
   ![detailed-flow](./assets/detailed-flow.png)
+
+## 2024-10-15
+
+- Switch Dagora to client-side API service (instead of server-side) to avoid breaking on production (Dagora might have whitelisted server)
+- Display Based Picks card and revamp UI (reuse a few components from base-org web)
+- Filter Spam NFT for UI display and scoring calculation
+- Fix NFT Activity loading for too long
+  - Migrate back to raw explorer's transactions and identify mint-buy-sale activity, rather than relying on Reservoir NFT Activity API
+  - Drawback: Cannot capture Listing/Bidding activities
+- Scoring recalculation after testing on 10-20 known wallets (and polish for better UI displayment)
+
+## 2024-10-17
+
+- Implement NFT minting flow with Coinbase CDP-SDK (thanks to the latest Instamint demo).
+  - Use Pinata for actual metadata IPFS storage
+  - Deploy custom ERC721 contract (since CDP native 721 contract not support incremental tokenID and dynamic metadata)
+- Fix getAddress (from ENS) rate limit error when hitting cloudflare-eth
