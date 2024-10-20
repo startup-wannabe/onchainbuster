@@ -96,8 +96,8 @@ type TVicscanAccount = {
   timestamp: number;
   updatedAt: string;
   tomoPrice: number;
-  accountName: string;
-  oneId: boolean;
+  accountName?: string;
+  oneId?: boolean;
 };
 
 type TVicscanTokenDetail = {

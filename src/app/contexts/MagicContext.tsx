@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { StateEvent, StateEventRegistry, ThreeStageState } from "../state.type";
-import { selectState } from "@/helpers";
+import React, { useRef, useState } from "react";
+import type { StateEventRegistry } from "../state.type";
 
 export enum BackgroundVariant {
   Image = "Background Image",
@@ -118,6 +117,9 @@ export interface IMagicContext {
   inputAddress: UseState<string>;
   talentPassportScore: UseState<TTalentPassportScore>;
 
+  // Special name service
+  oneID: UseState<string>;
+
   // Raw
   allTransactions: UseState<TEVMScanTransaction[]>;
   marketData: UseState<TTokenSymbolDetail[]>;
@@ -161,6 +163,7 @@ export const MagicProvider = ({ children }: Props) => {
 
   const inputAddress = useState("");
   const text = useState("");
+  const oneID = useState("");
 
   const appStage = useState<AppStage>(AppStage.DisplayProfile);
   // All transactions and activity stats
@@ -215,6 +218,7 @@ export const MagicProvider = ({ children }: Props) => {
         // Raw
         text,
         inputAddress,
+        oneID,
         talentPassportScore,
         allTransactions,
         tokenPortfolio,

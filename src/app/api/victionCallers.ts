@@ -199,3 +199,20 @@ export const searchAddressFromOneID = async (text: string) => {
   const oneidResp: TSearchOneIDResponse = res.data[0];
   return oneidResp?.address ? oneidResp.address : "";
 };
+
+export const searchOneIDFromAddress = async (
+  address: string
+): Promise<string> => {
+  if (address === "") {
+    return "";
+  }
+
+  const data = await fetch(`/api/vicscan/account?address=${address}`, {
+    method: "GET",
+  });
+
+  const res = await data.json();
+  const vicAccount: TVicscanAccount = res.data;
+
+  return vicAccount?.accountName ? vicAccount.accountName : "";
+};

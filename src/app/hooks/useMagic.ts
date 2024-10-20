@@ -38,7 +38,10 @@ import {
   listAllTokenActivityByChain,
   listAllTransactionsByChain,
 } from "../api/services";
-import { searchAddressFromOneID } from "../api/victionCallers";
+import {
+  searchAddressFromOneID,
+  searchOneIDFromAddress,
+} from "../api/victionCallers";
 import {} from "../contexts/MagicContext";
 import { AppStage, type IMagicContext } from "../contexts/MagicContext";
 import {
@@ -80,6 +83,9 @@ export const useMagic = () => {
     nftPortfolio,
     tokenActivity,
     nftActivity,
+
+    // Special name service
+    oneID,
 
     // Insights
     longestHoldingToken,
@@ -150,6 +156,7 @@ export const useMagic = () => {
       },
       async () => {
         let address = "";
+        let isOneID = false;
         if (text.startsWith("0x")) {
           address = text;
         } else if (text.endsWith(".eth")) {
@@ -160,10 +167,20 @@ export const useMagic = () => {
           setState(inputAddress)(address);
         } else {
           address = await searchAddressFromOneID(text);
+          isOneID = true;
           // console.log("OneID Address:", address);
         }
         if (isAddress(address)) {
           setState(inputAddress)(address);
+
+          // Set the input OneID if the return address is valid
+          if (isOneID) {
+            setState(oneID)(text);
+          } else {
+            // Fetch OneID from the raw address
+            const _oneID = await searchOneIDFromAddress(address);
+            setState(oneID)(_oneID);
+          }
           return address;
         }
         throw new Error("Wallet address is invalid! Please try again.");
