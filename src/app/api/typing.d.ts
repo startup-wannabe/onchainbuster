@@ -55,6 +55,7 @@ type TNFTActivityV2 = {
   from: string;
   to: string;
   timestamp: string;
+  hash: string;
 
   tokenId: string;
   tokenName: string;

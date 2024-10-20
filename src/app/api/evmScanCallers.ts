@@ -169,6 +169,7 @@ export const listEVMScanNFTActivity = async (
       blockHash: t.blockHash,
       from: t.from,
       to: t.to,
+      hash: t.hash,
       tokenId: t.tokenID,
       tokenName: t.tokenName,
       tokenSymbol: t.tokenSymbol,
@@ -204,6 +205,7 @@ export const getLatestNFTActivity = async (
       blockHash: t.hash, // Sorry for bad naming
       from: t.from,
       to: t.to,
+      hash: t.hash,
       tokenId: t.tokenID,
       tokenName: t.tokenName,
       tokenSymbol: t.tokenSymbol,

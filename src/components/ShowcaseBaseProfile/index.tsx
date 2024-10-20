@@ -109,7 +109,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                       </span>
                     ) : (
                       <span className="flex justify-center gap-2 items-center">
-                        Collect your profile 🤗
+                        Claim your profile 🤗
                       </span>
                     )}
                   </>
@@ -123,7 +123,7 @@ const ShowcaseBaseProfile = ({ addressInput }: Props) => {
                         onClick={() => openConnectModal()}
                       >
                         <span className="flex justify-center gap-2 items-center">
-                          No wallet connected 😢
+                          Connect to claim 👋
                         </span>
                       </div>
                     )}
