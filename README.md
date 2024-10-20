@@ -8,9 +8,21 @@ Made with ❤️️ and ☕ from 🇻🇳
 
 ## 💼 Product Overview
 
-TBA: Main points go hereeee
+We’ve built a Persona Builder that analyzes user preferences from their past onchain activities, then recommending Base applications that fit them best.
+We envision a future where everyone becomes a multichain citizen. Our approach promotes the idea that **_“Base is for everyone”_** and **_“Base is a bridge, not an island"_**. We aim to make Base welcoming to all, including users from other blockchains.
+
+### Key Features
+
+- **User Preference Analysis**: Onchain data footprints provide valuable insights into a wallet owner's preferences and behaviors. OnchainBuster will index data from multiple chains to create a full picture of each user’s onchain traits.
+- **Customized Recommendations**: Based on this analysis, we’ll offer tailored recommendations, reducing the information overload users might experience when exploring a new ecosystem.
+- **Free-to-claim Profile In One Click**: To ensure smooth onboarding process on Base, we utilize the CDP-SDK to enable the zero-cost interaction for users to collect their profile as an NFT.
+
+Here's how the data flow to calculate the user's onchain traits to product recommendations
+![data-flow](./docs/assets/detailed-flow.png)
 
 Please find our detailed product description in the [docs](./docs/) folder.
+
+_**Disclaimer**_: Within the Base Buildathon SEA scope of work, some features are currently in the Proof of Concept (PoC) status that are currently using mock/hard-coded data. We'll push it when there are more available resources.
 
 ## 🛠️ Local Development
 
@@ -112,7 +124,9 @@ Keep in mind that the starter template use [Biome](https://biomejs.dev/) for lin
 
 ### 📚 Resources
 
-Technical:
+Data source: Special thanks to [Talent Protocol](https://docs.talentprotocol.com/docs) for providing the exclusive API source to help us complete the weighting for the scoring process.
+
+Technical Resources:
 
 - UI: [OnchainKit documentation](https://onchainkit.xyz)
 - CDP SDK: [CDP SDK Sample Applications](https://github.com/coinbase/cdp-sdk-sample-apps)

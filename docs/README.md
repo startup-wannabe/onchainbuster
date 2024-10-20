@@ -48,13 +48,16 @@ A specific description of each category is provided below:
 
 ### How it works
 
-How we build data ?
+This is mainly a data-intensive aggregation product. At the current stage, there are 2 main data sources that are easy to access for building up a simple analytical playground:
 
-Setting up data infrastructure
+- Explorers: Etherscan and its relative product on L2 or other EVM-compatible chains
+- 3rd party APIs: including market data (Coingecko, Coinmarketcap), and infrastructure (Alchemy, Reservoir, Moralis,...)
+
+TBA
 
 ### Rooms for improvements
 
+TBA
+
 - AM/ML if more time
 - Time-tested rule
-
-## Reference
