@@ -46,18 +46,90 @@ A specific description of each category is provided below:
 2. After calculating the weights for each metric, we tested the formulas with a sample of 15 wallets within our network and adjusted the weights to improve the logic and accuracy of the predictions.
 3. Once the wallet traits are determined, the system matches category recommendations to the most prominent trait pillar of the wallet owner. For instance, a DeFi-oriented user exhibiting "degen" behavior might be recommended to explore SocialFi on Base, which has access to the latest memecoin news and market sentiment.
 
-### How it works
+## Technical Implementation
+
+### 1. Data Collection and Transformation
 
 This is mainly a data-intensive aggregation product. At the current stage, there are 2 main data sources that are easy to access for building up a simple analytical playground:
 
 - Explorers: Etherscan and its relative product on L2 or other EVM-compatible chains
 - 3rd party APIs: including market data (Coingecko, Coinmarketcap), and infrastructure (Alchemy, Reservoir, Moralis,...)
 
+We identified 3 main sections that can help the analytical purposes:
+
+- (Raw) Transaction
+- Token Balance and Activity
+- NFT Balance and Activity
+
+Different data crawling/API fetching should be implemented depending on each data source. Some have different pagination methods, some are too limit in the size of response,... In the end, the data should be transformed into a unified type (see `/src/app/api/typing.d.ts`)
+
+### 2. Smart Contract Indexer for Interaction
+
+There are several types of dapp that user might have interacted with:
+
+- DeFi protocol
+  - DEX: Swap, LP farming
+  - Lending
+  - Staking
+- NFT marketplace
+- Bridge
+- Name Service
+
+A list of smart contracts for each dapp and category was indexed (see `src/constants/contracts.ts`) to help providing the interaction insights. It was time-consuming, but crucial for the `_stats` calculation further.
+
+### 3. Statistics and Traits Computation
+
+Raw data will be transformed into features (statistics) to display user's insights and trait scoring process. The logic to get the stats are mainly placed in `/src/helpers` folder, with 4 files:
+
+- activity.helper.ts
+- portfolio.helper.ts
+- transaction.helper.ts
+
+The computed stats will be further loaded in `trait.helper.ts`. The tables below show the calculation logic behind
+
+`DeFi or Art Collector`
+| Weigth | Calculation | Note |
+|--------|-----------------------------------------------|------------|
+| 0.30 | Token Portfolio / (Token + NFT) Portfolio | |
+| 0.15 | MostValuableToken > MostValuableNFT | Binary 1/0 |
+| 0.35 | DeFi interactions / (DeFi + NFT) interactions | |
+| 0.20 | First transaction < 2022 | Binary 1/0 |
+
+`Degen or Diamond Hand`
+| Weigth | Calculation | Note |
+|--------|------------------------------------------|-----------------------|
+| 0.25 | 1 - (Longest token holding/ WalletAge) | |
+| 0.25 | SQRT(DEX Count / DeFi Count) | |
+| 0.35 | New token (12m) / All token Count | Token holding balance |
+| 0.15 | Longest token holding duration < 1 year? | Binary 1/0 |
+
+`Original Builder or Multichain Citizen`
+| Weigth | Calculation | Note |
+|--------|---------------------------------------------------------|------------|
+| 0.25 | N.o chain NOT having activities / N.o all chains | |
+| 0.30 | ActiveChain UniqueActiveDay / AllChains UniqueActiveDay | |
+| 0.30 | ActiveChain Txs / AllChains Txs | |
+| 0.15 | Has skills_score (from Talent API) | Binary 1/0 |
+
+For product recommendations, within the hackathon/MVP stage, there are rule for a combination of 2 traits:
+
+- DeFi + Degen = SocialFi
+- DeFi + Diamond = DeFi (Professional)
+- Art + Degen = Gaming
+- Art + Diamond = NFT
+- DeFi + Builder = Bridge
+- DeFi + MultichainCitizen = DeFi
+- Art + Builder = DAO
+- Art + MultichainCitizen = DAO
+- Default: NFT **(mint.fun is Based!)**
+
+## Rooms for improvements
+
 TBA
 
-### Rooms for improvements
-
-TBA
-
+- Accurate data cleaning and transformation
+- Enrich Dapp indexer
+- Data aggregation strategy to reduce load time
+- Diversify data sources for collection
 - AM/ML if more time
 - Time-tested rule

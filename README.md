@@ -17,7 +17,10 @@ We envision a future where everyone becomes a multichain citizen. Our approach p
 - **Customized Recommendations**: Based on this analysis, we’ll offer tailored recommendations, reducing the information overload users might experience when exploring a new ecosystem.
 - **Free-to-claim Profile In One Click**: To ensure smooth onboarding process on Base, we utilize the CDP-SDK to enable the zero-cost interaction for users to collect their profile as an NFT.
 
-Here's how the data flow to calculate the user's onchain traits to product recommendations
+The story on user journey is: Input address -> Submit -> Mint. It's a simple but interactive application to engage with end-users and encourage them to explore Base (by visiting the products recommendations and mint the NFT).
+![user-journey-v1](./docs/assets/user-journey-v1.png)
+
+Here's how the data was collected, transformed, and fitted in the analysis stage to calculate the user's onchain traits. One user will have 3 traits in total, and a combination of 2 will suggest the suitable product types on Base to explore.
 ![data-flow](./docs/assets/detailed-flow.png)
 
 Please find our detailed product description in the [docs](./docs/) folder.
