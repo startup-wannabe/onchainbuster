@@ -88,7 +88,7 @@ Raw data will be transformed into features (statistics) to display user's insigh
 The computed stats will be further loaded in `trait.helper.ts`. The tables below show the calculation logic behind
 
 `DeFi or Art Collector`
-| Weigth | Calculation | Note |
+| Weighting | Calculation | Note |
 |--------|-----------------------------------------------|------------|
 | 0.30 | Token Portfolio / (Token + NFT) Portfolio | |
 | 0.15 | MostValuableToken > MostValuableNFT | Binary 1/0 |
@@ -96,7 +96,7 @@ The computed stats will be further loaded in `trait.helper.ts`. The tables below
 | 0.20 | First transaction < 2022 | Binary 1/0 |
 
 `Degen or Diamond Hand`
-| Weigth | Calculation | Note |
+| Weighting | Calculation | Note |
 |--------|------------------------------------------|-----------------------|
 | 0.25 | 1 - (Longest token holding/ WalletAge) | |
 | 0.25 | SQRT(DEX Count / DeFi Count) | |
@@ -104,7 +104,7 @@ The computed stats will be further loaded in `trait.helper.ts`. The tables below
 | 0.15 | Longest token holding duration < 1 year? | Binary 1/0 |
 
 `Original Builder or Multichain Citizen`
-| Weigth | Calculation | Note |
+| Weighting | Calculation | Note |
 |--------|---------------------------------------------------------|------------|
 | 0.25 | N.o chain NOT having activities / N.o all chains | |
 | 0.30 | ActiveChain UniqueActiveDay / AllChains UniqueActiveDay | |
