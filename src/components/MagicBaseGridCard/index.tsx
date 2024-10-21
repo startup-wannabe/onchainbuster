@@ -346,7 +346,7 @@ const MagicBaseGridCard = ({ style }: Props) => {
                           alt={`${mostValuableToken.name} logo`}
                           className="mr-1 inline-block h-6 w-6 rounded-full"
                         />
-                        <h1 className="font-bold text-2xl">
+                        <h1 className="font-bold text-2xl text-center">
                           {toCapitalize(mostValuableToken.name)} (
                           {mostValuableToken.symbol})
                         </h1>
