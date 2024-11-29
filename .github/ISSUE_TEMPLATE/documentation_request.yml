@@ -1,6 +1,6 @@
 name: Documentation request
 description: Suggest a documentation for this project
-title: 'Documentation Request: '
+title: 'docs: '
 labels: ['type: documentation']
 
 body:
