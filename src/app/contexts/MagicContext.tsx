@@ -1,10 +1,10 @@
-"use client";
-import React, { useRef, useState } from "react";
-import type { StateEventRegistry } from "../state.type";
+'use client';
+import React, { useRef, useState } from 'react';
+import type { StateEventRegistry } from '../state.type';
 
 export enum BackgroundVariant {
-  Image = "Background Image",
-  Color = "Background Color",
+  Image = 'Background Image',
+  Color = 'Background Color',
 }
 
 const defaultActivityStats: TActivityStats = {
@@ -17,9 +17,9 @@ const defaultActivityStats: TActivityStats = {
 };
 
 const defaultLongestHoldingToken: TLongestHoldingToken = {
-  chain: "",
-  chainLogoURI: "",
-  symbol: "",
+  chain: '',
+  chainLogoURI: '',
+  symbol: '',
   duration: 0,
 };
 
@@ -38,16 +38,16 @@ const defaultTokenActivityStats: TTokenActivityStats = {
 const defaultTokenPortfolioStats: TTokenPortfolioStats = {
   aggregatedBalanceBySymbol: {},
   chainCircularPackingData: {
-    type: "leaf",
-    name: "",
+    type: 'leaf',
+    name: '',
     value: 0,
   },
   chainRecordsWithTokens: {},
   mostValuableToken: {
-    name: "",
-    symbol: "",
+    name: '',
+    symbol: '',
     value: 0,
-    logoURI: "",
+    logoURI: '',
   },
   sumMemeUSDValue: 0,
   sumPortfolioUSDValue: 0,
@@ -55,10 +55,10 @@ const defaultTokenPortfolioStats: TTokenPortfolioStats = {
 
 const defaultNftPortfolioStats: TNFTPortfolioStats = {
   mostValuableNFTCollection: {
-    chain: "",
-    collectionAddress: "",
-    collectionImage: "",
-    collectionName: "",
+    chain: '',
+    collectionAddress: '',
+    collectionImage: '',
+    collectionName: '',
     floorPrice: 0,
     totalCount: 0,
     totalValue: 0,
@@ -70,8 +70,8 @@ const defaultNftPortfolioStats: TNFTPortfolioStats = {
 const defaultChainStats: TChainStats = {
   totalChains: [],
   noActivityChains: [],
-  mostActiveChainID: "",
-  mostActiveChainName: "",
+  mostActiveChainID: '',
+  mostActiveChainName: '',
   countUniqueDaysActiveChain: 0,
   countActiveChainTxs: 0,
 };
@@ -142,7 +142,7 @@ export interface IMagicContext {
 }
 
 export const MagicContext = React.createContext<IMagicContext>(
-  undefined as any
+  undefined as any,
 );
 
 interface Props {
@@ -153,51 +153,51 @@ export const MagicProvider = ({ children }: Props) => {
   const exampleProfile = useState<string | undefined>(undefined);
   const [stateEvents, setStateEvents] = useState<StateEventRegistry>({});
   const ref = useRef<React.MutableRefObject<HTMLDivElement> | undefined>(
-    undefined
+    undefined,
   );
   const nftTemplateSetting = useState<TNftTemplateSetting>({
     ref: ref.current,
-    backgroundValue: "/background.avif",
+    backgroundValue: '/background.avif',
     backgroundType: BackgroundVariant.Image,
   });
 
-  const inputAddress = useState("");
-  const text = useState("");
-  const oneID = useState("");
+  const inputAddress = useState('');
+  const text = useState('');
+  const oneID = useState('');
 
   const appStage = useState<AppStage>(AppStage.DisplayProfile);
   // All transactions and activity stats
   const allTransactions = useState<TEVMScanTransaction[]>([]);
   const activityStats = useState<TActivityStats>(defaultActivityStats);
   const longestHoldingToken = useState<TLongestHoldingToken>(
-    defaultLongestHoldingToken
+    defaultLongestHoldingToken,
   );
   const talentPassportScore = useState<TTalentPassportScore>(
-    defaultTalentPassportScore
+    defaultTalentPassportScore,
   );
   const defiActivityStats = useState<TDeFiActivityStats>(
-    defaultDeFiActivityStats
+    defaultDeFiActivityStats,
   );
   const tokenActivityStats = useState<TTokenActivityStats>(
-    defaultTokenActivityStats
+    defaultTokenActivityStats,
   );
   const nftActivityStats = useState<TNFTActivityStats>(defaultNFTActivityStats);
   const chainStats = useState<TChainStats>(defaultChainStats);
   const dappInteractionStats = useState<TDAppInteractionMap>(
-    defaultDappInteractionStats
+    defaultDappInteractionStats,
   );
 
   // Multi-chain token portfolio
   const tokenPortfolio = useState<TTokenBalance[]>([]);
   const tokenPortfolioStats = useState<TTokenPortfolioStats>(
-    defaultTokenPortfolioStats
+    defaultTokenPortfolioStats,
   );
   const marketData = useState<TTokenSymbolDetail[]>([]);
 
   // Multi-chain nft portfolio
   const nftPortfolio = useState<TNFTBalance[]>([]);
   const nftPortfolioStats = useState<TNFTPortfolioStats>(
-    defaultNftPortfolioStats
+    defaultNftPortfolioStats,
   );
 
   // Multi-chain token & activity

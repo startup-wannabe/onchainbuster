@@ -11,7 +11,7 @@ const getPercent = (value: number): number => {
 const getHashPercent = (
   value: number,
   hash: number,
-  length: number
+  length: number,
 ): number => {
   return Math.round(((hash / length) * (value * 100)) % 100);
 };
@@ -20,15 +20,15 @@ const hexToHSL = (hex?: string): number | undefined => {
   if (!hex) {
     return undefined;
   }
-  hex = hex.replace(/#/g, "");
+  hex = hex.replace(/#/g, '');
   if (hex.length === 3) {
     hex = hex
-      .split("")
+      .split('')
       .map((hex) => hex + hex)
-      .join("");
+      .join('');
   }
   const result = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})[\da-z]{0,0}$/i.exec(
-    hex
+    hex,
   );
   if (!result) {
     return undefined;
@@ -98,18 +98,18 @@ const genStops = (length: number, baseColor?: number, hash?: number) => {
   const colors = genColors(length, baseColor ? baseColor : getColor());
   // generate the radial gradient
   const proprieties = genGrad(length, colors, hash ? hash : undefined);
-  return [colors[0], proprieties.join(",")];
+  return [colors[0], proprieties.join(',')];
 };
 
 export const generateMeshGradient = (
   length: number,
   baseColor?: string,
-  hash?: number
+  hash?: number,
 ) => {
   const [bgColor, bgImage] = genStops(
     length,
     hexToHSL(baseColor) ? hexToHSL(baseColor) : undefined,
-    hash ? hash : undefined
+    hash ? hash : undefined,
   );
   return `background-color: ${bgColor}; background-image:${bgImage}`;
 };
@@ -117,12 +117,12 @@ export const generateMeshGradient = (
 export const generateJSXMeshGradient = (
   length: number,
   baseColor?: string,
-  hash?: number
+  hash?: number,
 ) => {
   const [bgColor, bgImage] = genStops(
     length,
     hexToHSL(baseColor) ? hexToHSL(baseColor) : undefined,
-    hash ? hash : undefined
+    hash ? hash : undefined,
   );
   return { backgroundColor: bgColor, backgroundImage: bgImage };
 };

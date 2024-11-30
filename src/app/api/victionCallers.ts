@@ -1,7 +1,7 @@
-import { VIC_METADATA } from "@/constants/token";
+import { VIC_METADATA } from '@/constants/token';
 
 export const listVicTransactions = async (account: string, limit = 100) => {
-  if (account === "") {
+  if (account === '') {
     return [];
   }
 
@@ -13,8 +13,8 @@ export const listVicTransactions = async (account: string, limit = 100) => {
     const data = await fetch(
       `/api/vicscan/activity?account=${account}&limit=${limit}&offset=${offset}`,
       {
-        method: "GET",
-      }
+        method: 'GET',
+      },
     );
 
     const res = await data.json();
@@ -28,7 +28,7 @@ export const listVicTransactions = async (account: string, limit = 100) => {
 };
 
 export const listVicTokenActivity = async (account: string, limit = 100) => {
-  if (account === "") {
+  if (account === '') {
     return [];
   }
 
@@ -40,8 +40,8 @@ export const listVicTokenActivity = async (account: string, limit = 100) => {
     const data = await fetch(
       `/api/vicscan/token?account=${account}&limit=${limit}&offset=${offset}`,
       {
-        method: "GET",
-      }
+        method: 'GET',
+      },
     );
 
     const res = await data.json();
@@ -53,7 +53,7 @@ export const listVicTokenActivity = async (account: string, limit = 100) => {
 
   return tokenActivities.map((t) => {
     return {
-      chain: "vic",
+      chain: 'vic',
       symbol: t.tokenSymbol,
       from: t.from,
       to: t.to,
@@ -64,7 +64,7 @@ export const listVicTokenActivity = async (account: string, limit = 100) => {
 };
 
 export const listVicNFTActivity = async (account: string, limit = 100) => {
-  if (account === "") {
+  if (account === '') {
     return [];
   }
 
@@ -76,8 +76,8 @@ export const listVicNFTActivity = async (account: string, limit = 100) => {
     const data = await fetch(
       `/api/vicscan/nft?account=${account}&limit=${limit}&offset=${offset}`,
       {
-        method: "GET",
-      }
+        method: 'GET',
+      },
     );
 
     const res = await data.json();
@@ -89,7 +89,7 @@ export const listVicNFTActivity = async (account: string, limit = 100) => {
 
   return nftActivities.map((t) => {
     return {
-      chain: "vic",
+      chain: 'vic',
       blockHash: t.blockHash,
       from: t.from,
       to: t.to,
@@ -103,7 +103,7 @@ export const listVicNFTActivity = async (account: string, limit = 100) => {
 };
 
 export const listVicTokenBalance = async (account: string, limit = 100) => {
-  if (account === "") {
+  if (account === '') {
     return [];
   }
 
@@ -115,8 +115,8 @@ export const listVicTokenBalance = async (account: string, limit = 100) => {
     const data = await fetch(
       `/api/vicscan/balance?account=${account}&limit=${limit}&offset=${offset}`,
       {
-        method: "GET",
-      }
+        method: 'GET',
+      },
     );
 
     const res = await data.json();
@@ -130,26 +130,26 @@ export const listVicTokenBalance = async (account: string, limit = 100) => {
     tokenBalance.map(async (token) => {
       const metadata = await getVicTokenDetail(token.token);
       return {
-        chain: "vic",
+        chain: 'vic',
         name: metadata.name,
         symbol: token.tokenSymbol,
         logoURI: metadata.image,
         decimals: metadata.decimals,
         tokenBalance: token.quantityNumber,
       } as TTokenBalance;
-    })
+    }),
   );
 
   return detailedTokenBalance;
 };
 
 export const getVicNativeBalance = async (address: string) => {
-  if (address === "") {
+  if (address === '') {
     return [];
   }
 
   const data = await fetch(`/api/vicscan/account?address=${address}`, {
-    method: "GET",
+    method: 'GET',
   });
 
   const res = await data.json();
@@ -158,7 +158,7 @@ export const getVicNativeBalance = async (address: string) => {
   // Return list for easy mapping
   return [
     {
-      chain: "vic",
+      chain: 'vic',
       name: VIC_METADATA.name,
       logoURI: VIC_METADATA.logoURI,
       symbol: VIC_METADATA.symbol,
@@ -169,15 +169,15 @@ export const getVicNativeBalance = async (address: string) => {
 };
 
 export const getVicTokenDetail = async (tokenAddress: string) => {
-  if (tokenAddress === "") {
+  if (tokenAddress === '') {
     return {} as TVicscanTokenDetail;
   }
 
   const data = await fetch(
     `/api/vicscan/metadata?tokenAddress=${tokenAddress}`,
     {
-      method: "GET",
-    }
+      method: 'GET',
+    },
   );
 
   const res = await data.json();
@@ -187,32 +187,32 @@ export const getVicTokenDetail = async (tokenAddress: string) => {
 };
 
 export const searchAddressFromOneID = async (text: string) => {
-  if (text === "") {
-    return "";
+  if (text === '') {
+    return '';
   }
 
   const data = await fetch(`/api/vicscan/oneid?text=${text}`, {
-    method: "GET",
+    method: 'GET',
   });
 
   const res = await data.json();
   const oneidResp: TSearchOneIDResponse = res.data[0];
-  return oneidResp?.address ? oneidResp.address : "";
+  return oneidResp?.address ? oneidResp.address : '';
 };
 
 export const searchOneIDFromAddress = async (
-  address: string
+  address: string,
 ): Promise<string> => {
-  if (address === "") {
-    return "";
+  if (address === '') {
+    return '';
   }
 
   const data = await fetch(`/api/vicscan/account?address=${address}`, {
-    method: "GET",
+    method: 'GET',
   });
 
   const res = await data.json();
   const vicAccount: TVicscanAccount = res.data;
 
-  return vicAccount?.accountName ? vicAccount.accountName : "";
+  return vicAccount?.accountName ? vicAccount.accountName : '';
 };

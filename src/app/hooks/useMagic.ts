@@ -1,23 +1,23 @@
-import MultiAssetsPortfolio from "@/components/MultiAssetsPortfolio";
-import { BASE_SEPOLIA_CHAIN_ID } from "@/constants";
-import { MOCK_PROFILES } from "@/data/mocks";
+import MultiAssetsPortfolio from '@/components/MultiAssetsPortfolio';
+import { BASE_SEPOLIA_CHAIN_ID } from '@/constants';
+import { MOCK_PROFILES } from '@/data/mocks';
 import {
   calculateMultichainNFTPortfolio,
   calculateMultichainTokenPortfolio,
-} from "@/helpers/portfolio.helper";
+} from '@/helpers/portfolio.helper';
 import {
   dataURLtoBlob,
   generatePinataKey,
   uploadFile,
   uploadJson,
-} from "@/lib/pinata";
-import { getAddress } from "@coinbase/onchainkit/identity";
-import { toJpeg } from "html-to-image";
-import moment from "moment";
-import { toast } from "react-toastify";
-import { isAddress } from "viem";
-import { normalize } from "viem/ens";
-import { delayMs, setState } from "../../helpers";
+} from '@/lib/pinata';
+import { getAddress } from '@coinbase/onchainkit/identity';
+import { toJpeg } from 'html-to-image';
+import moment from 'moment';
+import { toast } from 'react-toastify';
+import { isAddress } from 'viem';
+import { normalize } from 'viem/ens';
+import { delayMs, setState } from '../../helpers';
 import {
   calculateDappInteraction,
   calculateDeFiActivityStats,
@@ -26,10 +26,10 @@ import {
   calculateNFTActivityStats,
   calculateTokenActivityStats,
   findLongestHoldingToken,
-} from "../../helpers/activity.helper";
-import type { MintResponse } from "../api/cdp/mint/route";
-import { listCMCTokenDetail } from "../api/cmcCallers";
-import { getLatestNFTActivity } from "../api/evmScanCallers";
+} from '../../helpers/activity.helper';
+import type { MintResponse } from '../api/cdp/mint/route';
+import { listCMCTokenDetail } from '../api/cmcCallers';
+import { getLatestNFTActivity } from '../api/evmScanCallers';
 import {
   getMultichainPortfolio,
   getTalentScore,
@@ -37,21 +37,21 @@ import {
   listAllNFTBalanceByChain,
   listAllTokenActivityByChain,
   listAllTransactionsByChain,
-} from "../api/services";
+} from '../api/services';
 import {
   searchAddressFromOneID,
   searchOneIDFromAddress,
-} from "../api/victionCallers";
-import {} from "../contexts/MagicContext";
-import { AppStage, type IMagicContext } from "../contexts/MagicContext";
+} from '../api/victionCallers';
+import {} from '../contexts/MagicContext';
+import { AppStage, type IMagicContext } from '../contexts/MagicContext';
 import {
   BinaryState,
   StateEvent,
   type StateOption,
   ThreeStageState,
   type Toastable,
-} from "../state.type";
-import { useMagicContext } from "./useMagicContext";
+} from '../state.type';
+import { useMagicContext } from './useMagicContext';
 
 export const StateSubEvents = {
   [StateEvent.HowBasedAreYou]: ThreeStageState,
@@ -106,7 +106,7 @@ export const useMagic = () => {
 
   const stateCheck = (
     event: keyof typeof StateEvent,
-    option: StateOption
+    option: StateOption,
   ): boolean => {
     return stateEvents[event] === (StateSubEvents[event] as any)[option];
   };
@@ -119,7 +119,7 @@ export const useMagic = () => {
       onErrorEvent: Toastable<StateOption>;
       onResetEvent: StateOption;
     },
-    method: () => Promise<Output>
+    method: () => Promise<Output>,
   ): Promise<Output> {
     dispatchStateEvent(eventName, eventHooks.onResetEvent);
     dispatchStateEvent(eventName, eventHooks.onStartEvent);
@@ -129,7 +129,7 @@ export const useMagic = () => {
       dispatchStateEvent(eventName, event.value);
       if (event.toast) {
         toast(event.toast, {
-          type: "success",
+          type: 'success',
         });
       }
       return data;
@@ -138,7 +138,7 @@ export const useMagic = () => {
       dispatchStateEvent(eventName, event.value);
       if (event.toast) {
         toast(`${event.toast} - Error: ${error.message}`, {
-          type: "error",
+          type: 'error',
         });
       }
       throw new Error(`${eventName} : ${error.message}`);
@@ -155,11 +155,11 @@ export const useMagic = () => {
         onResetEvent: StateSubEvents.GetAddress.False,
       },
       async () => {
-        let address = "";
+        let address = '';
         let isOneID = false;
-        if (text.startsWith("0x")) {
+        if (text.startsWith('0x')) {
           address = text;
-        } else if (text.endsWith(".eth")) {
+        } else if (text.endsWith('.eth')) {
           address = (await getAddress({
             name: normalize(text),
           })) as string;
@@ -183,8 +183,8 @@ export const useMagic = () => {
           }
           return address;
         }
-        throw new Error("Wallet address is invalid! Please try again.");
-      }
+        throw new Error('Wallet address is invalid! Please try again.');
+      },
     );
   };
 
@@ -202,7 +202,7 @@ export const useMagic = () => {
         // console.log("Talent score:", data);
         setState(talentPassportScore)(data);
         return data;
-      }
+      },
     );
   };
 
@@ -214,7 +214,7 @@ export const useMagic = () => {
         onErrorEvent: { value: StateSubEvents.ActivityStats.Idle },
         onFinishEvent: {
           value: StateSubEvents.ActivityStats.Finished,
-          toast: "Activity stats fetched.",
+          toast: 'Activity stats fetched.',
         },
         onResetEvent: StateSubEvents.ActivityStats.Idle,
       },
@@ -225,13 +225,13 @@ export const useMagic = () => {
         // console.log("_allTransactions", _allTransactions);
 
         const ethNativeTransactions: TEVMScanTransaction[] = Object.entries(
-          data
+          data,
         )
-          .filter(([key, _]) => key !== "vic") // exclude VIC since it's a zero-gas fee (VN proud)
+          .filter(([key, _]) => key !== 'vic') // exclude VIC since it's a zero-gas fee (VN proud)
           .flatMap(([_, value]) => value.txs);
 
         const filteredTransactions = ethNativeTransactions.filter(
-          (tx) => tx.from.toLowerCase() === addressInput.toLowerCase()
+          (tx) => tx.from.toLowerCase() === addressInput.toLowerCase(),
         );
 
         const _totalGasInETH = filteredTransactions.reduce(
@@ -239,20 +239,20 @@ export const useMagic = () => {
             acc +
             calculateGasInETH(
               Number.parseInt(curr.gasUsed),
-              Number.parseInt(curr.gasPrice)
+              Number.parseInt(curr.gasPrice),
             ),
-          0
+          0,
         );
 
         // console.log("_totalGasInETH:", _totalGasInETH);
         setState(totalGasInETH)(_totalGasInETH);
 
         let mostActiveChainID = Object.keys(data).reduce((a, b) =>
-          data[a].txs.length > data[b].txs.length ? a : b
+          data[a].txs.length > data[b].txs.length ? a : b,
         );
 
         if (data[mostActiveChainID].txs.length === 0) {
-          mostActiveChainID = "base"; // Default chain should be 'Base'
+          mostActiveChainID = 'base'; // Default chain should be 'Base'
         }
 
         const mostActiveChainName = data[mostActiveChainID].chainName;
@@ -261,7 +261,7 @@ export const useMagic = () => {
         // Get Activity Stats
         const stats = calculateEVMStreaksAndMetrics(
           _allTransactions,
-          addressInput
+          addressInput,
         );
         // console.log("Activity Stats:", stats);
         setState(activityStats)(stats);
@@ -269,12 +269,12 @@ export const useMagic = () => {
         // Get chain stats
         const totalChains = Object.keys(data);
         const noActivityChains = totalChains.filter(
-          (chain) => data[chain].txs.length === 0
+          (chain) => data[chain].txs.length === 0,
         );
         // Get unique active day, on most active chain 🫠
         const { uniqueActiveDays } = calculateEVMStreaksAndMetrics(
           data[mostActiveChainID].txs,
-          addressInput
+          addressInput,
         );
 
         const _chainStats: TChainStats = {
@@ -301,7 +301,7 @@ export const useMagic = () => {
         setState(defiActivityStats)(_defiActivityStats);
 
         return stats;
-      }
+      },
     );
   };
 
@@ -312,11 +312,11 @@ export const useMagic = () => {
         onStartEvent: StateSubEvents.GetTokenPortfolio.InProgress,
         onErrorEvent: {
           value: StateSubEvents.GetTokenPortfolio.Idle,
-          toast: "Failed to fetch multichain token portfolio.",
+          toast: 'Failed to fetch multichain token portfolio.',
         },
         onFinishEvent: {
           value: StateSubEvents.GetTokenPortfolio.Finished,
-          toast: "Fetched token portfolio.",
+          toast: 'Fetched token portfolio.',
         },
         onResetEvent: StateSubEvents.GetTokenPortfolio.Idle,
       },
@@ -328,12 +328,12 @@ export const useMagic = () => {
           ...new Set(
             tokenBalanceData
               .filter((token) => token.tokenBalance !== 0)
-              .map((token) => token.symbol)
+              .map((token) => token.symbol),
           ),
         ];
         // Get token price
         const _marketData = await listCMCTokenDetail(
-          distinctTokenSymbols.join(",")
+          distinctTokenSymbols.join(','),
         );
         // console.log("Price market data:", _marketData);
         setState(marketData)(_marketData);
@@ -342,12 +342,12 @@ export const useMagic = () => {
 
         const _tokenPortfolioStats = calculateMultichainTokenPortfolio(
           tokenBalanceData,
-          _marketData
+          _marketData,
         );
         // console.log("_tokenPortfolioStats", _tokenPortfolioStats);
         setState(tokenPortfolioStats)(_tokenPortfolioStats);
         return MultiAssetsPortfolio;
-      }
+      },
     );
   };
 
@@ -358,11 +358,11 @@ export const useMagic = () => {
         onStartEvent: StateSubEvents.GetTokenActivity.InProgress,
         onErrorEvent: {
           value: StateSubEvents.GetTokenActivity.Idle,
-          toast: "Failed to fetch multichain token activities.",
+          toast: 'Failed to fetch multichain token activities.',
         },
         onFinishEvent: {
           value: StateSubEvents.GetTokenActivity.Finished,
-          toast: "Fetched token activities.",
+          toast: 'Fetched token activities.',
         },
         onResetEvent: StateSubEvents.GetTokenActivity.Idle,
       },
@@ -375,7 +375,7 @@ export const useMagic = () => {
 
         // Get longest holding assets
         const longestHoldingTokenByChain = Object.entries(
-          tokenActivityData
+          tokenActivityData,
         ).map(([chain, activities]) => {
           return findLongestHoldingToken(chain, activities, addressInput);
         });
@@ -385,7 +385,7 @@ export const useMagic = () => {
         const _longestHoldingToken = longestHoldingTokenByChain.reduce(
           (prev, current) => {
             return prev.duration > current.duration ? prev : current;
-          }
+          },
         );
 
         // console.log("_longestHoldingToken", _longestHoldingToken);
@@ -410,19 +410,19 @@ export const useMagic = () => {
 
         // Get token price
         const marketData = await listCMCTokenDetail(
-          distinctTokenSymbols.join(",")
+          distinctTokenSymbols.join(','),
         );
         // End of TODO --------
 
         const _tokenActivityStats = calculateTokenActivityStats(
           allTokenActivities,
-          marketData
+          marketData,
         );
 
         // TODO: set tokenActivityStats
         setState(tokenActivityStats)(_tokenActivityStats);
         // console.log("tokenActivityStats:", _tokenActivityStats);
-      }
+      },
     );
   };
 
@@ -433,11 +433,11 @@ export const useMagic = () => {
         onStartEvent: StateSubEvents.GetNftPortfolio.InProgress,
         onErrorEvent: {
           value: StateSubEvents.GetNftPortfolio.Idle,
-          toast: "Failed to fetch NFT portfolio.",
+          toast: 'Failed to fetch NFT portfolio.',
         },
         onFinishEvent: {
           value: StateSubEvents.GetNftPortfolio.Finished,
-          toast: "Fetched NFT portfolio.",
+          toast: 'Fetched NFT portfolio.',
         },
         onResetEvent: StateSubEvents.GetNftPortfolio.Idle,
       },
@@ -450,7 +450,7 @@ export const useMagic = () => {
         const _nftPortfolio = calculateMultichainNFTPortfolio(allNFTBalance);
         // console.log("_nftPortfolio", _nftPortfolio);
         setState(nftPortfolioStats)(_nftPortfolio);
-      }
+      },
     );
   };
 
@@ -461,11 +461,11 @@ export const useMagic = () => {
         onStartEvent: StateSubEvents.GetNftActivity.InProgress,
         onErrorEvent: {
           value: StateSubEvents.GetNftActivity.Idle,
-          toast: "Failed to fetch multichain NFT activities.",
+          toast: 'Failed to fetch multichain NFT activities.',
         },
         onFinishEvent: {
           value: StateSubEvents.GetNftActivity.Finished,
-          toast: "Fetched NFT activities.",
+          toast: 'Fetched NFT activities.',
         },
         onResetEvent: StateSubEvents.GetNftActivity.Idle,
       },
@@ -477,12 +477,12 @@ export const useMagic = () => {
 
         const _nftActivityStats = calculateNFTActivityStats(
           allNftActivities,
-          addressInput
+          addressInput,
         );
 
         // console.log("nftActivityStats:", _nftActivityStats);
         setState(nftActivityStats)(_nftActivityStats);
-      }
+      },
     );
   };
 
@@ -494,11 +494,11 @@ export const useMagic = () => {
           onStartEvent: StateSubEvents.HowBasedAreYou.InProgress,
           onErrorEvent: {
             value: StateSubEvents.HowBasedAreYou.Idle,
-            toast: "Magic failed!",
+            toast: 'Magic failed!',
           },
           onFinishEvent: {
             value: StateSubEvents.HowBasedAreYou.Finished,
-            toast: "Magic done!",
+            toast: 'Magic done!',
           },
           onResetEvent: StateSubEvents.HowBasedAreYou.Idle,
         },
@@ -511,7 +511,7 @@ export const useMagic = () => {
           await fetchMultichainNftPortfolio(address);
           await fetchMultichainNftActivity(address);
           await delayMs(1000);
-        }
+        },
       );
     } catch (error) {
       console.log(error);
@@ -522,7 +522,7 @@ export const useMagic = () => {
     ref: React.MutableRefObject<any | null> | undefined,
     fileName: string,
     toAddress: string,
-    onMinted: (response: MintResponse) => void
+    onMinted: (response: MintResponse) => void,
   ) => {
     return newAsyncDispatch(
       StateEvent.MintProfileNft,
@@ -530,11 +530,11 @@ export const useMagic = () => {
         onStartEvent: StateSubEvents.MintProfileNft.InProgress,
         onErrorEvent: {
           value: StateSubEvents.MintProfileNft.Idle,
-          toast: "Failed to mint your profile NFT!",
+          toast: 'Failed to mint your profile NFT!',
         },
         onFinishEvent: {
           value: StateSubEvents.MintProfileNft.Finished,
-          toast: "NFT Minted!",
+          toast: 'NFT Minted!',
         },
         onResetEvent: StateSubEvents.MintProfileNft.Idle,
       },
@@ -550,17 +550,17 @@ export const useMagic = () => {
 
         const metadata = {
           name: `Onchain Buster Profile | ${toAddress.slice(0, 5)}`,
-          description: "Onchain Buster ",
+          description: 'Onchain Buster ',
           image: fileCID,
-          external_url: "https://onchainbuster.vercel.app",
+          external_url: 'https://onchainbuster.vercel.app',
         };
 
         const uriCID = await uploadJson(metadata, keyData.JWT);
 
-        const response = await fetch("/api/cdp/mint", {
-          method: "POST",
+        const response = await fetch('/api/cdp/mint', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             networkId: BASE_SEPOLIA_CHAIN_ID,
@@ -575,24 +575,24 @@ export const useMagic = () => {
         const data: MintResponse = await response.json();
         onMinted(data);
 
-        const activity = await getLatestNFTActivity(toAddress, "BASE-SEPOLIA");
+        const activity = await getLatestNFTActivity(toAddress, 'BASE-SEPOLIA');
 
         const matchingTransaction = activity.find(
           (transaction) =>
             transaction.blockHash.toLowerCase() ===
-            data.mintTxHash.toLowerCase()
+            data.mintTxHash.toLowerCase(),
         );
         return {
           mintResponse: data,
           tokenId: matchingTransaction?.tokenId,
         };
-      }
+      },
     );
   };
 
   const setExampleProfile = (_exampleProfile: string) => {
     const profile = MOCK_PROFILES.find(
-      (profile) => profile.name === _exampleProfile
+      (profile) => profile.name === _exampleProfile,
     )?.data as any as IMagicContext;
     // console.log(_exampleProfile);
     if (!profile) {
@@ -609,7 +609,7 @@ export const useMagic = () => {
     setState(activityStats)({
       ...(profile.activityStats as any),
       firstActiveDay: moment(
-        (profile.activityStats as any as TActivityStats).firstActiveDay
+        (profile.activityStats as any as TActivityStats).firstActiveDay,
       ).toDate(),
     });
     setState(longestHoldingToken)(profile.longestHoldingToken as any);
