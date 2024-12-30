@@ -1,18 +1,18 @@
-import { listStaticTokenMetadata } from './tokenCallers';
+import { listStaticTokenMetadata } from "./tokenCallers";
 
 export const listAlchemyTokenBalance = async (
   address: string,
-  chain: string,
+  chain: string
 ) => {
   // Note: let the maxCount=100 by default
   const req: TAlchemyRequest = {
     id: 1,
-    jsonrpc: '2.0',
-    method: 'alchemy_getTokenBalances',
+    jsonrpc: "2.0",
+    method: "alchemy_getTokenBalances",
     params: [address],
   };
   const data = await fetch(`/api/alchemy?chain=${chain}`, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(req),
   });
 
@@ -21,16 +21,16 @@ export const listAlchemyTokenBalance = async (
   const tokenBalance = alchemyRes.result.tokenBalances || [];
 
   const alchemyChainMapping: Record<string, string> = {
-    'eth-mainnet': 'eth',
-    'base-mainnet': 'base',
-    'opt-mainnet': 'op',
-    'arb-mainnet': 'arb',
+    "eth-mainnet": "eth",
+    "base-mainnet": "base",
+    "opt-mainnet": "op",
+    "arb-mainnet": "arb",
   };
 
   const parsedTokenBalance = tokenBalance.map((token) => {
     const metadata = listStaticTokenMetadata(
       alchemyChainMapping[chain],
-      token.contractAddress,
+      token.contractAddress
     );
 
     if (metadata) {

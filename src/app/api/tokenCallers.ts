@@ -1,11 +1,11 @@
-import { chainIDMap } from '@constants/chains';
-import tokenList from '@data/tokenList.json';
+import { chainIDMap } from "@constants/chains";
+import tokenList from "@data/tokenList.json";
 
 const tokenListJSON: TTokenList = JSON.parse(JSON.stringify(tokenList));
 
 export const listStaticTokenMetadata = (
   chain: string,
-  contractAdress: string,
+  contractAddress: string
 ) => {
   const chainMetadata =
     chainIDMap[chain.toLowerCase() as keyof typeof chainIDMap] ||
@@ -13,11 +13,11 @@ export const listStaticTokenMetadata = (
 
   const chainTokens =
     tokenListJSON.tokens.filter(
-      (token) => token.chainId === chainMetadata.id,
+      (token) => token.chainId === chainMetadata.id
     ) || [];
 
   return chainTokens.find(
     (t: TTokenListMetadata) =>
-      t.address?.toLowerCase() === contractAdress.toLowerCase(),
+      t.address?.toLowerCase() === contractAddress.toLowerCase()
   );
 };
