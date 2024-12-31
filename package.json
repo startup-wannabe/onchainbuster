@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@coinbase/coinbase-sdk": "^0.8.1",
-    "@coinbase/onchainkit": "^0.32.0",
+    "@coinbase/onchainkit": "^0.36.3",
     "@dicebear/collection": "^9.2.2",
     "@dicebear/core": "^9.2.2",
     "@nivo/pie": "^0.87.0",
@@ -48,6 +48,7 @@
     "react-responsive": "^10.0.0",
     "react-spring": "^9.7.4",
     "react-toastify": "^10.0.5",
+    "sharp": "^0.33.5",
     "siwe": "^2.3.2",
     "usehooks-ts": "^3.1.0",
     "uuid": "^10.0.0"
